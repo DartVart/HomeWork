@@ -8,8 +8,10 @@ const int maxSizeOfString = 1000;
 bool isAnagram(char firstString[], char secondString[])
 {
     int lengthOfFirstString = strlen(firstString);
+    int lengthOfSecondString = strlen(secondString);
 
-    if (lengthOfFirstString != strlen(secondString))
+
+    if (lengthOfFirstString != lengthOfSecondString)
     {
         return false;
     }
