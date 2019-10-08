@@ -2,6 +2,21 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+
+void swapInteger(int* a, int* b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void swapDouble(double* a, double* b)
+{
+    double temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
 struct Fraction
 {
     int numerator;
@@ -9,20 +24,11 @@ struct Fraction
     double value;
 };
 
-void setFractionData(struct Fraction* gettingData, struct Fraction* givingData)
-{
-    gettingData->numerator = givingData->numerator;
-    gettingData->denominator = givingData->denominator;
-    gettingData->value = givingData->value;
-}
-
 void swapFraction(struct Fraction* a, struct Fraction* b)
 {
-    struct Fraction* temp = (struct Fraction*) malloc(sizeof(struct Fraction));
-    setFractionData(temp, a);
-    setFractionData(a, b);
-    setFractionData(b, temp);
-    free (temp);
+    swapInteger(&(a->denominator), &(b->denominator));
+    swapInteger(&(a->numerator), &(b->numerator));
+    swapDouble(&(a->value), &(b->value));
 }
 
 void getCoprimeIntegers(bool isCoprimeIntegers[], int number)
