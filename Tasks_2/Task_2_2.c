@@ -35,8 +35,6 @@ void getCoprimeIntegers(bool isCoprimeIntegers[], int number)
 {
     int sizeOfArray = number;
 
-    isCoprimeIntegers[0] = false;
-
     int halfOfNumber = (int)number / 2;
     for (int factor = 2; factor <= halfOfNumber; factor++)
     {
@@ -61,6 +59,7 @@ struct Fraction* getIrreducibleFraction(int maxDenominator, int* numberOfIrreduc
     struct Fraction* irreducibleFractions = (struct Fraction*) malloc(maxNumberOfFractions * sizeof(struct Fraction));
 
     bool* isCoprimeIntegers = (bool*) malloc(maxDenominator * sizeof(bool));
+    isCoprimeIntegers[0] = false;
 
     for (int i = 0; i < maxDenominator; i++)
     {
@@ -138,6 +137,7 @@ int main()
 
     quickSort(fractions, 0, numberOfFractions - 1);
 
+    printf("All irreducible fractions whose denominators do not exceed %d. They printed in ascending order: \n", maxDenominator);
     for (int i = 0; i < numberOfFractions; i++)
     {
         printf("%d / %d\n", fractions[i].numerator, fractions[i].denominator);
