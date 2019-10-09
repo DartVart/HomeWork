@@ -43,22 +43,6 @@ void quickSort(int array[], int leftElement, int rightElement)
     quickSort(array, leftElement, downIterator);
 }
 
-//This method modifies the array
-int getIndexOfRepeatingMax(int array[], int sizeOfArray)
-{
-    quickSort(array, 0, sizeOfArray - 1);
-
-    for (int i = 0; i < sizeOfArray - 1; i++)
-    {
-        if (array[i] == array[i + 1])
-        {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
 int main()
 {
     int sizeOfInputArray = 0;
@@ -72,17 +56,19 @@ int main()
         scanf("%d", &inputArray[i]);
     }
 
-    int indexOfRepeatingMax = getIndexOfRepeatingMax(inputArray, sizeOfInputArray);
-    if (indexOfRepeatingMax >= 0)
+    quickSort(inputArray, 0, sizeOfInputArray - 1);
+
+    for (int i = 0; i < sizeOfInputArray - 1; i++)
     {
-        printf("The maximum repeating element: %d", inputArray[indexOfRepeatingMax]);
-    }
-    else
-    {
-        printf("There is no repeating element");
+        if (inputArray[i] == inputArray[i + 1])
+        {
+            printf("The maximum repeating element: %d.", inputArray[i]);
+            free(inputArray);
+            return 0;
+        }
     }
 
+    printf("There is no repeating element.");
     free(inputArray);
-
     return 0;
 }
