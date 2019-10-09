@@ -8,13 +8,14 @@ void swap(int *a, int *b)
     *b = temp;
 }
 
-//This method sorts descending
+//This method sorts in descending order
 void quickSort(int array[], int leftElement, int rightElement)
 {
     if (rightElement - leftElement < 1)
         return;
 
-    int upIterator = leftElement, downIterator = rightElement;
+    int upIterator = leftElement;
+    int downIterator = rightElement;
     int middleIndex = (leftElement + rightElement) / 2;
     int middle = array[middleIndex];
 
