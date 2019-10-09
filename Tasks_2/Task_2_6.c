@@ -21,22 +21,19 @@ unsigned long long getMinNumberFormedByDigits(unsigned long long number)
         number /= 10;
     }
 
-    //Looking for the smallest nonzero element
-    for (int i = 1; result == 0; i++)
+    int smallestNonzeroDigit = 0;
+    for (int digit = 1; smallestNonzeroDigit == 0; digit++)
     {
-        if (digitsOfNumber[i] != 0)
+        if (digitsOfNumber[digit] != 0)
         {
-            result = i;
-            digitsOfNumber[i]--;
+            smallestNonzeroDigit = digit;
+            digitsOfNumber[smallestNonzeroDigit]--;
         }
     }
 
-    for (int i = 0; i < digitsOfNumber[0]; i++)
-    {
-        result *= 10;
-    }
+    result = smallestNonzeroDigit;
 
-    for (int currentDigitOfNumber = 1; currentDigitOfNumber < numberOfDigits; currentDigitOfNumber++)
+    for (int currentDigitOfNumber = 0; currentDigitOfNumber < numberOfDigits; currentDigitOfNumber++)
     {
         for (int i = 0; i < digitsOfNumber[currentDigitOfNumber]; i++)
         {
