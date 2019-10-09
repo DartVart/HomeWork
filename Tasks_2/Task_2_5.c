@@ -2,13 +2,15 @@
 #include <stdbool.h>
 #include <string.h>
 
-const int numberOfSymbols = 256;
+const int numberOfCharacters = (int)'z' - (int)'A' + 1;
+const int numberOfFirstUsedCharacter = (int)'A';
 const int maxSizeOfString = 1000;
 
 bool isAnagram(char firstString[], char secondString[])
 {
     int lengthOfFirstString = strlen(firstString);
     int lengthOfSecondString = strlen(secondString);
+    int indexOfCharacter = 0;
 
 
     if (lengthOfFirstString != lengthOfSecondString)
@@ -16,14 +18,17 @@ bool isAnagram(char firstString[], char secondString[])
         return false;
     }
 
-    int symbols[numberOfSymbols] = {0};
+    int symbols[numberOfCharacters] = {0};
     for (int i = 0; i < lengthOfFirstString; i++)
     {
-        symbols[(int)firstString[i]]++;
-        symbols[(int)secondString[i]]--;
+
+        indexOfCharacter = (int)firstString[i] - numberOfFirstUsedCharacter;
+        symbols[indexOfCharacter]++;
+        indexOfCharacter = (int)secondString[i] - numberOfFirstUsedCharacter;
+        symbols[indexOfCharacter]--;
     }
 
-    for (int i = 0; i < numberOfSymbols; i++)
+    for (int i = 0; i < numberOfCharacters; i++)
     {
         if (symbols[i] != 0)
         {
