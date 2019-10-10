@@ -1,0 +1,33 @@
+		28      commandments
+           excerpts
+
+                   ... There should not be any code extracted...s
+
+		Highlight  common chunks in function ...
+
+It is bad to use global 	variables...
+				  
+   
+
+
+    
+                 ...Do not use "magic constants"...
+
+...Write braces on a 			separate line...
+...Each data output to the screen   should be accompanied by a message explaining what exactly is displayed...
+
+    		...Use the nullptr  constant to indicate a null pointer...
+
+
+
+...Access  operators to 	fields of structures and classes are not allocated by spaces...
+		
+    	 	 
+
+	... 	
+ 	
+ 	
+ 
+
+ 			
+...Use the nullptr constant to 	indicate a      null pointer.
