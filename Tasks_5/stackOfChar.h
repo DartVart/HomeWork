@@ -1,5 +1,5 @@
-#ifndef CHAR_STACK_H
-#define CHAR_STACK_H
+#ifndef STACK_OF_CHAR_H
+#define STACK_OF_CHAR_H
 
 #include <stdbool.h>
 
@@ -22,4 +22,4 @@ void deleteStack(Stack* stack);
 
 int getStackSize(Stack* stack);
 
-#endif //CHAR_STACK_H
+#endif //STACK_OF_CHAR_H

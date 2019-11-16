@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "charStack.h"
+#include "stackOfChar.h"
 
 const int maxSizeOfString = 1000;
 
