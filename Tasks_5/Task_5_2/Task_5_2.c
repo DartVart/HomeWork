@@ -3,19 +3,15 @@
 #include "stack.h"
 
 const int maxSizeOfString = 1000;
-const int asciiCodeOfZero = (int)'0';
-const int asciiCodeOfNine = (int)'9';
 
 int convertCharToDigit(char symbol)
 {
-    return (int)symbol - asciiCodeOfZero;
+    return (int)symbol - (int)'0';
 }
 
 bool isDigit(char symbol)
 {
-    int asciiCodeOfSymbol = (int)symbol;
-    return (asciiCodeOfZero <= asciiCodeOfSymbol &&
-            asciiCodeOfNine >= asciiCodeOfSymbol);
+    return '0' <= symbol && '9' >= symbol;
 }
 
 double performOperation(double firstNumber, double secondNumber, char operator)
