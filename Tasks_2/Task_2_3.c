@@ -19,11 +19,11 @@ struct Answer
 };
 typedef struct Answer Answer;
 
-bool isInSecretNumber(int checkingDigit, int secretNumber[])
+bool isDigitInNumber(int number[], int digit, int lengthOfNumber)
 {
-    for (int i = 0; i < lengthOfSecretNumber; i++)
+    for (int i = 0; i < lengthOfNumber; i++)
     {
-        if (secretNumber[i] == checkingDigit)
+        if (number[i] == digit)
         {
             return true;
         }
@@ -40,7 +40,7 @@ void setSecretNumber(int secretNumber[])
         do
         {
             newDigit = rand() % 10;
-        } while (isInSecretNumber(newDigit, secretNumber));
+        } while (isDigitInNumber(secretNumber, newDigit, lengthOfSecretNumber));
 
         secretNumber[i] = newDigit;
     }
@@ -64,7 +64,7 @@ void getAnswer(int guessAsArray[], int secretNumber[], Answer* answer)
 
     for (int i = 0; i < lengthOfSecretNumber; i++)
     {
-        if (isInSecretNumber(guessAsArray[i], secretNumber))
+        if (isDigitInNumber(secretNumber, guessAsArray[i], lengthOfSecretNumber))
         {
             if (guessAsArray[i] == secretNumber[i])
             {
