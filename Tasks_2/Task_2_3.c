@@ -5,10 +5,11 @@
 
 const int lengthOfSecretNumber = 4;
 
+typedef enum GameAction GameAction;
 enum GameAction
 {
-    CONTINUE = 1,
-    EXIT
+    EXIT,
+    CONTINUE
 };
 
 struct Answer
@@ -92,9 +93,9 @@ void printForeword()
            "Output: \"Attempt 1: 2093 -> 1 bulls; 2 cows.\"\n");
 }
 
-void getActionFromConsole(enum GameAction* action)
+void getActionFromConsole(GameAction* action)
 {
-    printf("If you want to continue, enter 1, if you want to exit, enter 2:\n");
+    printf("If you want to exit, enter 0, if you want to continue, enter 1:\n");
     scanf("%d", action);
 }
 
@@ -106,7 +107,7 @@ int main()
     int guessAsArray[lengthOfSecretNumber] = {0};
     int secretNumber[lengthOfSecretNumber] = {0};
     int attemptNumber = 0;
-    enum GameAction action = CONTINUE;
+    GameAction action = EXIT;
     Answer answer = {0, 0};
 
     printForeword();
