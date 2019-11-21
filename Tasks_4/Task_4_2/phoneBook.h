@@ -30,6 +30,6 @@ bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[]
 /* The file should be opened with the following access mode flags: "a", "a+". */
 void writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput);
 
-void deletedPhoneBook(PhoneBook* phoneBook);
+void deletePhoneBook(PhoneBook* phoneBook);
 
 #endif //PHONEBOOK_H

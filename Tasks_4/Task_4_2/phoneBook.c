@@ -108,7 +108,7 @@ void writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput)
     phoneBook->numberOfUsersInFile = phoneBook->numberOfUsers;
 }
 
-void deletedPhoneBook(PhoneBook* phoneBook)
+void deletePhoneBook(PhoneBook* phoneBook)
 {
     free(phoneBook->array);
     free(phoneBook);

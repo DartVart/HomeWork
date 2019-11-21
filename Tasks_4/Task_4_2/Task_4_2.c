@@ -117,6 +117,6 @@ int main()
     }
 
     fclose(fileOutput);
-    deletedPhoneBook(phoneBook);
+    deletePhoneBook(phoneBook);
     return 0;
 }
