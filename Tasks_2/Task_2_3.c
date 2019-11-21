@@ -12,12 +12,12 @@ enum GameAction
     CONTINUE
 };
 
+typedef struct Answer Answer;
 struct Answer
 {
     int bulls;
     int cows;
 };
-typedef struct Answer Answer;
 
 bool isDigitInNumber(int number[], int digit, int lengthOfNumber)
 {
@@ -107,14 +107,14 @@ int main()
     int guessAsArray[lengthOfSecretNumber] = {0};
     int secretNumber[lengthOfSecretNumber] = {0};
     int attemptNumber = 0;
-    GameAction action = EXIT;
+    GameAction action = CONTINUE;
     Answer answer = {0, 0};
 
     printForeword();
 
     getActionFromConsole(&action);
 
-    while (action == CONTINUE)
+    while (action != EXIT)
     {
         printf("-----------------NEW GAME------------------\n");
 
