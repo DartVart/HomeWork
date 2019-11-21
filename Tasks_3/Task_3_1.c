@@ -41,10 +41,10 @@ int getIndexOfMinimumElement(int array[], int firstIndex, int secondIndex)
     return (array[firstIndex] < array[secondIndex]) ? firstIndex : secondIndex;
 }
 
-void siftDownElement(int heap[], int indexOfElement, int sizeOfHeap)
+void siftElement(int heap[], int indexOfElement, int sizeOfHeap)
 {
+    int indexOfLeftChild = indexOfElement * 2 + 1;
     int indexOfRightChild = indexOfElement * 2 + 2;
-    int indexOfLeftChild = indexOfRightChild - 1;
     int indexOfMinimumChild = 0;
     bool needSwap = false;
 
@@ -66,7 +66,7 @@ void siftDownElement(int heap[], int indexOfElement, int sizeOfHeap)
     if (needSwap)
     {
         swap(&heap[indexOfMinimumChild], &heap[indexOfElement]);
-        siftDownElement(heap, indexOfMinimumChild, sizeOfHeap);
+        siftElement(heap, indexOfMinimumChild, sizeOfHeap);
     }
 }
 
@@ -76,13 +76,13 @@ void heapSort(int array[], int sizeOfArray)
     int indexOfElementWithoutChild = sizeOfArray / 2 - 1;
     for (int i = indexOfElementWithoutChild; i >= 0; i--)
     {
-        siftDownElement(array, i, sizeOfArray);
+        siftElement(array, i, sizeOfArray);
     }
 
     for (int i = sizeOfArray - 1; i > 0; i--)
     {
         swap(&array[i], &array[0]);
-        siftDownElement(array, 0, i);
+        siftElement(array, 0, i);
     }
 }
 
