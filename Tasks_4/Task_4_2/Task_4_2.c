@@ -46,18 +46,10 @@ int main()
     bool isFindObject = false;
     enum Action action = 0;
     getAction(&action, nameOfFile);
-    while (true)
+    while (action != EXIT)
     {
         switch (action)
         {
-            case EXIT:
-            {
-                fclose(fileOutput);
-                deletedPhoneBook(phoneBook);
-                return 0;
-                break;
-            }
-
             case ADD_USER:
             {
                 printf("Enter user name: ");
@@ -123,4 +115,8 @@ int main()
 
         getAction(&action, nameOfFile);
     }
+
+    fclose(fileOutput);
+    deletedPhoneBook(phoneBook);
+    return 0;
 }
