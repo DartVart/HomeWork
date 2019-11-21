@@ -55,16 +55,10 @@ int main()
     bool isValueInSet = false;
     Action action = 0;
     getAction(&action);
-    while (true)
+    while (action != EXIT)
     {
         switch (action)
         {
-            case EXIT:
-            {
-                deleteSet(set);
-                return 0;
-            }
-
             case ADD_ELEMENT:
             {
                 printf("Enter value:" );
@@ -80,6 +74,7 @@ int main()
                 removeFromSet(set, value);
                 break;
             }
+
             case CHECK_AFFILIATION_OF_ELEMENT:
             {
                 printf("Enter value:" );
@@ -148,4 +143,7 @@ int main()
 
         getAction(&action);
     }
+
+    deleteSet(set);
+    return 0;
 }
