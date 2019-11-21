@@ -113,6 +113,3 @@ void deletedPhoneBook(PhoneBook* phoneBook)
     free(phoneBook->array);
     free(phoneBook);
 }
-
-
-
