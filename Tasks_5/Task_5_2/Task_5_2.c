@@ -38,7 +38,7 @@ double performOperation(double firstNumber, double secondNumber, char operator)
 
         case '/':
         {
-            return (double)firstNumber / (double)secondNumber;
+            return firstNumber / secondNumber;
             break;
         }
 
