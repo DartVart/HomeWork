@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "phoneBook.h"
 
+const int maxSizeOfName = 40;
+const int maxSizeOfPhoneNumber = 20;
 const int initialCapacity = 10;
 
 typedef struct PhoneUser PhoneUser;

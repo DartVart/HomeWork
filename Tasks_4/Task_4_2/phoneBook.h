@@ -9,8 +9,8 @@
 
 #include <stdbool.h>
 
-const int maxSizeOfName = 40;
-const int maxSizeOfPhoneNumber = 20;
+extern const int maxSizeOfName;
+extern const int maxSizeOfPhoneNumber;
 
 typedef struct PhoneBook PhoneBook;
 struct PhoneBook;
