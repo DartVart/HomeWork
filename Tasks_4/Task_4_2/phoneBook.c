@@ -27,7 +27,7 @@ PhoneBook* initializePhoneBook(char nameOfFile[])
     char name[maxSizeOfName] = "";
     char phoneNumber[maxSizeOfPhoneNumber] = "";
 
-    PhoneBook* phoneBook = (PhoneBook*) malloc(sizeof(phoneBook));
+    PhoneBook* phoneBook = (PhoneBook*) malloc(sizeof(PhoneBook));
 
     phoneBook->arrayCapacity = initialCapacity;
     phoneBook->numberOfUsers = 0;
