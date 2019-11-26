@@ -50,6 +50,49 @@ double performOperation(double firstNumber, double secondNumber, char operator)
     }
 }
 
+/* recordableNumber is the part of the number that was considered before the function call;
+ * isScanNumber determines whether a digit was process before the function call. */
+bool processSymbolWhenCalculatingPostfixForm(Stack* numbersInExpression, char checkingSymbol,
+                                             int* recordableNumber, bool* isScanOfNumber)
+{
+    double firstNumberInOperation = 0.0;
+    double secondNumberInOperation = 0.0;
+    double resultOfOperation = 0.0;
+    int currentDigit = 0;
+
+    if (isDigit(checkingSymbol))
+    {
+        *isScanOfNumber = true;
+        currentDigit = convertCharToDigit(checkingSymbol);
+        *recordableNumber = (*recordableNumber) * 10 + currentDigit;
+    }
+    else
+    {
+        if (*isScanOfNumber)
+        {
+            *isScanOfNumber = false;
+            pushToStack(numbersInExpression, *recordableNumber);
+            *recordableNumber = 0;
+        }
+
+        if (checkingSymbol == ' ')
+        {
+            return true;
+        }
+
+        if (getStackSize(numbersInExpression) < 2)
+        {
+            return false;
+        }
+
+        secondNumberInOperation = popFromStack(numbersInExpression);
+        firstNumberInOperation = popFromStack(numbersInExpression);
+        resultOfOperation = performOperation(firstNumberInOperation, secondNumberInOperation, checkingSymbol);
+        pushToStack(numbersInExpression, resultOfOperation);
+    }
+    return true;
+}
+
 /* The result will be written into resultOfExpression.
  * If the expression is incorrect or (postfixExpression == NULL), the function will return false and
  * the value of resultOfExpression will be 0. */
@@ -65,48 +108,24 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
 
     char currentSymbol = '\000';
     int currentRecordableNumber = 0;
-    double firstNumberInOperation = 0.0;
-    double secondNumberInOperation = 0.0;
-    double resultOfCurrentOperation = 0.0;
-    int currentDigit = 0;
     bool isScanOfNumber = false;
+    bool isBalanceOfOperatorsAndOperands = true;
+
     for (int i = 0; i < lengthOfExpression; i++)
     {
         currentSymbol = postfixExpression[i];
 
-        if (isDigit(currentSymbol))
+        isBalanceOfOperatorsAndOperands = processSymbolWhenCalculatingPostfixForm(numbersInExpression, currentSymbol,
+                                                                                  &currentRecordableNumber, &isScanOfNumber);
+        if (!isBalanceOfOperatorsAndOperands)
         {
-            isScanOfNumber = true;
-            currentDigit = convertCharToDigit(currentSymbol);
-            currentRecordableNumber = currentRecordableNumber * 10 + currentDigit;
-        }
-        else
-        {
-            if (isScanOfNumber)
-            {
-                isScanOfNumber = false;
-                pushToStack(numbersInExpression, currentRecordableNumber);
-                currentRecordableNumber = 0;
-            }
-
-            if (currentSymbol == ' ')
-            {
-                continue;
-            }
-
-            if (getStackSize(numbersInExpression) < 2)
-            {
-                return false;
-            }
-
-            secondNumberInOperation = popFromStack(numbersInExpression);
-            firstNumberInOperation = popFromStack(numbersInExpression);
-            resultOfCurrentOperation = performOperation(firstNumberInOperation, secondNumberInOperation, currentSymbol);
-            pushToStack(numbersInExpression, resultOfCurrentOperation);
+            return false;
         }
     }
 
-    if (getStackSize(numbersInExpression) != 1)
+    isBalanceOfOperatorsAndOperands = getStackSize(numbersInExpression) == 1;
+
+    if (!isBalanceOfOperatorsAndOperands)
     {
         *resultOfExpression = 0;
         return false;
