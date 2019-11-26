@@ -1,5 +1,4 @@
-#ifndef STACK_H
-#define STACK_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -21,5 +20,3 @@ bool isStackEmpty(Stack* stack);
 void deleteStack(Stack* stack);
 
 int getStackSize(Stack* stack);
-
-#endif //STACK_H
