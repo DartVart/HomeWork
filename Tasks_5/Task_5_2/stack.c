@@ -30,11 +30,18 @@ StackElement* createStackElement(double value, StackElement* nextElement)
     return stackElement;
 }
 
-void pushToStack(Stack* stack, double value)
+bool pushToStack(Stack* stack, double value)
 {
+    if (stack == NULL)
+    {
+        return false;
+    }
+
     StackElement* newElement = createStackElement(value, stack->top);
     stack->top = newElement;
     stack->size++;
+
+    return true;
 }
 
 double popFromStack(Stack* stack)
@@ -65,7 +72,7 @@ double peekIntoStack(Stack* stack)
 
 bool isStackEmpty(Stack* stack)
 {
-    return stack->top == NULL;
+    return stack == NULL || stack->top == NULL;
 }
 
 void deleteStack(Stack* stack)
@@ -80,5 +87,9 @@ void deleteStack(Stack* stack)
 
 int getStackSize(Stack* stack)
 {
+    if (stack == NULL)
+    {
+        return -1;
+    }
     return stack->size;
 }

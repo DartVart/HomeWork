@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "stack.h"
 
 const int maxSizeOfString = 1000;
@@ -50,10 +51,15 @@ double performOperation(double firstNumber, double secondNumber, char operator)
 }
 
 /* The result will be written into resultOfExpression.
- * If the expression is incorrect, the function will return false and
- * the value of resultOfExpression will be 0.*/
+ * If the expression is incorrect or (postfixExpression == NULL), the function will return false and
+ * the value of resultOfExpression will be 0. */
 bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpression)
 {
+    if (postfixExpression == NULL)
+    {
+        return false;
+    }
+
     Stack *numbersInExpression = createStack();
     int lengthOfExpression = strlen(postfixExpression);
 
@@ -108,12 +114,11 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
 
     *resultOfExpression = popFromStack(numbersInExpression);
 
-
     deleteStack(numbersInExpression);
     return true;
 }
 
-void scanStringWithSpaces(FILE* inputStream, char* stringBuffer)
+void scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
 {
     if (inputStream == NULL)
     {
@@ -129,7 +134,7 @@ int main()
 {
     char* postfixExpression = (char*) calloc(maxSizeOfString, sizeof(char));
     printf("Enter an expression in postfix notation (characters '+', '-', '*', '/' are allowed):");
-    scanStringWithSpaces(stdin, postfixExpression);
+    scanStringWithSpaces(stdin, postfixExpression, maxSizeOfString);
 
     double resultOfExpression = 0.0;
     bool isCorrectExpression = false;
@@ -144,5 +149,6 @@ int main()
         printf("You entered an incorrect expression!");
     }
 
+    free(postfixExpression);
     return 0;
 }
