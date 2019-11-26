@@ -6,7 +6,7 @@ const int maxSizeOfString = 1000;
 
 int convertCharToDigit(char symbol)
 {
-    return (int)symbol - (int)'0';
+    return symbol - '0';
 }
 
 bool isDigit(char symbol)
