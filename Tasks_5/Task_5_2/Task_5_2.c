@@ -116,7 +116,9 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
 void scanStringWithSpaces(FILE* inputStream, char* stringBuffer)
 {
     fflush(inputStream);
-    scanf("%[^\n]", stringBuffer);
+    fgets(stringBuffer, maxLengthOfString, inputStream);
+    int indexOfNewLineCharacter = strlen(stringBuffer) - 1;
+    stringBuffer[indexOfNewLineCharacter] = '\0';
 }
 
 int main()
