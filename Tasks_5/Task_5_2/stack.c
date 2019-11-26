@@ -65,7 +65,7 @@ double peekIntoStack(Stack* stack)
 
 bool isStackEmpty(Stack* stack)
 {
-    return stack->top == 0;
+    return stack->top == NULL;
 }
 
 void deleteStack(Stack* stack)
