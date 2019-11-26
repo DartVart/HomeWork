@@ -127,7 +127,7 @@ void scanStringWithSpaces(FILE* inputStream, char* stringBuffer)
 
 int main()
 {
-    char postfixExpression[maxSizeOfString] = "";
+    char* postfixExpression = (char*) calloc(maxSizeOfString, sizeof(char));
     printf("Enter an expression in postfix notation (characters '+', '-', '*', '/' are allowed):");
     scanStringWithSpaces(stdin, postfixExpression);
 
