@@ -104,12 +104,12 @@ int main()
     srand(time(NULL));
 
     int guessAsInteger = 0;
-    int guessAsArray[lengthOfSecretNumber] = {0};
-    int secretNumber[lengthOfSecretNumber] = {0};
+    int* guessAsArray = (int*) calloc(lengthOfSecretNumber, sizeof(int));
+    int* secretNumber = (int*) calloc(lengthOfSecretNumber, sizeof(int));
     int attemptNumber = 0;
+
     GameAction action = CONTINUE;
     Answer answer = {0, 0};
-
     printForeword();
 
     getActionFromConsole(&action);
@@ -137,5 +137,7 @@ int main()
         getActionFromConsole(&action);
     }
 
+    free(guessAsArray);
+    free(secretNumber);
     return 0;
 }
