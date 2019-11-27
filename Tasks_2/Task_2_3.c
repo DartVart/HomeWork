@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <time.h>
 
 const int lengthOfSecretNumber = 4;
+const int maxSizeOfString = 5;
 
 typedef enum GameAction GameAction;
 enum GameAction
@@ -93,10 +95,31 @@ void printForeword()
            "Output: \"Attempt 1: 2093 -> 1 bulls; 2 cows.\"\n");
 }
 
+int convertCharToDigit(char symbol)
+{
+    return symbol - '0';
+}
+
 void getActionFromConsole(GameAction* action)
 {
-    printf("If you want to exit, enter 0, if you want to continue, enter 1:\n");
-    scanf("%d", action);
+    // validation of input
+    char* inputString = (char*) calloc(maxSizeOfString, sizeof(char));
+    bool isCorrectInput = false;
+    while (!isCorrectInput)
+    {
+        printf("If you want to exit, enter 0, if you want to continue, enter 1:\n");
+        fflush(stdin);
+        scanf("%2s", inputString);
+
+        isCorrectInput = strcmp(inputString, "1") == 0 || strcmp(inputString, "0") == 0;
+        if (!isCorrectInput)
+        {
+            printf("Please enter a valid value.\n");
+        }
+    }
+
+    *action = convertCharToDigit(inputString[0]);
+    free(inputString);
 }
 
 int main()
