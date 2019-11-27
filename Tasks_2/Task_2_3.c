@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-const int lengthOfSecretNumber = 4;
+const int sizeOfSecretNumber = 4;
 const int maxSizeOfString = 5;
 
 typedef enum GameAction GameAction;
@@ -35,14 +35,15 @@ bool isDigitInNumber(int number[], int digit, int lengthOfNumber)
 
 void setSecretNumber(int secretNumber[])
 {
+
     int newDigit = 0;
     secretNumber[0] = rand() % 9 + 1;
-    for (int i = 1; i < lengthOfSecretNumber; i++)
+    for (int i = 1; i < sizeOfSecretNumber; i++)
     {
         do
         {
             newDigit = rand() % 10;
-        } while (isDigitInNumber(secretNumber, newDigit, lengthOfSecretNumber));
+        } while (isDigitInNumber(secretNumber, newDigit, sizeOfSecretNumber));
 
         secretNumber[i] = newDigit;
     }
@@ -51,7 +52,7 @@ void setSecretNumber(int secretNumber[])
 void representGuessAsArray(int guessAsInteger, int guessAsArray[])
 {
     int lastDigit = 0;
-    for (int i = lengthOfSecretNumber - 1; i >= 0; i--)
+    for (int i = sizeOfSecretNumber - 1; i >= 0; i--)
     {
         lastDigit = guessAsInteger % 10;
         guessAsArray[i] = lastDigit;
@@ -64,9 +65,9 @@ void getAnswer(int guessAsArray[], int secretNumber[], Answer* answer)
     answer->bulls = 0;
     answer->cows = 0;
 
-    for (int i = 0; i < lengthOfSecretNumber; i++)
+    for (int i = 0; i < sizeOfSecretNumber; i++)
     {
-        if (isDigitInNumber(secretNumber, guessAsArray[i], lengthOfSecretNumber))
+        if (isDigitInNumber(secretNumber, guessAsArray[i], sizeOfSecretNumber))
         {
             if (guessAsArray[i] == secretNumber[i])
             {
@@ -122,17 +123,34 @@ void getActionFromConsole(GameAction* action)
     free(inputString);
 }
 
-int main()
+void playBullsAndCowsMatch(int lengthOfSecretNumber)
 {
-    srand(time(NULL));
-
-    int guessAsInteger = 0;
     int* guessAsArray = (int*) calloc(lengthOfSecretNumber, sizeof(int));
     int* secretNumber = (int*) calloc(lengthOfSecretNumber, sizeof(int));
-    int attemptNumber = 0;
+    setSecretNumber(secretNumber);
 
-    GameAction action = CONTINUE;
+    int guessAsInteger = 0;
+    int attemptNumber = 0;
     Answer answer = {0, 0};
+
+    while (answer.bulls != lengthOfSecretNumber)
+    {
+        attemptNumber++;
+        printf("Enter a supposed number:");
+        scanf("%d", &guessAsInteger);
+        representGuessAsArray(guessAsInteger, guessAsArray);
+        getAnswer(guessAsArray, secretNumber, &answer);
+        printf("Attempt %d: %d -> %d bulls; %d cows.\n", attemptNumber, guessAsInteger, answer.bulls, answer.cows);
+    }
+    printf("Awesome! You win!\n");
+
+    free(guessAsArray);
+    free(secretNumber);
+}
+
+void playBullsAndCows(int lengthOfSecretNumber)
+{
+    GameAction action = CONTINUE;
     printForeword();
 
     getActionFromConsole(&action);
@@ -141,26 +159,17 @@ int main()
     {
         printf("-----------------NEW GAME------------------\n");
 
-        setSecretNumber(secretNumber);
+        playBullsAndCowsMatch(lengthOfSecretNumber);
 
-        while (answer.bulls != lengthOfSecretNumber)
-        {
-            attemptNumber++;
-            printf("Enter a supposed number:");
-            scanf("%d", &guessAsInteger);
-            representGuessAsArray(guessAsInteger, guessAsArray);
-            getAnswer(guessAsArray, secretNumber, &answer);
-            printf("Attempt %d: %d -> %d bulls; %d cows.\n", attemptNumber, guessAsInteger, answer.bulls, answer.cows);
-        }
-        attemptNumber = 0;
-        answer.bulls = 0;
-        answer.cows = 0;
-
-        printf("Awesome! You win!\n");
         getActionFromConsole(&action);
     }
+}
 
-    free(guessAsArray);
-    free(secretNumber);
+int main()
+{
+    srand(time(NULL));
+
+    playBullsAndCows(sizeOfSecretNumber);
+
     return 0;
 }
