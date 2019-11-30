@@ -3,9 +3,7 @@
  * Data about one user should be written in a file in the form:
  * "<phone (a string without spaces, tabs, newline)> <username (spaces are allowed)><newline>".
  */
-
-#ifndef PHONEBOOK_H
-#define PHONEBOOK_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -31,5 +29,3 @@ bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[]
 void writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput);
 
 void deletePhoneBook(PhoneBook* phoneBook);
-
-#endif //PHONEBOOK_H
