@@ -30,11 +30,18 @@ StackOfDoubleElement* createStackOfDoubleElement(double value, StackOfDoubleElem
     return stackElement;
 }
 
-void pushToStackOfDouble(StackOfDouble* stack, double value)
+bool pushToStackOfDouble(StackOfDouble* stack, double value)
 {
+    if (stack == NULL)
+    {
+        return false;
+    }
+
     StackOfDoubleElement* newElement = createStackOfDoubleElement(value, stack->top);
     stack->top = newElement;
     stack->size++;
+
+    return true;
 }
 
 double popFromStackOfDouble(StackOfDouble* stack)
@@ -65,7 +72,7 @@ double peekIntoStackOfDouble(StackOfDouble* stack)
 
 bool isStackOfDoubleEmpty(StackOfDouble* stack)
 {
-    return stack->top == 0;
+    return stack == NULL || stack->top == NULL;
 }
 
 void deleteStackOfDouble(StackOfDouble* stack)
@@ -80,5 +87,9 @@ void deleteStackOfDouble(StackOfDouble* stack)
 
 int getStackOfDoubleSize(StackOfDouble* stack)
 {
+    if (stack == NULL)
+    {
+        return -1;
+    }
     return stack->size;
 }

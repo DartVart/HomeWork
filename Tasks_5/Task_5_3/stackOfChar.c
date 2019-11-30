@@ -30,11 +30,18 @@ StackOfCharElement* createStackOfCharElement(char value, StackOfCharElement* nex
     return stackElement;
 }
 
-void pushToStackOfChar(StackOfChar* stack, char value)
+bool pushToStackOfChar(StackOfChar* stack, char value)
 {
+    if (stack == NULL)
+    {
+        return false;
+    }
+
     StackOfCharElement* newElement = createStackOfCharElement(value, stack->top);
     stack->top = newElement;
     stack->size++;
+
+    return true;
 }
 
 char popFromStackOfChar(StackOfChar* stack)
@@ -65,7 +72,7 @@ char peekIntoStackOfChar(StackOfChar* stack)
 
 bool isStackOfCharEmpty(StackOfChar* stack)
 {
-    return stack->top == 0;
+    return stack == NULL || stack->top == NULL;
 }
 
 void deleteStackOfChar(StackOfChar* stack)
@@ -80,5 +87,9 @@ void deleteStackOfChar(StackOfChar* stack)
 
 int getStackOfCharSize(StackOfChar* stack)
 {
+    if (stack == NULL)
+    {
+        return -1;
+    }
     return stack->size;
 }
