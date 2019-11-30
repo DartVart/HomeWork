@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "notationOfExpression.h"
-
-void scanStringWithSpaces(FILE* inputStream, char* stringBuffer)
-{
-    fflush(inputStream);
-    scanf("%[^\n]", stringBuffer);
-}
+#include "stringReading.h"
 
 int main()
 {
