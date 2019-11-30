@@ -2,6 +2,8 @@
 #include "notationOfExpression.h"
 #include "stack.h"
 
+const int maxSizeOfExpression = 1000;
+
 bool isOperator(char symbol)
 {
     return (symbol == '+' ||

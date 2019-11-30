@@ -8,7 +8,7 @@
 
 #include "stdbool.h"
 
-#define maxSizeOfExpression 1000
+extern const int maxSizeOfExpression;
 
 /* The result will be written into resultOfExpression.
  * If the expression is incorrect, the function will return false and
