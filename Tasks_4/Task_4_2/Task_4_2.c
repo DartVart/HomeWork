@@ -7,14 +7,14 @@
 
 const int maxSizeOfString = 5;
 
-enum Action
+typedef enum Action
 {
     EXIT,
     ADD_USER,
     FIND_PHONE_NUMBER,
     FIND_NAME,
     WRITE_TO_FILE
-};
+} Action;
 
 void displayInvitationToEnterAction(char* nameOfFile)
 {
@@ -32,7 +32,7 @@ int convertCharToDigit(char symbol)
     return symbol - '0';
 }
 
-void getAction(enum Action* action, char* nameOfFile)
+void getAction(Action* action, char* nameOfFile)
 {
     displayInvitationToEnterAction(nameOfFile);
     // validation of input
@@ -54,22 +54,60 @@ void getAction(enum Action* action, char* nameOfFile)
     free(inputString);
 }
 
-
-int main()
+//name and phoneNumber are variables for reading name and phone number data
+void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
-    printf("===================PHONE BOOK===================\n");
+    printf("Enter user name: ");
+    scanStringWithSpaces(stdin, name, maxSizeOfName);
 
-    char nameOfFile[] = "Phone_book.txt";
+    printf("Enter user phone number (without spaces): ");
+    scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
 
-    PhoneBook* phoneBook = initializePhoneBook(nameOfFile);
+    addUserToPhoneBook(phoneBook, name, phoneNumber);
+}
 
-    FILE* fileOutput = fopen(nameOfFile, "a+");
+//name and phoneNumber are variables for reading name and phone number data
+void findPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
+{
+    printf("Enter user name: ");
+    scanStringWithSpaces(stdin, name, maxSizeOfName);
+    bool isFindPhone = getPhoneByName(phoneBook, name, phoneNumber);
 
+    if (isFindPhone)
+    {
+        printf("%s uses phone number %s.\n", name, phoneNumber);
+    }
+    else
+    {
+        printf("%s doesn't have a phone number yet!\n", name);
+    }
+}
+
+//name and phoneNumber are variables for reading name and phone number data
+void findUserName(PhoneBook* phoneBook, char* name, char* phoneNumber)
+{
+    printf("Enter user phone number (without spaces): ");
+    scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
+
+    bool isFindName = getNameByPhone(phoneBook, name, phoneNumber);
+
+    if (isFindName)
+    {
+        printf("Phone number %s is used by %s.\n", phoneNumber, name);
+    }
+    else
+    {
+        printf("There is no user with a phone number %s yet!\n", phoneNumber);
+    }
+}
+
+void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile)
+{
     // maxSizeOfPhoneNumber and maxSizeOfName declared in "phoneBook.h"
     char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
     char* name = (char*) calloc(maxSizeOfName, sizeof(char));
-    bool isFindObject = false;
-    enum Action action = 0;
+
+    Action action = 0;
     getAction(&action, nameOfFile);
     while (action != EXIT)
     {
@@ -77,52 +115,19 @@ int main()
         {
             case ADD_USER:
             {
-                printf("Enter user name: ");
-                scanStringWithSpaces(stdin, name, maxSizeOfName);
-
-                printf("Enter user phone number (without spaces): ");
-                scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
-
-                addUserToPhoneBook(phoneBook, name, phoneNumber);
-
+                addUser(phoneBook, name, phoneNumber);
                 break;
             }
 
             case FIND_PHONE_NUMBER:
             {
-                printf("Enter user name: ");
-                scanStringWithSpaces(stdin, name, maxSizeOfName);
-
-                isFindObject = getPhoneByName(phoneBook, name, phoneNumber);
-
-                if (isFindObject)
-                {
-                    printf("%s uses phone number %s.\n", name, phoneNumber);
-                }
-                else
-                {
-                    printf("%s doesn't have a phone number yet!\n", name);
-                }
-
+                findPhoneNumber(phoneBook, name, phoneNumber);
                 break;
             }
 
             case FIND_NAME:
             {
-                printf("Enter user phone number (without spaces): ");
-                scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
-
-                isFindObject = getNameByPhone(phoneBook, name, phoneNumber);
-
-                if (isFindObject)
-                {
-                    printf("Phone number %s is used by %s.\n", phoneNumber, name);
-                }
-                else
-                {
-                    printf("There is no user with a phone number %s yet!\n", phoneNumber);
-                }
-
+                findUserName(phoneBook, name, phoneNumber);
                 break;
             }
 
@@ -143,6 +148,20 @@ int main()
 
     free(name);
     free(phoneNumber);
+}
+
+int main()
+{
+    printf("===================PHONE BOOK===================\n");
+
+    char nameOfFile[] = "Phone_book.txt";
+
+    PhoneBook* phoneBook = initializePhoneBook(nameOfFile);
+
+    FILE* fileOutput = fopen(nameOfFile, "a+");
+
+    processUserActions(phoneBook, fileOutput, nameOfFile);
+
     fclose(fileOutput);
     deletePhoneBook(phoneBook);
     return 0;
