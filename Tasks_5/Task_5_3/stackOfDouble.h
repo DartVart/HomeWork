@@ -1,5 +1,4 @@
-#ifndef STACK_OF_DOUBLE_H
-#define STACK_OF_DOUBLE_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -21,5 +20,3 @@ bool isStackOfDoubleEmpty(StackOfDouble* stack);
 void deleteStackOfDouble(StackOfDouble* stack);
 
 int getStackOfDoubleSize(StackOfDouble* stack);
-
-#endif //STACK_OF_DOUBLE_H

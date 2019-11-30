@@ -4,9 +4,7 @@
  *
  * As of November 16, 2019, this module doesn't implement all actions with notations of mathematical expressions.
  */
-
-#ifndef NOTATIONOFEXPRESSION_H
-#define NOTATIONOFEXPRESSION_H
+#pragma once
 
 #include "stdbool.h"
 
@@ -19,5 +17,3 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
 
 /* This function doesn't detect all incorrect expressions, but if it does, it will return false. */
 bool convertInfixToPostfixNotation(char infixExpression[], char postfixExpression[]);
-
-#endif //NOTATIONOFEXPRESSION_H

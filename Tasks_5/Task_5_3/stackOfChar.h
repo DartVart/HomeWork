@@ -1,5 +1,4 @@
-#ifndef STACK_OF_CHAR_H
-#define STACK_OF_CHAR_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -21,5 +20,3 @@ bool isStackOfCharEmpty(StackOfChar* stack);
 void deleteStackOfChar(StackOfChar* stack);
 
 int getStackOfCharSize(StackOfChar* stack);
-
-#endif //STACK_OF_CHAR_H
