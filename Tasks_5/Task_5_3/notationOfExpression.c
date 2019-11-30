@@ -14,7 +14,7 @@ bool isOperator(char symbol)
 
 int convertCharToDigit(char symbol)
 {
-    return (int)symbol - (int)'0';
+    return symbol - '0';
 }
 
 bool isDigit(char symbol)
