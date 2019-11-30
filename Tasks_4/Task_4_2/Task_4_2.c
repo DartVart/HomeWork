@@ -54,7 +54,7 @@ void getAction(Action* action, char* nameOfFile)
     free(inputString);
 }
 
-//name and phoneNumber are variables for reading name and phone number data
+//'name' and 'phoneNumber' are variables for reading name and phone number data
 void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     printf("Enter user name: ");
@@ -66,7 +66,7 @@ void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
     addUserToPhoneBook(phoneBook, name, phoneNumber);
 }
 
-//name and phoneNumber are variables for reading name and phone number data
+//'name' and 'phoneNumber' are variables for reading name and phone number data
 void findPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     printf("Enter user name: ");
@@ -83,7 +83,7 @@ void findPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
     }
 }
 
-//name and phoneNumber are variables for reading name and phone number data
+//'name' and 'phoneNumber' are variables for reading name and phone number data
 void findUserName(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     printf("Enter user phone number (without spaces): ");
@@ -103,6 +103,12 @@ void findUserName(PhoneBook* phoneBook, char* name, char* phoneNumber)
 
 void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile)
 {
+    if (phoneBook == NULL || fileOutput == NULL)
+    {
+        printf("Phone book initialization error.");
+        return;
+    }
+
     // maxSizeOfPhoneNumber and maxSizeOfName declared in "phoneBook.h"
     char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
     char* name = (char*) calloc(maxSizeOfName, sizeof(char));

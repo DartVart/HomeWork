@@ -33,9 +33,15 @@ PhoneBook* createEmptyPhoneBook()
     return phoneBook;
 }
 
-void setDataToPhoneBookFromFile(PhoneBook* phoneBook, char nameOfFile[])
+//If (PhoneBook == NULL) or there was an error reading the file, the function will return false
+bool setDataToPhoneBookFromFile(PhoneBook* phoneBook, char nameOfFile[])
 {
     FILE* fileInput = fopen(nameOfFile, "a+");
+
+    if (phoneBook == NULL || fileInput == NULL)
+    {
+        return false;
+    }
 
     char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
     char* name = (char*) calloc(maxSizeOfName, sizeof(char));
@@ -59,19 +65,31 @@ void setDataToPhoneBookFromFile(PhoneBook* phoneBook, char nameOfFile[])
     free(lineInFile);
     free(name);
     free(phoneNumber);
+    return true;
 }
 
 PhoneBook* initializePhoneBook(char nameOfFile[])
 {
     PhoneBook* phoneBook = createEmptyPhoneBook();
 
-    setDataToPhoneBookFromFile(phoneBook, nameOfFile);
+    bool isCorrectInitialization = setDataToPhoneBookFromFile(phoneBook, nameOfFile);
+
+    if (!isCorrectInitialization)
+    {
+        return  NULL;
+    }
 
     return phoneBook;
 }
 
-void setDataToPhoneUser(PhoneBook* phoneBook, char name[], char phoneNumber[], int currentNumberOfUsers)
+//If (PhoneBook == NULL), the function will return false
+bool setDataToPhoneUser(PhoneBook* phoneBook, char name[], char phoneNumber[], int currentNumberOfUsers)
 {
+    if (phoneBook == NULL)
+    {
+        return false;
+    }
+
     char* newPhoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
     char* newName = (char*) calloc(maxSizeOfName, sizeof(char));
     strcpy(newName, name);
@@ -79,10 +97,16 @@ void setDataToPhoneUser(PhoneBook* phoneBook, char name[], char phoneNumber[], i
 
     phoneBook->array[currentNumberOfUsers].name = newName;
     phoneBook->array[currentNumberOfUsers].phoneNumber = newPhoneNumber;
+    return true;
 }
 
-void addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[])
+bool addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[])
 {
+    if (phoneBook == NULL)
+    {
+        return false;
+    }
+
     if (phoneBook->numberOfUsers == phoneBook->arrayCapacity)
     {
         phoneBook->arrayCapacity *= 2;
@@ -93,10 +117,16 @@ void addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[])
     setDataToPhoneUser(phoneBook, name, phoneNumber, currentNumberOfUsers);
 
     phoneBook->numberOfUsers++;
+    return true;
 }
 
 bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[])
 {
+    if (phoneBook == NULL)
+    {
+        return false;
+    }
+
     bool isStringsEqual = false;
     int strcmpReturn = 0;
     for (int i = 0; i < phoneBook->numberOfUsers; i++)
@@ -115,6 +145,10 @@ bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[]
 
 bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[])
 {
+    if (phoneBook == NULL)
+    {
+        return false;
+    }
     bool isStringsEqual = false;
     int strcmpReturn = 0;
     for (int i = 0; i < phoneBook->numberOfUsers; i++)
@@ -131,22 +165,34 @@ bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[]
     return false;
 }
 
-void writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput)
+bool writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput)
 {
+    if (phoneBook == NULL || fileOutput == NULL)
+    {
+        return false;
+    }
+
     for (int i = phoneBook->numberOfUsersInFile; i < phoneBook->numberOfUsers; i++)
     {
         fprintf(fileOutput, "%s %s\n", phoneBook->array[i].phoneNumber, phoneBook->array[i].name);
     }
 
     phoneBook->numberOfUsersInFile = phoneBook->numberOfUsers;
+    return true;
 }
 
-void deletePhoneBook(PhoneBook* phoneBook)
+bool deletePhoneBook(PhoneBook* phoneBook)
 {
+    if (phoneBook == NULL)
+    {
+        return false;
+    }
+
     for (int i = 0; i < phoneBook->numberOfUsers; i++)
     {
         free(phoneBook->array[i].name);
         free(phoneBook->array[i].phoneNumber);
     }
     free(phoneBook);
+    return true;
 }

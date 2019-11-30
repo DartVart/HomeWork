@@ -14,18 +14,24 @@ typedef struct PhoneBook PhoneBook;
 struct PhoneBook;
 
 /* nameOfFile contains the name of file with data about users.
- * If the file is missing, then it's created. */
+ * If the file is missing, then it's created.
+ * In case of an initialization error, the function will return NULL. */
 PhoneBook* initializePhoneBook(char nameOfFile[]);
 
-void addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[]);
+/* If (PhoneBook == NULL), the function will return false. */
+bool addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[]);
 
-/* The phone number will be placed in the desiredPhoneNumber. */
+/* The phone number will be placed in the desiredPhoneNumber.
+ * If (PhoneBook == NULL) or name was not found, the function will return false. */
 bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[]);
 
-/* The name will be placed in the desiredName. */
+/* The name will be placed in the desiredName.
+ * If (PhoneBook == NULL) or phone number was not found, the function will return false. */
 bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[]);
 
-/* The file should be opened with the following access mode flags: "a", "a+". */
-void writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput);
+/* The file should be opened with the following access mode flags: "a", "a+".
+ * If (PhoneBook == NULL) or there was an error reading the file, the function will return false. */
+bool writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput);
 
-void deletePhoneBook(PhoneBook* phoneBook);
+/* If (PhoneBook == NULL), the function will return false. */
+bool deletePhoneBook(PhoneBook* phoneBook);
