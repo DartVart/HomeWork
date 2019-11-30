@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include "phoneBook.h"
-
-void scanStringWithSpaces(FILE* inputStream, char* stringBuffer)
-{
-    fflush(inputStream);
-    scanf("%[^\n]", stringBuffer);
-}
+#include "stringReading.h"
 
 enum Action
 {
@@ -40,9 +36,8 @@ int main()
     FILE* fileOutput = fopen(nameOfFile, "a+");
 
     // maxSizeOfPhoneNumber and maxSizeOfName declared in "phoneBook.h"
-    char phoneNumber[maxSizeOfPhoneNumber] = "";
-    char name[maxSizeOfName] = "";
-
+    char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
+    char* name = (char*) calloc(maxSizeOfName, sizeof(char));
     bool isFindObject = false;
     enum Action action = 0;
     getAction(&action, nameOfFile);
@@ -53,10 +48,10 @@ int main()
             case ADD_USER:
             {
                 printf("Enter user name: ");
-                scanStringWithSpaces(stdin, name);
+                scanStringWithSpaces(stdin, name, maxSizeOfName);
 
-                printf("Enter user phone number: ");
-                scanf("%s", phoneNumber);
+                printf("Enter user phone number (without spaces): ");
+                scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
 
                 addUserToPhoneBook(phoneBook, name, phoneNumber);
 
@@ -66,7 +61,7 @@ int main()
             case FIND_PHONE_NUMBER:
             {
                 printf("Enter user name: ");
-                scanStringWithSpaces(stdin, name);
+                scanStringWithSpaces(stdin, name, maxSizeOfName);
 
                 isFindObject = getPhoneByName(phoneBook, name, phoneNumber);
 
@@ -84,8 +79,8 @@ int main()
 
             case FIND_NAME:
             {
-                printf("Enter user phone number: ");
-                scanf("%s", phoneNumber);
+                printf("Enter user phone number (without spaces): ");
+                scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
 
                 isFindObject = getNameByPhone(phoneBook, name, phoneNumber);
 
@@ -116,6 +111,8 @@ int main()
         getAction(&action, nameOfFile);
     }
 
+    free(name);
+    free(phoneNumber);
     fclose(fileOutput);
     deletePhoneBook(phoneBook);
     return 0;
