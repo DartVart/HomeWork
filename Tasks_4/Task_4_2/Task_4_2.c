@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include "phoneBook.h"
 #include "stringReading.h"
+
+const int maxSizeOfString = 5;
 
 enum Action
 {
@@ -13,7 +16,7 @@ enum Action
     WRITE_TO_FILE
 };
 
-void getAction(enum Action* action, char* nameOfFile)
+void displayInvitationToEnterAction(char* nameOfFile)
 {
     printf("------------------NEW ACTION------------------\n"
            "Enter some of the following integers: \n"
@@ -22,8 +25,35 @@ void getAction(enum Action* action, char* nameOfFile)
            "\'2\' to find phone by name;\n"
            "\'3\' to find name by phone;\n"
            "\'4\' to write data to \"%s\": \n", nameOfFile);
-    scanf("%d", action);
 }
+
+int convertCharToDigit(char symbol)
+{
+    return symbol - '0';
+}
+
+void getAction(enum Action* action, char* nameOfFile)
+{
+    displayInvitationToEnterAction(nameOfFile);
+    // validation of input
+    char* inputString = (char*) calloc(maxSizeOfString, sizeof(char));
+    bool isCorrectInput = false;
+    while (!isCorrectInput)
+    {
+        fflush(stdin);
+        scanf("%2s", inputString);
+
+        isCorrectInput = strlen(inputString) == 1 && inputString[0] >= '0' && inputString[0] <= '4';
+        if (!isCorrectInput)
+        {
+            printf("Please enter a valid value.\n");
+        }
+    }
+
+    *action = convertCharToDigit(inputString[0]);
+    free(inputString);
+}
+
 
 int main()
 {
