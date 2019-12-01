@@ -1,9 +1,7 @@
 /**
  * This is beta of a module that implements the set. Debugging may be required (as of November 17, 2019)
  **/
-
-#ifndef SET_H
-#define SET_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -32,5 +30,3 @@ void printSet(Set* set);
 int getSizeOfSet(Set* set);
 
 void deleteSet(Set* set);
-
-#endif //SET_H

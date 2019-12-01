@@ -1,9 +1,7 @@
 /**
  * This module implements an unbalanced binary search tree.
  */
-
-#ifndef BINARYSEARCHTREE_H
-#define BINARYSEARCHTREE_H
+#pragma once
 
 #include <stdbool.h>
 
@@ -43,5 +41,3 @@ int getSizeOfBinaryTree(BinarySearchTree* tree);
 void printBinarySearchTree(BinarySearchTree* tree);
 
 void deleteBinarySearchTree(BinarySearchTree* tree);
-
-#endif //BINARYSEARCHTREE_H
