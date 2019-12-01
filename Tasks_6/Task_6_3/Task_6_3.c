@@ -73,14 +73,84 @@ void getAction(enum Action* action)
     free(inputString);
 }
 
-int main()
+void addElement(Set* set)
 {
-    Set* set = createSet();
-    int* setAsArray = (int*) malloc(0);
-    int sizeOfSet = 0;
-
     int value = 0;
-    bool isValueInSet = false;
+    printf("Enter value:" );
+    scanf("%d", &value);
+    insertToSet(set, value);
+}
+
+void removeElement(Set* set)
+{
+    int value = 0;
+    printf("Enter value:" );
+    scanf("%d", &value);
+    removeFromSet(set, value);
+}
+
+void checkAffiliationOfElement(Set* set)
+{
+    int value = 0;
+    printf("Enter value:" );
+    scanf("%d", &value);
+    bool isValueInSet = isInSet(set, value);
+    if (isValueInSet)
+    {
+        printf("Number %d is in the set!\n", value);
+    }
+    else
+    {
+        printf("Number %d isn't in set!\n", value);
+    }
+}
+
+void printSetInAscendingOrder(Set* set, int* setAsArray)
+{
+    int sizeOfSet = 0;
+    if (isSetEmpty(set))
+    {
+        printf("The set is empty!\n");
+    }
+    else
+    {
+        sizeOfSet = getSizeOfSet(set);
+        free(setAsArray);
+        setAsArray = getSetInAscendingOrder(set);
+        printf("The set: \n");
+        printArrayInDirectOrder(setAsArray, sizeOfSet);
+        printf("\n");
+    }
+}
+
+void printSetInDescendingOrder(Set* set, int* setAsArray)
+{
+    int sizeOfSet = 0;
+    if (isSetEmpty(set))
+    {
+        printf("The set is empty!\n");
+    }
+    else
+    {
+        sizeOfSet = getSizeOfSet(set);
+        free(setAsArray);
+        setAsArray = getSetInAscendingOrder(set);
+        printf("The set: \n");
+        printArrayInReverseOrder(setAsArray, sizeOfSet);
+        printf("\n");
+    }
+}
+
+void printSet(Set* set)
+{
+    printf("The set: \n");
+    printSetAsTree(set);
+    printf("\n");
+}
+
+void processUserActions(Set* set)
+{
+    int* setAsArray = (int*) malloc(0);
     Action action = 0;
     getAction(&action);
     while (action != EXIT)
@@ -89,77 +159,37 @@ int main()
         {
             case ADD_ELEMENT:
             {
-                printf("Enter value:" );
-                scanf("%d", &value);
-                insertToSet(set, value);
+                addElement(set);
                 break;
             }
 
             case REMOVE_ELEMENT:
             {
-                printf("Enter value:" );
-                scanf("%d", &value);
-                removeFromSet(set, value);
+                removeElement(set);
                 break;
             }
 
             case CHECK_AFFILIATION_OF_ELEMENT:
             {
-                printf("Enter value:" );
-                scanf("%d", &value);
-                isValueInSet = isInSet(set, value);
-                if (isValueInSet)
-                {
-                    printf("Number %d is in the set!\n", value);
-                }
-                else
-                {
-                    printf("Number %d isn't in set!\n", value);
-                }
+                checkAffiliationOfElement(set);
                 break;
             }
 
             case PRINT_IN_ASCENDING_ORDER:
             {
-                if (isSetEmpty(set))
-                {
-                    printf("The set is empty!\n");
-                }
-                else
-                {
-                    sizeOfSet = getSizeOfSet(set);
-                    free(setAsArray);
-                    setAsArray = getSetInAscendingOrder(set);
-                    printf("The set: \n");
-                    printArrayInDirectOrder(setAsArray, sizeOfSet);
-                    printf("\n");
-                }
+                printSetInAscendingOrder(set, setAsArray);
                 break;
             }
 
             case PRINT_IN_DESCENDING_ORDER:
             {
-                if (isSetEmpty(set))
-                {
-                    printf("The set is empty!\n");
-                }
-                else
-                {
-                    sizeOfSet = getSizeOfSet(set);
-                    free(setAsArray);
-                    setAsArray = getSetInAscendingOrder(set);
-                    printf("The set: \n");
-                    printArrayInReverseOrder(setAsArray, sizeOfSet);
-                    printf("\n");
-                }
+                printSetInDescendingOrder(set, setAsArray);
                 break;
             }
 
             case PRINT_SET:
             {
-                printf("The set: \n");
                 printSet(set);
-                printf("\n");
                 break;
             }
 
@@ -168,9 +198,17 @@ int main()
                 break;
             }
         }
-
         getAction(&action);
     }
+
+    free(setAsArray);
+}
+
+int main()
+{
+    Set* set = createSet();
+
+    processUserActions(set);
 
     deleteSet(set);
     return 0;
