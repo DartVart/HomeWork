@@ -2,7 +2,7 @@
  * This module implements actions with various notations of mathematical expressions.
  * Expressions are represented as a char array.
  *
- * As of November 16, 2019, this module doesn't implement all actions with notations of mathematical expressions.
+ * As of December 1, 2019, this module doesn't implement all actions with notations of mathematical expressions.
  */
 #pragma once
 

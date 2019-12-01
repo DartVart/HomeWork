@@ -9,7 +9,7 @@ int main()
     char* postfixExpression = (char*) calloc(maxSizeOfExpression, sizeof(char));
 
     printf("Enter an expression in infix notation:");
-    scanStringWithSpaces(stdin, infixExpression);
+    scanStringWithSpaces(stdin, infixExpression, maxSizeOfExpression);
 
     double resultOfExpression = 0.0;
     bool isExpressionCorrect = convertInfixToPostfixNotation(infixExpression, postfixExpression);
