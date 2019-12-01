@@ -150,6 +150,12 @@ void printSet(Set* set)
 
 void processUserActions(Set* set)
 {
+    if (set == NULL)
+    {
+        printf("Set initialization error.");
+        return;
+    }
+
     int* setAsArray = (int*) malloc(0);
     Action action = 0;
     getAction(&action);
