@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "set.h"
+
+const int maxSizeOfString = 5;
 
 typedef enum Action Action;
 enum Action
@@ -30,7 +33,7 @@ void printArrayInReverseOrder(int array[], int sizeOfArray)
     }
 }
 
-void getAction(enum Action* action)
+void displayInvitationToEnterAction()
 {
     printf("------------------------------------NEW ACTION------------------------------------\n"
            "Enter some of the following integers: \n"
@@ -41,7 +44,33 @@ void getAction(enum Action* action)
            "\'4\' to print the set in ascending order; \n"
            "\'5\' to print the set in descending order; \n"
            "\'6\' to print the set (as a tree) in form: (node (left subtree) (right subtree)): \n");
-    scanf("%d", action);
+}
+
+int convertCharToDigit(char symbol)
+{
+    return symbol - '0';
+}
+
+void getAction(enum Action* action)
+{
+    displayInvitationToEnterAction();
+    // validation of input
+    char* inputString = (char*) calloc(maxSizeOfString, sizeof(char));
+    bool isCorrectInput = false;
+    while (!isCorrectInput)
+    {
+        fflush(stdin);
+        scanf("%2s", inputString);
+
+        isCorrectInput = strlen(inputString) == 1 && inputString[0] >= '0' && inputString[0] <= '6';
+        if (!isCorrectInput)
+        {
+            printf("Please enter a valid value.\n");
+        }
+    }
+
+    *action = convertCharToDigit(inputString[0]);
+    free(inputString);
 }
 
 int main()
@@ -49,7 +78,6 @@ int main()
     Set* set = createSet();
     int* setAsArray = (int*) malloc(0);
     int sizeOfSet = 0;
-
 
     int value = 0;
     bool isValueInSet = false;
