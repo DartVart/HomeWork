@@ -172,7 +172,7 @@ void scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOf
 int main()
 {
     char* postfixExpression = (char*) calloc(maxSizeOfString, sizeof(char));
-    printf("Enter an expression in postfix notation (characters '+', '-', '*', '/' are allowed):");
+    printf("Enter an expression in postfix notation (characters '+', '-', '*', '/' are allowed):\n");
     scanStringWithSpaces(stdin, postfixExpression, maxSizeOfString);
 
     double resultOfExpression = 0.0;
@@ -181,7 +181,7 @@ int main()
 
     if (isCorrectExpression)
     {
-        printf("%s = %lf", postfixExpression, resultOfExpression);
+        printf("Result of the expression: %lf", resultOfExpression);
     }
     else
     {
