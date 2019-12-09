@@ -10,7 +10,7 @@ bool isOperator(char symbol)
     return (symbol == '+' ||
             symbol == '-' ||
             symbol == '*' ||
-            symbol == '/' );
+            symbol == '/');
 }
 
 int convertCharToDigit(char symbol)
@@ -23,39 +23,45 @@ bool isDigit(char symbol)
     return '0' <= symbol && '9' >= symbol;
 }
 
-double performOperation(double firstNumber, double secondNumber, char operator)
+bool performOperation(double firstNumber, double secondNumber, double* resultOfOperation, char operator)
 {
     switch (operator)
     {
         case '+':
         {
-            return firstNumber + secondNumber;
+            *resultOfOperation = firstNumber + secondNumber;
             break;
         }
 
         case '-':
         {
-            return firstNumber - secondNumber;
+            *resultOfOperation = firstNumber - secondNumber;
             break;
         }
 
         case '*':
         {
-            return firstNumber * secondNumber;
+            *resultOfOperation = firstNumber * secondNumber;
             break;
         }
 
         case '/':
         {
-            return firstNumber / secondNumber;
+            if (secondNumber == 0.0)
+            {
+                return false;
+            }
+            *resultOfOperation = firstNumber / secondNumber;
             break;
         }
 
         default:
         {
+            return false;
             break;
         }
     }
+    return true;
 }
 
 /* recordableNumber is the part of the number that was considered before the function call;
@@ -63,9 +69,6 @@ double performOperation(double firstNumber, double secondNumber, char operator)
 bool processSymbolWhenCalculatingPostfixForm(Stack* numbersInExpression, char checkingSymbol,
                                              int* recordableNumber, bool* isScanOfNumber)
 {
-    double firstNumberInOperation = 0.0;
-    double secondNumberInOperation = 0.0;
-    double resultOfOperation = 0.0;
     int currentDigit = 0;
 
     if (isDigit(checkingSymbol))
@@ -93,9 +96,18 @@ bool processSymbolWhenCalculatingPostfixForm(Stack* numbersInExpression, char ch
             return false;
         }
 
+        double firstNumberInOperation = 0.0;
+        double secondNumberInOperation = 0.0;
+        double resultOfOperation = 0.0;
+        bool isDivisionByZero = false;
         secondNumberInOperation = popFromStack(numbersInExpression);
         firstNumberInOperation = popFromStack(numbersInExpression);
-        resultOfOperation = performOperation(firstNumberInOperation, secondNumberInOperation, checkingSymbol);
+        isDivisionByZero = !performOperation(firstNumberInOperation, secondNumberInOperation, &resultOfOperation,
+                                             checkingSymbol);
+        if (isDivisionByZero)
+        {
+            return false;
+        }
         pushToStack(numbersInExpression, resultOfOperation);
     }
     return true;
@@ -111,10 +123,10 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
         return false;
     }
 
-    Stack *numbersInExpression = createStack();
+    Stack* numbersInExpression = createStack();
     int lengthOfExpression = strlen(postfixExpression);
 
-    char currentSymbol = '\000';
+    char currentSymbol = '\0';
     int currentRecordableNumber = 0;
     bool isScanOfNumber = false;
     bool isCorrectExpression = true;
