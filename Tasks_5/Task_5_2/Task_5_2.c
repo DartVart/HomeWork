@@ -5,6 +5,14 @@
 
 const int maxSizeOfString = 1000;
 
+bool isOperator(char symbol)
+{
+    return (symbol == '+' ||
+            symbol == '-' ||
+            symbol == '*' ||
+            symbol == '/' );
+}
+
 int convertCharToDigit(char symbol)
 {
     return symbol - '0';
@@ -80,7 +88,7 @@ bool processSymbolWhenCalculatingPostfixForm(Stack* numbersInExpression, char ch
             return true;
         }
 
-        if (getStackSize(numbersInExpression) < 2)
+        if (getStackSize(numbersInExpression) < 2 || !isOperator(checkingSymbol))
         {
             return false;
         }
@@ -109,23 +117,23 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
     char currentSymbol = '\000';
     int currentRecordableNumber = 0;
     bool isScanOfNumber = false;
-    bool isBalanceOfOperatorsAndOperands = true;
+    bool isCorrectExpression = true;
 
     for (int i = 0; i < lengthOfExpression; i++)
     {
         currentSymbol = postfixExpression[i];
 
-        isBalanceOfOperatorsAndOperands = processSymbolWhenCalculatingPostfixForm(numbersInExpression, currentSymbol,
-                                                                                  &currentRecordableNumber, &isScanOfNumber);
-        if (!isBalanceOfOperatorsAndOperands)
+        isCorrectExpression = processSymbolWhenCalculatingPostfixForm(numbersInExpression, currentSymbol,
+                                                                      &currentRecordableNumber, &isScanOfNumber);
+        if (!isCorrectExpression)
         {
             return false;
         }
     }
 
-    isBalanceOfOperatorsAndOperands = getStackSize(numbersInExpression) == 1;
+    isCorrectExpression = getStackSize(numbersInExpression) == 1;
 
-    if (!isBalanceOfOperatorsAndOperands)
+    if (!isCorrectExpression)
     {
         *resultOfExpression = 0;
         return false;
