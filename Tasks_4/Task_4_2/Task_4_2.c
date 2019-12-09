@@ -11,8 +11,8 @@ typedef enum Action
 {
     EXIT = 0,
     ADD_USER = 1,
-    FIND_PHONE_NUMBER = 2,
-    FIND_NAME = 3,
+    DISPLAY_PHONE_NUMBER_BY_NAME = 2,
+    DISPLAY_NAME_BY_PHONE_NUMBER = 3,
     WRITE_TO_FILE = 4
 } Action;
 
@@ -66,8 +66,9 @@ void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
     addUserToPhoneBook(phoneBook, name, phoneNumber);
 }
 
-//'name' and 'phoneNumber' are variables for reading name and phone number data
-void findPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
+// 'name' and 'phoneNumber' are variables for reading name and phone number data
+// The function reads the name from the console
+void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     printf("Enter user name: ");
     scanStringWithSpaces(stdin, name, maxSizeOfName);
@@ -83,8 +84,9 @@ void findPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
     }
 }
 
-//'name' and 'phoneNumber' are variables for reading name and phone number data
-void findUserName(PhoneBook* phoneBook, char* name, char* phoneNumber)
+// 'name' and 'phoneNumber' are variables for reading name and phone number data
+// The function reads the phone number from the console
+void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     printf("Enter user phone number (without spaces): ");
     scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
@@ -125,15 +127,15 @@ void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile
                 break;
             }
 
-            case FIND_PHONE_NUMBER:
+            case DISPLAY_PHONE_NUMBER_BY_NAME:
             {
-                findPhoneNumber(phoneBook, name, phoneNumber);
+                displayPhoneNumberByName(phoneBook, name, phoneNumber);
                 break;
             }
 
-            case FIND_NAME:
+            case DISPLAY_NAME_BY_PHONE_NUMBER:
             {
-                findUserName(phoneBook, name, phoneNumber);
+                displayNameByPhoneNumber(phoneBook, name, phoneNumber);
                 break;
             }
 
