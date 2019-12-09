@@ -9,11 +9,11 @@ const int maxSizeOfString = 5;
 
 typedef enum Action
 {
-    EXIT,
-    ADD_USER,
-    FIND_PHONE_NUMBER,
-    FIND_NAME,
-    WRITE_TO_FILE
+    EXIT = 0,
+    ADD_USER = 1,
+    FIND_PHONE_NUMBER = 2,
+    FIND_NAME = 3,
+    WRITE_TO_FILE = 4
 } Action;
 
 void displayInvitationToEnterAction(char* nameOfFile)
