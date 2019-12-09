@@ -88,6 +88,7 @@ void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumbe
 // The function reads the phone number from the console
 void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
+
     printf("Enter user phone number (without spaces): ");
     scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
 
@@ -103,59 +104,64 @@ void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumbe
     }
 }
 
-void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile)
+bool processAction(Action action, PhoneBook* phoneBook, FILE* fileOutput)
 {
-    if (phoneBook == NULL || fileOutput == NULL)
-    {
-        printf("Phone book initialization error.");
-        return;
-    }
-
     // maxSizeOfPhoneNumber and maxSizeOfName declared in "phoneBook.h"
     char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
     char* name = (char*) calloc(maxSizeOfName, sizeof(char));
 
+    if (phoneBook == NULL || fileOutput == NULL)
+    {
+        return false;
+    }
+
+    switch (action)
+    {
+        case ADD_USER:
+        {
+            addUser(phoneBook, name, phoneNumber);
+            break;
+        }
+        case DISPLAY_PHONE_NUMBER_BY_NAME:
+        {
+            displayPhoneNumberByName(phoneBook, name, phoneNumber);
+            break;
+        }
+        case DISPLAY_NAME_BY_PHONE_NUMBER:
+        {
+            displayNameByPhoneNumber(phoneBook, name, phoneNumber);
+            break;
+        }
+        case WRITE_TO_FILE:
+        {
+            writeDataToFile(phoneBook, fileOutput);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    free(name);
+    free(phoneNumber);
+    return true;
+}
+
+void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile)
+{
+    bool isCorrectProcessing = true;
     Action action = 0;
     getAction(&action, nameOfFile);
     while (action != EXIT)
     {
-        switch (action)
+        isCorrectProcessing = processAction(action, phoneBook, fileOutput);
+        if (!isCorrectProcessing)
         {
-            case ADD_USER:
-            {
-                addUser(phoneBook, name, phoneNumber);
-                break;
-            }
-
-            case DISPLAY_PHONE_NUMBER_BY_NAME:
-            {
-                displayPhoneNumberByName(phoneBook, name, phoneNumber);
-                break;
-            }
-
-            case DISPLAY_NAME_BY_PHONE_NUMBER:
-            {
-                displayNameByPhoneNumber(phoneBook, name, phoneNumber);
-                break;
-            }
-
-            case WRITE_TO_FILE:
-            {
-                writeDataToFile(phoneBook, fileOutput);
-                break;
-            }
-
-            default:
-            {
-                break;
-            }
+            printf("Action processing error.");
+            return;
         }
-
         getAction(&action, nameOfFile);
     }
-
-    free(name);
-    free(phoneNumber);
 }
 
 int main()
@@ -164,9 +170,9 @@ int main()
 
     char nameOfFile[] = "Phone_book.txt";
 
-    PhoneBook* phoneBook = initializePhoneBook(nameOfFile);
-
     FILE* fileOutput = fopen(nameOfFile, "a+");
+
+    PhoneBook* phoneBook = initializePhoneBook(nameOfFile);
 
     processUserActions(phoneBook, fileOutput, nameOfFile);
 
