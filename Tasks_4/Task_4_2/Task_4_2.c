@@ -172,7 +172,19 @@ int main()
 
     FILE* fileOutput = fopen(nameOfFile, "a+");
 
+    if (fileOutput == NULL)
+    {
+        printf("File open error.");
+        return -1;
+    }
+
     PhoneBook* phoneBook = initializePhoneBook(nameOfFile);
+
+    if (phoneBook == NULL)
+    {
+        printf("Phone book initialization error.");
+        return -1;
+    }
 
     processUserActions(phoneBook, fileOutput, nameOfFile);
 
