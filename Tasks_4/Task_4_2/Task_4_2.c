@@ -19,12 +19,12 @@ typedef enum Action
 void displayInvitationToEnterAction(char* nameOfFile)
 {
     printf("------------------NEW ACTION------------------\n"
-           "Enter some of the following integers: \n"
+           "Enter some of the following integers:\n"
            "\'0\' to exit;\n"
            "\'1\' to add user;\n"
            "\'2\' to find phone by name;\n"
            "\'3\' to find name by phone;\n"
-           "\'4\' to write data to \"%s\": \n", nameOfFile);
+           "\'4\' to write data to \"%s\":\n", nameOfFile);
 }
 
 int convertCharToDigit(char symbol)
@@ -49,7 +49,7 @@ void getAction(Action* action, char* nameOfFile)
             printf("Please enter a valid value.\n");
         }
     }
-
+    fflush(stdin);
     *action = convertCharToDigit(inputString[0]);
     free(inputString);
 }
@@ -57,11 +57,11 @@ void getAction(Action* action, char* nameOfFile)
 //'name' and 'phoneNumber' are variables for reading name and phone number data
 void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
-    printf("Enter user name: ");
+    printf("Enter user name:\n");
     scanStringWithSpaces(stdin, name, maxSizeOfName);
 
-    printf("Enter user phone number (without spaces): ");
-    scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
+    printf("Enter user phone number:\n");
+    scanString(stdin, phoneNumber, maxSizeOfPhoneNumber);
 
     addUserToPhoneBook(phoneBook, name, phoneNumber);
 }
@@ -70,7 +70,7 @@ void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
 // The function reads the name from the console
 void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
-    printf("Enter user name: ");
+    printf("Enter user name:\n");
     scanStringWithSpaces(stdin, name, maxSizeOfName);
     bool isFindPhone = getPhoneByName(phoneBook, name, phoneNumber);
 
@@ -88,9 +88,8 @@ void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumbe
 // The function reads the phone number from the console
 void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
-
-    printf("Enter user phone number (without spaces): ");
-    scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
+    printf("Enter user phone number:\n");
+    scanString(stdin, phoneNumber, maxSizeOfPhoneNumber);
 
     bool isFindName = getNameByPhone(phoneBook, name, phoneNumber);
 
