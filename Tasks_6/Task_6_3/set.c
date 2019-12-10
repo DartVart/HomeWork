@@ -16,40 +16,52 @@ Set* createSet()
 
 bool isSetEmpty(Set* set)
 {
-    return isBinarySearchTreeEmpty(set->tree);
+    return set == NULL || isBinarySearchTreeEmpty(set->tree);
 }
 
-void insertToSet(Set* set, int value)
+bool insertToSet(Set* set, int value)
 {
-    insertToBinarySearchTree(set->tree, value);
+    return set != NULL && insertToBinarySearchTree(set->tree, value);
 }
 
 bool removeFromSet(Set* set, int value)
 {
-    return removeFromBinarySearchTree(set->tree, value);
+    return set != NULL && removeFromBinarySearchTree(set->tree, value);
 }
 
 bool isInSet(Set* set, int value)
 {
-    return isInBinarySearchTree(set->tree, value);
+    return set != NULL && isInBinarySearchTree(set->tree, value);
 }
 
 int* getSetInAscendingOrder(Set* set)
 {
-   return traverseBinarySearchTree(set->tree, INFIX_TRAVERSE);
+    if (set == NULL)
+    {
+        return NULL;
+    }
+    return traverseBinarySearchTree(set->tree, INFIX_TRAVERSE);
 }
 
-void printSet(Set* set)
+bool printSetAsTree(Set* set)
 {
-    printBinarySearchTree(set->tree);
+    return set != NULL && printBinarySearchTree(set->tree);
 }
 
 int getSizeOfSet(Set* set)
 {
+    if (set == NULL)
+    {
+        return -1;
+    }
     return getSizeOfBinaryTree(set->tree);
 }
 
 void deleteSet(Set* set)
 {
+    if (set == NULL)
+    {
+        return;
+    }
     deleteBinarySearchTree(set->tree);
 }

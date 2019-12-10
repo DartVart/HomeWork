@@ -27,11 +27,15 @@ TreeElement* createTreeElement(int value)
 
 bool isBinarySearchTreeEmpty(BinarySearchTree* tree)
 {
-    return tree->root == NULL;
+    return tree == NULL || tree->root == NULL;
 }
 
 int getSizeOfBinaryTree(BinarySearchTree* tree)
 {
+    if (tree == NULL)
+    {
+        return -1;
+    }
     return tree->size;
 }
 
@@ -43,171 +47,143 @@ BinarySearchTree* createBinarySearchTree()
     return newTree;
 }
 
-void insertToBinarySearchTree(BinarySearchTree* tree, int value)
+
+TreeElement* getSubtreeWithInsertedElement(BinarySearchTree* tree, TreeElement* treeElement, int value)
 {
-    TreeElement* newTreeElement = createTreeElement(value);
-
-    if (isBinarySearchTreeEmpty(tree))
+    if (tree == NULL)
     {
-        tree->root = newTreeElement;
-    }
-    else
-    {
-        TreeElement* currentElement = tree->root;
-
-        while (true)
-        {
-            if (newTreeElement->value < currentElement->value)
-            {
-                if (currentElement->leftChild == NULL)
-                {
-                    currentElement->leftChild = newTreeElement;
-                    break;
-                }
-                else
-                {
-                    currentElement = currentElement->leftChild;
-                }
-            }
-            else if (newTreeElement->value > currentElement->value)
-            {
-                if (currentElement->rightChild == NULL)
-                {
-                    currentElement->rightChild = newTreeElement;
-                    break;
-                }
-                else
-                {
-                    currentElement = currentElement->rightChild;
-                }
-            }
-            else
-            {
-                return;
-            }
-        }
+        return NULL;
     }
 
-    tree->size++;
+    if (treeElement == NULL)
+    {
+        TreeElement* newTreeElement = createTreeElement(value);
+        tree->size++;
+        return newTreeElement;
+    }
+
+    if (treeElement->value < value)
+    {
+        treeElement->rightChild = getSubtreeWithInsertedElement(tree, treeElement->rightChild, value);
+    }
+    else if (treeElement->value > value)
+    {
+        treeElement->leftChild = getSubtreeWithInsertedElement(tree, treeElement->leftChild, value);
+    }
+    return treeElement;
+}
+
+bool insertToBinarySearchTree(BinarySearchTree* tree, int value)
+{
+    if (tree == NULL)
+    {
+        return false;
+    }
+    tree->root = getSubtreeWithInsertedElement(tree, tree->root, value);
+    return true;
+}
+
+
+bool isInSubtree(TreeElement* treeElement, int value)
+{
+    if (treeElement == NULL)
+    {
+        return false;
+    }
+    else if (treeElement->value < value)
+    {
+        return isInSubtree(treeElement->rightChild, value);
+    }
+    else if (treeElement->value > value)
+    {
+        return isInSubtree(treeElement->leftChild, value);
+    }
+    return true;
 }
 
 bool isInBinarySearchTree(BinarySearchTree* tree, int value)
 {
-    TreeElement* current = tree->root;
-
-    while (true)
+    if (tree == NULL)
     {
-        if (current == NULL)
-        {
-            return false;
-        }
-        else if (current->value < value)
-        {
-            current = current->rightChild;
-        }
-        else if (current->value > value)
-        {
-            current = current->leftChild;
-        }
-        else
-        {
-            return true;
-        }
+        return false;
     }
+    return isInSubtree(tree->root, value);
 }
 
-/* If you need to remove the root, then it's necessary that
- * parentOfRemovedElement must have value NULL and newChild must point to root. */
-void linkElementsAfterRemove(BinarySearchTree* tree, TreeElement* parentOfRemovedElement,
-                             TreeElement* newChild, bool isLeftChild)
+
+TreeElement* getMinimumInSubtree(TreeElement* treeElement)
 {
-    if (parentOfRemovedElement == NULL)
+    if (treeElement->leftChild != NULL)
     {
-        tree->root = newChild;
+        return getMinimumInSubtree(treeElement->leftChild);
+    }
+    return treeElement;
+}
+
+// This function will directly remove the element to be deleted.
+TreeElement* getElementReplacingDeletedOne(BinarySearchTree* tree, TreeElement* removableElement)
+{
+    if (tree == NULL)
+    {
+        return NULL;
+    }
+    if (removableElement->rightChild != NULL)
+    {
+        TreeElement* minInRightSubtree = getMinimumInSubtree(removableElement->rightChild);
+        int value = minInRightSubtree->value;
+        removeFromBinarySearchTree(tree, value);
+        removableElement->value = value;
+        return removableElement;
     }
     else
     {
-        if (isLeftChild)
+        TreeElement* returnedElement = NULL;
+        if (removableElement->leftChild != NULL)
         {
-            parentOfRemovedElement->leftChild = newChild;
+            returnedElement = removableElement->leftChild;
         }
-        else
-        {
-            parentOfRemovedElement->rightChild = newChild;
-        }
+        free(removableElement);
+        tree->size--;
+        return returnedElement;
     }
+}
+
+TreeElement* getSubtreeWithRemovedElement(BinarySearchTree* tree, TreeElement* treeElement, int value)
+{
+    if (tree == NULL || treeElement == NULL)
+    {
+        return NULL;
+    }
+
+    if (treeElement->value < value)
+    {
+        treeElement->rightChild = getSubtreeWithRemovedElement(tree, treeElement->rightChild, value);
+    }
+    else if (treeElement->value > value)
+    {
+        treeElement->leftChild = getSubtreeWithRemovedElement(tree, treeElement->leftChild, value);
+    }
+    else
+    {
+        return getElementReplacingDeletedOne(tree, treeElement);
+    }
+    return treeElement;
 }
 
 bool removeFromBinarySearchTree(BinarySearchTree* tree, int value)
 {
-    if (tree->root == NULL)
+    if (tree == NULL)
     {
         return false;
     }
-
-    TreeElement* parentOfRemovedElement = NULL;
-    TreeElement* removableElement = tree->root;
-    bool isLeftChild = false;
-
-    while (removableElement->value != value)
-    {
-        parentOfRemovedElement = removableElement;
-
-        if (removableElement->value > value)
-        {
-            removableElement = removableElement->leftChild;
-            isLeftChild = true;
-        }
-        else
-        {
-            removableElement = removableElement->rightChild;
-            isLeftChild = false;
-        }
-
-        if (removableElement == NULL)
-        {
-            return false;
-        }
-    }
-
-    if (removableElement->rightChild == NULL &&
-        removableElement->leftChild == NULL)
-    {
-        linkElementsAfterRemove(tree, parentOfRemovedElement, NULL, isLeftChild);
-    }
-    else if (removableElement->rightChild != NULL &&
-             removableElement->leftChild != NULL)
-    {
-        TreeElement* smallestRightChild = removableElement->rightChild;
-
-        while (smallestRightChild->leftChild != NULL)
-        {
-            smallestRightChild = smallestRightChild->leftChild;
-        }
-
-        int valueOfReplacingElement = smallestRightChild->value;
-        removeFromBinarySearchTree(tree, smallestRightChild->value);
-        removableElement->value = valueOfReplacingElement;
-        tree->size--;
-        return true;
-    }
-    else if (removableElement->leftChild != NULL)
-    {
-        linkElementsAfterRemove(tree, parentOfRemovedElement, removableElement->leftChild, isLeftChild);
-    }
-    else
-    {
-        linkElementsAfterRemove(tree, parentOfRemovedElement, removableElement->rightChild, isLeftChild);
-    }
-
-    free(removableElement);
-    tree->size--;
+    tree->root = getSubtreeWithRemovedElement(tree, tree->root, value);
     return true;
 }
 
+
 void traverseSubtreeInInfixOrder(TreeElement* treeElement, int array[], int* currentSize)
 {
-    if (treeElement == NULL)
+    if (treeElement == NULL || array == NULL)
     {
         return;
     }
@@ -220,7 +196,7 @@ void traverseSubtreeInInfixOrder(TreeElement* treeElement, int array[], int* cur
 
 void traverseSubtreeInPostfixOrder(TreeElement* treeElement, int array[], int* currentSize)
 {
-    if (treeElement == NULL)
+    if (treeElement == NULL || array == NULL)
     {
         return;
     }
@@ -233,7 +209,7 @@ void traverseSubtreeInPostfixOrder(TreeElement* treeElement, int array[], int* c
 
 void traverseSubtreeInPrefixOrder(TreeElement* treeElement, int array[], int* currentSize)
 {
-    if (treeElement == NULL)
+    if (treeElement == NULL || array == NULL)
     {
         return;
     }
@@ -246,6 +222,11 @@ void traverseSubtreeInPrefixOrder(TreeElement* treeElement, int array[], int* cu
 
 int* traverseBinarySearchTree(BinarySearchTree* tree, Traverse kindOfTraverse)
 {
+    if (tree == NULL)
+    {
+        return NULL;
+    }
+
     int* array = (int*) malloc(tree->size * sizeof(int));
     int currentSize = 0;
 
@@ -293,10 +274,12 @@ void deleteSubtree(TreeElement* treeElement)
 
 void deleteBinarySearchTree(BinarySearchTree* tree)
 {
-    deleteSubtree(tree->root);
+    if (tree != NULL)
+    {
+        deleteSubtree(tree->root);
+    }
     free(tree);
 }
-
 
 void printSubtree(TreeElement* treeElement)
 {
@@ -313,7 +296,12 @@ void printSubtree(TreeElement* treeElement)
     printf(")");
 }
 
-void printBinarySearchTree(BinarySearchTree* tree)
+bool printBinarySearchTree(BinarySearchTree* tree)
 {
+    if (tree == NULL)
+    {
+        return false;
+    }
     printSubtree(tree->root);
+    return true;
 }
