@@ -148,66 +148,72 @@ void printSet(Set* set)
     printf("\n");
 }
 
-void processUserActions(Set* set)
+/* If (set == NULL), the function will return false. */
+bool processAction(Action action, Set* set)
 {
     if (set == NULL)
     {
-        printf("Set initialization error.");
-        return;
+        return false;
     }
 
-    int* setAsArray = (int*) malloc(0);
+    int* setAsArray = NULL;
+    switch (action)
+    {
+        case ADD_ELEMENT:
+        {
+            addElement(set);
+            break;
+        }
+        case REMOVE_ELEMENT:
+        {
+            removeElement(set);
+            break;
+        }
+        case CHECK_AFFILIATION_OF_ELEMENT:
+        {
+            checkAffiliationOfElement(set);
+            break;
+        }
+        case PRINT_IN_ASCENDING_ORDER:
+        {
+            printSetInAscendingOrder(set, setAsArray);
+            break;
+        }
+        case PRINT_IN_DESCENDING_ORDER:
+        {
+            printSetInDescendingOrder(set, setAsArray);
+            break;
+        }
+        case PRINT_SET:
+        {
+            printSet(set);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    free(setAsArray);
+    return true;
+}
+
+void processUserActions(Set* set)
+{
+    bool isCorrectProcessing = false;
+
     Action action = 0;
     getAction(&action);
     while (action != EXIT)
     {
-        switch (action)
+        isCorrectProcessing = processAction(action, set);
+        if (!isCorrectProcessing)
         {
-            case ADD_ELEMENT:
-            {
-                addElement(set);
-                break;
-            }
-
-            case REMOVE_ELEMENT:
-            {
-                removeElement(set);
-                break;
-            }
-
-            case CHECK_AFFILIATION_OF_ELEMENT:
-            {
-                checkAffiliationOfElement(set);
-                break;
-            }
-
-            case PRINT_IN_ASCENDING_ORDER:
-            {
-                printSetInAscendingOrder(set, setAsArray);
-                break;
-            }
-
-            case PRINT_IN_DESCENDING_ORDER:
-            {
-                printSetInDescendingOrder(set, setAsArray);
-                break;
-            }
-
-            case PRINT_SET:
-            {
-                printSet(set);
-                break;
-            }
-
-            default:
-            {
-                break;
-            }
+            printf("Action processing error: set are not initialized.\n");
+            return;
         }
         getAction(&action);
     }
-
-    free(setAsArray);
 }
 
 int main()
