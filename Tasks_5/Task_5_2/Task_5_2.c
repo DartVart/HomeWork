@@ -58,7 +58,6 @@ bool performOperation(double firstNumber, double secondNumber, double* resultOfO
         default:
         {
             return false;
-            break;
         }
     }
     return true;
