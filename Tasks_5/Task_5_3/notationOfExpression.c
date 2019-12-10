@@ -12,14 +12,19 @@ bool isOperator(char symbol)
             symbol == '/');
 }
 
-int convertCharToDigit(char symbol)
-{
-    return symbol - '0';
-}
-
 bool isDigit(char symbol)
 {
     return '0' <= symbol && '9' >= symbol;
+}
+
+/* if the symbol isn't a digit, the function will return -1. */
+int convertCharToDigit(char symbol)
+{
+    if (isDigit(symbol))
+    {
+        return symbol - '0';
+    }
+    return -1;
 }
 
 /* If the operator is incorrect, the function will return -1. */
