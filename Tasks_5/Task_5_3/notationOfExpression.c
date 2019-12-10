@@ -31,20 +31,17 @@ int getPriority(char operator)
         case '/':
         {
             return 1;
-            break;
         }
 
         case '-':
         case '+':
         {
             return 0;
-            break;
         }
 
         default:
         {
             return -1;
-            break;
         }
     }
 }
@@ -260,7 +257,6 @@ bool performOperation(double firstNumber, double secondNumber, double* resultOfO
         default:
         {
             return false;
-            break;
         }
     }
     return true;
