@@ -8,13 +8,13 @@ const int maxSizeOfString = 5;
 typedef enum Action Action;
 enum Action
 {
-    EXIT,
-    ADD_ELEMENT,
-    REMOVE_ELEMENT,
-    CHECK_AFFILIATION_OF_ELEMENT,
-    PRINT_IN_ASCENDING_ORDER,
-    PRINT_IN_DESCENDING_ORDER,
-    PRINT_SET
+    EXIT = 0,
+    ADD_ELEMENT = 1,
+    REMOVE_ELEMENT = 2,
+    CHECK_AFFILIATION_OF_ELEMENT = 3,
+    PRINT_IN_ASCENDING_ORDER = 4,
+    PRINT_IN_DESCENDING_ORDER = 5,
+    PRINT_SET = 6
 };
 
 void printArrayInDirectOrder(int array[], int sizeOfArray)
