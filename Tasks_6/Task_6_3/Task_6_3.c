@@ -5,18 +5,6 @@
 
 const int maxSizeOfString = 5;
 
-typedef enum Action Action;
-enum Action
-{
-    EXIT = 0,
-    ADD_ELEMENT = 1,
-    REMOVE_ELEMENT = 2,
-    CHECK_AFFILIATION_OF_ELEMENT = 3,
-    PRINT_IN_ASCENDING_ORDER = 4,
-    PRINT_IN_DESCENDING_ORDER = 5,
-    PRINT_SET = 6
-};
-
 void printArrayInDirectOrder(int array[], int sizeOfArray)
 {
     for (int i = 0; i < sizeOfArray; i++)
@@ -41,9 +29,9 @@ void displayInvitationToEnterAction()
            "\'1\' to add an element to the set;\n"
            "\'2\' to remove an element from the set;\n"
            "\'3\' to check if an element belongs to the set;\n"
-           "\'4\' to print the set in ascending order; \n"
-           "\'5\' to print the set in descending order; \n"
-           "\'6\' to print the set (as a tree) in form: (node (left subtree) (right subtree)): \n");
+           "\'4\' to print the set in ascending order;\n"
+           "\'5\' to print the set in descending order;\n"
+           "\'6\' to print the set (as a tree) in form: (node (left subtree) (right subtree)):\n");
 }
 
 int convertCharToDigit(char symbol)
@@ -51,7 +39,7 @@ int convertCharToDigit(char symbol)
     return symbol - '0';
 }
 
-void getAction(enum Action* action)
+void getAction(int* action)
 {
     displayInvitationToEnterAction();
     // validation of input
@@ -149,7 +137,7 @@ void printSet(Set* set)
 }
 
 /* If (set == NULL), the function will return false. */
-bool processAction(Action action, Set* set)
+bool processAction(int action, Set* set)
 {
     if (set == NULL)
     {
@@ -159,32 +147,32 @@ bool processAction(Action action, Set* set)
     int* setAsArray = NULL;
     switch (action)
     {
-        case ADD_ELEMENT:
+        case 1:
         {
             addElement(set);
             break;
         }
-        case REMOVE_ELEMENT:
+        case 2:
         {
             removeElement(set);
             break;
         }
-        case CHECK_AFFILIATION_OF_ELEMENT:
+        case 3:
         {
             checkAffiliationOfElement(set);
             break;
         }
-        case PRINT_IN_ASCENDING_ORDER:
+        case 4:
         {
             printSetInAscendingOrder(set, setAsArray);
             break;
         }
-        case PRINT_IN_DESCENDING_ORDER:
+        case 5:
         {
             printSetInDescendingOrder(set, setAsArray);
             break;
         }
-        case PRINT_SET:
+        case 6:
         {
             printSet(set);
             break;
@@ -202,9 +190,9 @@ void processUserActions(Set* set)
 {
     bool isCorrectProcessing = false;
 
-    Action action = 0;
+    int action = 0;
     getAction(&action);
-    while (action != EXIT)
+    while (action != 0)
     {
         isCorrectProcessing = processAction(action, set);
         if (!isCorrectProcessing)

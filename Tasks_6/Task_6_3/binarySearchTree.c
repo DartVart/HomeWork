@@ -232,19 +232,19 @@ int* traverseBinarySearchTree(BinarySearchTree* tree, Traverse kindOfTraverse)
 
     switch (kindOfTraverse)
     {
-        case PREFIX_TRAVERSE:
+        case prefixTraverse:
         {
             traverseSubtreeInPrefixOrder(tree->root, array, &currentSize);
             break;
         }
 
-        case INFIX_TRAVERSE:
+        case infixTraverse:
         {
             traverseSubtreeInInfixOrder(tree->root, array, &currentSize);
             break;
         }
 
-        case POSTFIX_TRAVERSE:
+        case postfixTraverse:
         {
             traverseSubtreeInPostfixOrder(tree->root, array, &currentSize);
             break;

@@ -11,9 +11,9 @@ struct BinarySearchTree;
 typedef enum Traverse Traverse;
 enum Traverse
 {
-    PREFIX_TRAVERSE = 0,
-    INFIX_TRAVERSE = 1,
-    POSTFIX_TRAVERSE = 2
+    prefixTraverse = 0,
+    infixTraverse = 1,
+    postfixTraverse = 2
 };
 
 BinarySearchTree* createBinarySearchTree();

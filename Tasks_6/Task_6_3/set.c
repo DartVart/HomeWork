@@ -40,7 +40,7 @@ int* getSetInAscendingOrder(Set* set)
     {
         return NULL;
     }
-    return traverseBinarySearchTree(set->tree, INFIX_TRAVERSE);
+    return traverseBinarySearchTree(set->tree, infixTraverse);
 }
 
 bool printSetAsTree(Set* set)
