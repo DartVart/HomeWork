@@ -34,9 +34,19 @@ void displayInvitationToEnterAction()
            "\'6\' to print the set (as a tree) in form: (node (left subtree) (right subtree)):\n");
 }
 
+bool isDigit(char symbol)
+{
+    return symbol >= '0' && symbol <= '9';
+}
+
+/* if the symbol isn't a digit, the function will return -1. */
 int convertCharToDigit(char symbol)
 {
-    return symbol - '0';
+    if (isDigit(symbol))
+    {
+        return symbol - '0';
+    }
+    return -1;
 }
 
 void getAction(int* action)
