@@ -74,7 +74,7 @@ void getAction(int* action)
 void addElement(Set* set)
 {
     int value = 0;
-    printf("Enter value:" );
+    printf("Enter value:");
     scanf("%d", &value);
     insertToSet(set, value);
 }
@@ -82,7 +82,7 @@ void addElement(Set* set)
 void removeElement(Set* set)
 {
     int value = 0;
-    printf("Enter value:" );
+    printf("Enter value:");
     scanf("%d", &value);
     removeFromSet(set, value);
 }
@@ -90,7 +90,7 @@ void removeElement(Set* set)
 void checkAffiliationOfElement(Set* set)
 {
     int value = 0;
-    printf("Enter value:" );
+    printf("Enter value:");
     scanf("%d", &value);
     bool isValueInSet = isInSet(set, value);
     if (isValueInSet)
@@ -103,7 +103,7 @@ void checkAffiliationOfElement(Set* set)
     }
 }
 
-void printSetInAscendingOrder(Set* set, int* setAsArray)
+void printSetInAscendingOrder(Set* set)
 {
     int sizeOfSet = 0;
     if (isSetEmpty(set))
@@ -112,16 +112,18 @@ void printSetInAscendingOrder(Set* set, int* setAsArray)
     }
     else
     {
+        int* setAsArray = NULL;
         sizeOfSet = getSizeOfSet(set);
         free(setAsArray);
         setAsArray = getSetInAscendingOrder(set);
         printf("The set: \n");
         printArrayInDirectOrder(setAsArray, sizeOfSet);
         printf("\n");
+        free(setAsArray);
     }
 }
 
-void printSetInDescendingOrder(Set* set, int* setAsArray)
+void printSetInDescendingOrder(Set* set)
 {
     int sizeOfSet = 0;
     if (isSetEmpty(set))
@@ -130,12 +132,13 @@ void printSetInDescendingOrder(Set* set, int* setAsArray)
     }
     else
     {
+        int* setAsArray = NULL;
         sizeOfSet = getSizeOfSet(set);
-        free(setAsArray);
         setAsArray = getSetInAscendingOrder(set);
-        printf("The set: \n");
+        printf("The set:\n");
         printArrayInReverseOrder(setAsArray, sizeOfSet);
         printf("\n");
+        free(setAsArray);
     }
 }
 
@@ -174,12 +177,12 @@ bool processAction(int action, Set* set)
         }
         case 4:
         {
-            printSetInAscendingOrder(set, setAsArray);
+            printSetInAscendingOrder(set);
             break;
         }
         case 5:
         {
-            printSetInDescendingOrder(set, setAsArray);
+            printSetInDescendingOrder(set);
             break;
         }
         case 6:

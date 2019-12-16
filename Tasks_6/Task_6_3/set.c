@@ -64,4 +64,5 @@ void deleteSet(Set* set)
         return;
     }
     deleteBinarySearchTree(set->tree);
+    free(set);
 }
