@@ -11,6 +11,16 @@ typedef enum Errors
     loopingProgram = -4,
 } Errors;
 
+Errors scanNumber(int* number)
+{
+    bool isCorrectScanning = scanf("%d", number) == 1;
+    if (!isCorrectScanning)
+    {
+        return incorrectReading;
+    }
+    return normalCompletion;
+}
+
 bool isComplianceWithCondition(int numberOfStudent, int numberOfHelper)
 {
     return !((numberOfStudent == 1 && numberOfHelper != 1) ||
@@ -20,44 +30,34 @@ bool isComplianceWithCondition(int numberOfStudent, int numberOfHelper)
 
 Errors scanNumberOfStudents(int* numberOfStudents)
 {
-    bool isCorrectInput = scanf("%d", numberOfStudents) == 1;
-    if (!isCorrectInput)
+    Errors error = scanNumber(numberOfStudents);
+    if (error == normalCompletion && *numberOfStudents < 3)
     {
-        return incorrectReading;
+        error = mismatchWithCondition;
     }
-    if (*numberOfStudents < 3)
-    {
-        return mismatchWithCondition;
-    }
-    return normalCompletion;
+    return error;
 }
 
 Errors scanNumberOfStudent(int* numberOfStudent, const int* studentsWhoHelpCheat, int numberOfStudents)
 {
-    bool isCorrectReading = scanf("%d", numberOfStudent) == 1;
-    if (!isCorrectReading)
+    Errors error = scanNumber(numberOfStudent);
+    if (error == normalCompletion &&
+        (*numberOfStudent > numberOfStudents || *numberOfStudent <= 0 || studentsWhoHelpCheat[*numberOfStudent] != 0))
     {
-        return incorrectReading;
+        error = mismatchWithCondition;
     }
-    if (*numberOfStudent > numberOfStudents || *numberOfStudent <= 0 || studentsWhoHelpCheat[*numberOfStudent] != 0)
-    {
-        return mismatchWithCondition;
-    }
-    return normalCompletion;
+    return error;
 }
 
 Errors scanNumberOfHelper(int* numberOfHelper, int numberOfStudents)
 {
-    bool isCorrectReading = scanf("%d", numberOfHelper) == 1;
-    if (!isCorrectReading)
+    Errors error = scanNumber(numberOfHelper);
+    if (error == normalCompletion &&
+        (*numberOfHelper > numberOfStudents || (*numberOfHelper <= 0 && *numberOfHelper != -1)))
     {
-        return incorrectReading;
+        error = mismatchWithCondition;
     }
-    if (*numberOfHelper > numberOfStudents || (*numberOfHelper <= 0 && *numberOfHelper != -1))
-    {
-        return mismatchWithCondition;
-    }
-    return normalCompletion;
+    return error;
 }
 
 /* studentsWhoHelpCheat[k] contains number of the student who helped the student #k cheat. */
