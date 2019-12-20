@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include "stringReading.h"
 
-const int maxSizeOfString = 1000;
-
 typedef enum State
 {
     start = 0,
@@ -222,9 +220,10 @@ bool isRealNumber(const char* checkingString)
 
 int main()
 {
-    char* inputString = (char*) malloc(maxSizeOfString * sizeof(char));
+    int lengthOfString = 0;
     printf("Enter the string:\n");
-    scanString(stdin, inputString, maxSizeOfString);
+    char* inputString = getStringFromStream(stdin, &lengthOfString, readingWithSpaces);
+
     if (isRealNumber(inputString))
     {
         printf("You entered a real number!");

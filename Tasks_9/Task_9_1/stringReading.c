@@ -1,5 +1,8 @@
 #include <string.h>
+#include <stdlib.h>
 #include "stringReading.h"
+
+const int initialCapacity = 10;
 
 /* The function moves the stream position indicator to the first character
  * that is not equal to the character recorded in the 'symbol'.
@@ -25,43 +28,53 @@ bool ignoreSymbolsInInputStream(char* symbols, FILE* inputStream)
     return true;
 }
 
-bool scanDelimitedString(char* delimiters, FILE* inputStream, char* stringBuffer,
-                                     int maxLengthOfString)
+char* getDelimitedStringFromStream(char* delimiters, FILE* inputStream, int* lengthOfString)
 {
     bool isReadingCorrect = ignoreSymbolsInInputStream(delimiters, inputStream);
     if (!isReadingCorrect)
     {
-        return false;
+        return NULL;
     }
 
+    char* stringBuffer = (char*) malloc(initialCapacity * sizeof(char));
     int readingSymbolKey = 0;
-    int currentLength = 0;
+    *lengthOfString = 0;
+    int currentCapacity = initialCapacity;
     readingSymbolKey = fgetc(inputStream);
 
     do
     {
-        stringBuffer[currentLength] = (char)readingSymbolKey;
-        currentLength++;
+        stringBuffer[*lengthOfString] = (char) readingSymbolKey;
+        (*lengthOfString)++;
         readingSymbolKey = fgetc(inputStream);
 
-    } while (readingSymbolKey != EOF &&
-             strchr(delimiters, readingSymbolKey) == NULL &&
-             currentLength < maxLengthOfString - 1);
+        if (*lengthOfString == currentCapacity)
+        {
+            currentCapacity *= 2;
+            stringBuffer = (char*) realloc(stringBuffer, currentCapacity * sizeof(char));
+        }
 
-    stringBuffer[currentLength] = '\0';
-    return true;
+    } while (readingSymbolKey != EOF && strchr(delimiters, readingSymbolKey) == NULL);
+
+    stringBuffer[*lengthOfString] = '\0';
+    return stringBuffer;
 }
 
-bool scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
+char* getStringFromStream(FILE* inputStream, int* lengthOfString, ReadingType readingType)
 {
-    bool isCorrectScanning = scanDelimitedString("\n\t", inputStream,
-                                                 stringBuffer, maxLengthOfString);
-    return isCorrectScanning;
-}
-
-bool scanString(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
-{
-    bool isCorrectScanning = scanDelimitedString("\n\t ", inputStream,
-                                                 stringBuffer, maxLengthOfString);
-    return isCorrectScanning;
+    switch (readingType)
+    {
+        case readingWithoutSpaces:
+        {
+            return getDelimitedStringFromStream("\n\r\t ", inputStream, lengthOfString);
+        }
+        case readingWithSpaces:
+        {
+            return getDelimitedStringFromStream("\n\r\t", inputStream, lengthOfString);
+        }
+        default:
+        {
+            return NULL;
+        }
+    }
 }

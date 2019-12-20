@@ -1,5 +1,5 @@
 /**
- * This module implements safe reading a string (char array) with spaces
+ * This module implements reading a string (char array)
  * */
 
 #pragma once
@@ -7,10 +7,15 @@
 #include <stdbool.h>
 #include <stdio.h>
 
- /* The function reads a non-empty string until a '\n' or is found, not including it.
-  * The function will return 'false' if the file ended before reading a string or (inputStream == NULL). */
-bool scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOfString);
+typedef enum ReadingType
+{
+    readingWithSpaces = 0,
+    readingWithoutSpaces = 1
+} ReadingType;
 
-/* The function reads a non-empty string until a '\n' or '\t' or ' ' is found, not including it.
- * The function will return 'false' if the file ended before reading a string or (inputStream == NULL). */
-bool scanString(FILE* inputStream, char* stringBuffer, int maxLengthOfString);
+/* If (readingType == readingWithoutSpaces), the function reads a non-empty string
+ * until a '\n' or '\t' or '\r' is found, not including it.
+ * If (readingType == readingWithoutSpaces), then the character ' ' is added to the delimiter characters.
+ * 'lengthOfString' will contain the length of the string.
+ * The function will return NULL if the file ended before reading a string or (inputStream == NULL). */
+char* getStringFromStream(FILE* inputStream, int* lengthOfString, ReadingType readingType);
