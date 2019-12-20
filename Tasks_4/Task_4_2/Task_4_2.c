@@ -5,6 +5,16 @@
 #include "phoneBook.h"
 #include "stringReading.h"
 
+void cleanStdin()
+{
+    int character;
+    do
+    {
+        character = getchar();
+    }
+    while (character != EOF && character != '\n');
+}
+
 void displayInvitationToEnterAction(char* nameOfFile)
 {
     printf("------------------NEW ACTION------------------\n"
@@ -34,7 +44,7 @@ int getAction(char* nameOfFile)
         {
             printf("Please enter a valid value.\n");
         }
-        fflush(stdin);
+        cleanStdin();
     } while (!isCorrectInput);
     return action;
 }
