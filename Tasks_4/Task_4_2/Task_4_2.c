@@ -21,20 +21,22 @@ bool scanNumber(int* number)
     return scanf("%d", number) == 1;
 }
 
-void getAction(int* action, char* nameOfFile)
+int getAction(char* nameOfFile)
 {
+    int action = 0;
     displayInvitationToEnterAction(nameOfFile);
     // validation of input
     bool isCorrectInput = false;
     do
     {
-        isCorrectInput = scanNumber(action) && *action >= 0 && *action <= 4;
+        isCorrectInput = scanNumber(&action) && action >= 0 && action <= 4;
         if (!isCorrectInput)
         {
             printf("Please enter a valid value.\n");
         }
         fflush(stdin);
     } while (!isCorrectInput);
+    return action;
 }
 
 bool haveSpaces(char* string)
@@ -155,8 +157,7 @@ bool processAction(int action, PhoneBook* phoneBook, FILE* fileOutput)
 void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile)
 {
     bool isCorrectProcessing = true;
-    int action = 0;
-    getAction(&action, nameOfFile);
+    int action = getAction(nameOfFile);
     while (action != 0)
     {
         isCorrectProcessing = processAction(action, phoneBook, fileOutput);
@@ -165,7 +166,7 @@ void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile
             printf("Action processing error.");
             return;
         }
-        getAction(&action, nameOfFile);
+        action = getAction(nameOfFile);
     }
 }
 
