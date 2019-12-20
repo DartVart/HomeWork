@@ -191,6 +191,7 @@ bool deletePhoneBook(PhoneBook* phoneBook)
         free(phoneBook->array[i].name);
         free(phoneBook->array[i].phoneNumber);
     }
+    free(phoneBook->array);
     free(phoneBook);
     return true;
 }

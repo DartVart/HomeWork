@@ -5,17 +5,6 @@
 #include "phoneBook.h"
 #include "stringReading.h"
 
-const int maxSizeOfString = 5;
-
-typedef enum Action
-{
-    EXIT = 0,
-    ADD_USER = 1,
-    DISPLAY_PHONE_NUMBER_BY_NAME = 2,
-    DISPLAY_NAME_BY_PHONE_NUMBER = 3,
-    WRITE_TO_FILE = 4
-} Action;
-
 void displayInvitationToEnterAction(char* nameOfFile)
 {
     printf("------------------NEW ACTION------------------\n"
@@ -27,31 +16,48 @@ void displayInvitationToEnterAction(char* nameOfFile)
            "\'4\' to write data to \"%s\":\n", nameOfFile);
 }
 
-int convertCharToDigit(char symbol)
+bool scanNumber(int* number)
 {
-    return symbol - '0';
+    return scanf("%d", number) == 1;
 }
 
-void getAction(Action* action, char* nameOfFile)
+void getAction(int* action, char* nameOfFile)
 {
     displayInvitationToEnterAction(nameOfFile);
     // validation of input
-    char* inputString = (char*) calloc(maxSizeOfString, sizeof(char));
     bool isCorrectInput = false;
-    while (!isCorrectInput)
+    do
     {
-        fflush(stdin);
-        scanf("%2s", inputString);
-
-        isCorrectInput = strlen(inputString) == 1 && inputString[0] >= '0' && inputString[0] <= '4';
+        isCorrectInput = scanNumber(action) && *action >= 0 && *action <= 4;
         if (!isCorrectInput)
         {
             printf("Please enter a valid value.\n");
         }
+        fflush(stdin);
+    } while (!isCorrectInput);
+}
+
+bool haveSpaces(char* string)
+{
+    int length = strlen(string);
+    for (int i = 0; i < length; i++)
+    {
+        if (string[i] == ' ')
+        {
+            return true;
+        }
     }
-    fflush(stdin);
-    *action = convertCharToDigit(inputString[0]);
-    free(inputString);
+    return false;
+}
+
+void scanPhoneNumber(char* phoneNumber)
+{
+    scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
+    while (haveSpaces(phoneNumber))
+    {
+        printf("Please enter the phone number without spaces:\n");
+        scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
+    }
 }
 
 //'name' and 'phoneNumber' are variables for reading name and phone number data
@@ -60,8 +66,8 @@ void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
     printf("Enter user name:\n");
     scanStringWithSpaces(stdin, name, maxSizeOfName);
 
-    printf("Enter user phone number:\n");
-    scanString(stdin, phoneNumber, maxSizeOfPhoneNumber);
+    printf("Enter user phone number (without spaces):\n");
+    scanPhoneNumber(phoneNumber);
 
     addUserToPhoneBook(phoneBook, name, phoneNumber);
 }
@@ -72,9 +78,9 @@ void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumbe
 {
     printf("Enter user name:\n");
     scanStringWithSpaces(stdin, name, maxSizeOfName);
-    bool isFindPhone = getPhoneByName(phoneBook, name, phoneNumber);
+    bool isFoundPhone = getPhoneByName(phoneBook, name, phoneNumber);
 
-    if (isFindPhone)
+    if (isFoundPhone)
     {
         printf("%s uses phone number %s.\n", name, phoneNumber);
     }
@@ -89,11 +95,11 @@ void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumbe
 void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     printf("Enter user phone number:\n");
-    scanString(stdin, phoneNumber, maxSizeOfPhoneNumber);
+    scanPhoneNumber(phoneNumber);
 
-    bool isFindName = getNameByPhone(phoneBook, name, phoneNumber);
+    bool isFoundName = getNameByPhone(phoneBook, name, phoneNumber);
 
-    if (isFindName)
+    if (isFoundName)
     {
         printf("Phone number %s is used by %s.\n", phoneNumber, name);
     }
@@ -103,7 +109,7 @@ void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumbe
     }
 }
 
-bool processAction(Action action, PhoneBook* phoneBook, FILE* fileOutput)
+bool processAction(int action, PhoneBook* phoneBook, FILE* fileOutput)
 {
     // maxSizeOfPhoneNumber and maxSizeOfName declared in "phoneBook.h"
     char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
@@ -116,22 +122,22 @@ bool processAction(Action action, PhoneBook* phoneBook, FILE* fileOutput)
 
     switch (action)
     {
-        case ADD_USER:
+        case 1:
         {
             addUser(phoneBook, name, phoneNumber);
             break;
         }
-        case DISPLAY_PHONE_NUMBER_BY_NAME:
+        case 2:
         {
             displayPhoneNumberByName(phoneBook, name, phoneNumber);
             break;
         }
-        case DISPLAY_NAME_BY_PHONE_NUMBER:
+        case 3:
         {
             displayNameByPhoneNumber(phoneBook, name, phoneNumber);
             break;
         }
-        case WRITE_TO_FILE:
+        case 4:
         {
             writeDataToFile(phoneBook, fileOutput);
             break;
@@ -149,9 +155,9 @@ bool processAction(Action action, PhoneBook* phoneBook, FILE* fileOutput)
 void processUserActions(PhoneBook* phoneBook, FILE* fileOutput, char* nameOfFile)
 {
     bool isCorrectProcessing = true;
-    Action action = 0;
+    int action = 0;
     getAction(&action, nameOfFile);
-    while (action != EXIT)
+    while (action != 0)
     {
         isCorrectProcessing = processAction(action, phoneBook, fileOutput);
         if (!isCorrectProcessing)

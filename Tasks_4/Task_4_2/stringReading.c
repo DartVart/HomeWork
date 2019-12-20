@@ -25,8 +25,7 @@ bool ignoreSymbolsInInputStream(char* symbols, FILE* inputStream)
     return true;
 }
 
-bool scanDelimitedString(char* delimiters, FILE* inputStream, char* stringBuffer,
-                         int maxLengthOfString)
+bool scanDelimitedString(char* delimiters, FILE* inputStream, char* stringBuffer, int maxLengthOfString)
 {
     bool isReadingCorrect = ignoreSymbolsInInputStream(delimiters, inputStream);
     if (!isReadingCorrect)
@@ -40,7 +39,7 @@ bool scanDelimitedString(char* delimiters, FILE* inputStream, char* stringBuffer
 
     do
     {
-        stringBuffer[currentLength] = (char)readingSymbolKey;
+        stringBuffer[currentLength] = (char) readingSymbolKey;
         currentLength++;
         readingSymbolKey = fgetc(inputStream);
 
@@ -54,14 +53,14 @@ bool scanDelimitedString(char* delimiters, FILE* inputStream, char* stringBuffer
 
 bool scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
 {
-    bool isCorrectScanning = scanDelimitedString("\n\t", inputStream,
+    bool isCorrectScanning = scanDelimitedString("\n\r\t", inputStream,
                                                  stringBuffer, maxLengthOfString);
     return isCorrectScanning;
 }
 
 bool scanString(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
 {
-    bool isCorrectScanning = scanDelimitedString("\n\t ", inputStream,
+    bool isCorrectScanning = scanDelimitedString("\n\r\t ", inputStream,
                                                  stringBuffer, maxLengthOfString);
     return isCorrectScanning;
 }
