@@ -120,6 +120,11 @@ bool addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[])
     return true;
 }
 
+bool isStringEqual(char* firstString, char* secondString)
+{
+    return strcmp(firstString, secondString) == 0;
+}
+
 bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[])
 {
     if (phoneBook == NULL)
@@ -127,13 +132,9 @@ bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[]
         return false;
     }
 
-    bool isStringsEqual = false;
-    int strcmpReturn = 0;
     for (int i = 0; i < phoneBook->numberOfUsers; i++)
     {
-        strcmpReturn = strcmp(phoneBook->array[i].name, name);
-        isStringsEqual = (strcmpReturn == 0);
-        if (isStringsEqual)
+        if (isStringEqual(phoneBook->array[i].name, name))
         {
             strcpy(desiredPhoneNumber, phoneBook->array[i].phoneNumber);
             return true;
@@ -149,13 +150,10 @@ bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[]
     {
         return false;
     }
-    bool isStringsEqual = false;
-    int strcmpReturn = 0;
+
     for (int i = 0; i < phoneBook->numberOfUsers; i++)
     {
-        strcmpReturn = strcmp(phoneBook->array[i].phoneNumber, phoneNumber);
-        isStringsEqual = (strcmpReturn == 0);
-        if (isStringsEqual)
+        if (isStringEqual(phoneBook->array[i].phoneNumber, phoneNumber))
         {
             strcpy(desiredName, phoneBook->array[i].name);
             return true;
