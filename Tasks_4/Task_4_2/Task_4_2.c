@@ -11,8 +11,7 @@ void cleanStdin()
     do
     {
         character = getchar();
-    }
-    while (character != EOF && character != '\n');
+    } while (character != EOF && character != '\n');
 }
 
 void displayInvitationToEnterAction(char* nameOfFile)

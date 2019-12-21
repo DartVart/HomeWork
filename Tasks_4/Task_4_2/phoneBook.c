@@ -32,7 +32,7 @@ PhoneBook* createEmptyPhoneBook()
 }
 
 //If (PhoneBook == NULL) or there was an error reading the file, the function will return false
-bool setDataToPhoneBookFromFile(PhoneBook* phoneBook, char nameOfFile[])
+bool setDataToPhoneBookFromFile(PhoneBook* phoneBook, char* nameOfFile)
 {
     FILE* fileInput = fopen(nameOfFile, "a+");
 
@@ -60,7 +60,7 @@ bool setDataToPhoneBookFromFile(PhoneBook* phoneBook, char nameOfFile[])
     return true;
 }
 
-PhoneBook* initializePhoneBook(char nameOfFile[])
+PhoneBook* initializePhoneBook(char* nameOfFile)
 {
     PhoneBook* phoneBook = createEmptyPhoneBook();
 
@@ -88,7 +88,7 @@ char* getClonedString(char* sourceString)
 }
 
 // If (PhoneBook == NULL), the function will return false
-bool setDataToPhoneUser(PhoneBook* phoneBook, char name[], char phoneNumber[], int currentNumberOfUsers)
+bool setDataToPhoneUser(PhoneBook* phoneBook, char* name, char* phoneNumber, int currentNumberOfUsers)
 {
     if (phoneBook == NULL || name == NULL || phoneNumber == NULL)
     {
@@ -100,7 +100,7 @@ bool setDataToPhoneUser(PhoneBook* phoneBook, char name[], char phoneNumber[], i
     return true;
 }
 
-bool addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[])
+bool addUserToPhoneBook(PhoneBook* phoneBook, char* name, char* phoneNumber)
 {
     if (phoneBook == NULL || name == NULL || phoneNumber == NULL)
     {
@@ -161,7 +161,7 @@ bool hasPhoneNumber(PhoneBook* phoneBook, char* phoneNumber)
     return false;
 }
 
-char* getPhoneByName(PhoneBook* phoneBook, char name[])
+char* getPhoneByName(PhoneBook* phoneBook, char* name)
 {
     if (phoneBook == NULL || name == NULL)
     {
@@ -180,7 +180,7 @@ char* getPhoneByName(PhoneBook* phoneBook, char name[])
     return NULL;
 }
 
-char* getNameByPhone(PhoneBook* phoneBook, char phoneNumber[])
+char* getNameByPhone(PhoneBook* phoneBook, char* phoneNumber)
 {
     if (phoneBook == NULL || phoneNumber == NULL)
     {
