@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "notationOfExpression.h"
 #include "stringReading.h"
 
 int main()
 {
-    char* infixExpression = (char*) calloc(maxSizeOfExpression, sizeof(char));
-    char* postfixExpression = (char*) calloc(maxSizeOfExpression, sizeof(char));
-
     printf("Enter an expression in infix notation:");
-    scanStringWithSpaces(stdin, infixExpression, maxSizeOfExpression);
+    char* infixExpression = getStringFromStream(stdin, readingWithSpaces);
+    int lengthOfExpression = strlen(infixExpression) * 2;
+    char* postfixExpression = (char*) calloc(lengthOfExpression, sizeof(char));
 
     double resultOfExpression = 0.0;
-    bool isExpressionCorrect = convertInfixToPostfixNotation(infixExpression, postfixExpression);
+    bool isExpressionCorrect = convertInfixToPostfixNotation(infixExpression, postfixExpression, lengthOfExpression);
     if (isExpressionCorrect)
     {
         isExpressionCorrect = calculatePostfixExpression(postfixExpression, &resultOfExpression);
