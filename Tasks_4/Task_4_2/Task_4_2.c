@@ -49,7 +49,7 @@ int getAction(char* nameOfFile)
     return action;
 }
 
-bool haveSpaces(char* string)
+bool hasSpaces(char* string)
 {
     int length = strlen(string);
     for (int i = 0; i < length; i++)
@@ -62,37 +62,51 @@ bool haveSpaces(char* string)
     return false;
 }
 
-void scanPhoneNumber(char* phoneNumber)
+char* scanPhoneNumberFromConsole()
 {
-    scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
-    while (haveSpaces(phoneNumber))
+    char* phoneNumber = getStringFromStream(stdin, readingWithSpaces);
+    while (hasSpaces(phoneNumber))
     {
         printf("Please enter the phone number without spaces:\n");
-        scanStringWithSpaces(stdin, phoneNumber, maxSizeOfPhoneNumber);
+        free(phoneNumber);
+        phoneNumber = getStringFromStream(stdin, readingWithSpaces);
     }
+    return phoneNumber;
 }
 
-//'name' and 'phoneNumber' are variables for reading name and phone number data
-void addUser(PhoneBook* phoneBook, char* name, char* phoneNumber)
+void addUser(PhoneBook* phoneBook)
 {
     printf("Enter user name:\n");
-    scanStringWithSpaces(stdin, name, maxSizeOfName);
+    char* name = getStringFromStream(stdin, readingWithSpaces);
+    while (hasName(phoneBook, name))
+    {
+        printf("Sorry, but this name already exists in the book. Try another:\n");
+        free(name);
+        name = getStringFromStream(stdin, readingWithSpaces);
+    }
 
     printf("Enter user phone number (without spaces):\n");
-    scanPhoneNumber(phoneNumber);
+    char* phoneNumber = scanPhoneNumberFromConsole();
+    while (hasPhoneNumber(phoneBook, phoneNumber))
+    {
+        printf("Sorry, but this phone number already exists in the book. Try another:\n");
+        free(phoneNumber);
+        phoneNumber = scanPhoneNumberFromConsole();
+    }
 
     addUserToPhoneBook(phoneBook, name, phoneNumber);
+    free(name);
+    free(phoneNumber);
 }
 
-// 'name' and 'phoneNumber' are variables for reading name and phone number data
 // The function reads the name from the console
-void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumber)
+void displayPhoneNumberByName(PhoneBook* phoneBook)
 {
     printf("Enter user name:\n");
-    scanStringWithSpaces(stdin, name, maxSizeOfName);
-    bool isFoundPhone = getPhoneByName(phoneBook, name, phoneNumber);
+    char* name = getStringFromStream(stdin, readingWithSpaces);
+    char* phoneNumber = getPhoneByName(phoneBook, name);
 
-    if (isFoundPhone)
+    if (phoneNumber != NULL)
     {
         printf("%s uses phone number %s.\n", name, phoneNumber);
     }
@@ -100,18 +114,19 @@ void displayPhoneNumberByName(PhoneBook* phoneBook, char* name, char* phoneNumbe
     {
         printf("%s doesn't have a phone number yet!\n", name);
     }
+
+    free(name);
+    free(phoneNumber);
 }
 
-// 'name' and 'phoneNumber' are variables for reading name and phone number data
 // The function reads the phone number from the console
-void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumber)
+void displayNameByPhoneNumber(PhoneBook* phoneBook)
 {
     printf("Enter user phone number:\n");
-    scanPhoneNumber(phoneNumber);
+    char* phoneNumber = scanPhoneNumberFromConsole();
+    char* name = getNameByPhone(phoneBook, phoneNumber);
 
-    bool isFoundName = getNameByPhone(phoneBook, name, phoneNumber);
-
-    if (isFoundName)
+    if (name != NULL)
     {
         printf("Phone number %s is used by %s.\n", phoneNumber, name);
     }
@@ -119,14 +134,12 @@ void displayNameByPhoneNumber(PhoneBook* phoneBook, char* name, char* phoneNumbe
     {
         printf("There is no user with a phone number %s yet!\n", phoneNumber);
     }
+    free(name);
+    free(phoneNumber);
 }
 
 bool processAction(int action, PhoneBook* phoneBook, FILE* fileOutput)
 {
-    // maxSizeOfPhoneNumber and maxSizeOfName declared in "phoneBook.h"
-    char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
-    char* name = (char*) calloc(maxSizeOfName, sizeof(char));
-
     if (phoneBook == NULL || fileOutput == NULL)
     {
         return false;
@@ -136,17 +149,17 @@ bool processAction(int action, PhoneBook* phoneBook, FILE* fileOutput)
     {
         case 1:
         {
-            addUser(phoneBook, name, phoneNumber);
+            addUser(phoneBook);
             break;
         }
         case 2:
         {
-            displayPhoneNumberByName(phoneBook, name, phoneNumber);
+            displayPhoneNumberByName(phoneBook);
             break;
         }
         case 3:
         {
-            displayNameByPhoneNumber(phoneBook, name, phoneNumber);
+            displayNameByPhoneNumber(phoneBook);
             break;
         }
         case 4:
@@ -159,8 +172,6 @@ bool processAction(int action, PhoneBook* phoneBook, FILE* fileOutput)
             break;
         }
     }
-    free(name);
-    free(phoneNumber);
     return true;
 }
 

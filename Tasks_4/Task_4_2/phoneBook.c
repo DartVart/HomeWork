@@ -4,8 +4,6 @@
 #include "phoneBook.h"
 #include "stringReading.h"
 
-const int maxSizeOfName = 40;
-const int maxSizeOfPhoneNumber = 20;
 const int initialCapacity = 10;
 
 typedef struct PhoneUser PhoneUser;
@@ -43,28 +41,22 @@ bool setDataToPhoneBookFromFile(PhoneBook* phoneBook, char nameOfFile[])
         return false;
     }
 
-    char* phoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
-    char* name = (char*) calloc(maxSizeOfName, sizeof(char));
-
-    // maxLengthOfLineInFile = maxSizeOfPhoneNumber - 1 (excluding '\0') + maxSizeOfName - 1 (excluding '\0') +
-    // + 1 (space between number and name) + 1 ('\0' in the string itself)
-    int maxLengthOfLineInFile = maxSizeOfPhoneNumber + maxSizeOfName;
-    char* lineInFile = (char*) calloc(maxLengthOfLineInFile, sizeof(char));
+    char* phoneNumber = NULL;
+    char* name = NULL;
 
     while (!feof(fileInput))
     {
-        scanStringWithSpaces(fileInput, lineInFile, maxLengthOfLineInFile);
-        sscanf(lineInFile, "%s %[^\n]", phoneNumber, name);
+        phoneNumber = getStringFromStream(fileInput, readingWithoutSpaces);
+        name = getStringFromStream(fileInput, readingWithSpaces);
 
         addUserToPhoneBook(phoneBook, name, phoneNumber);
+        free(phoneNumber);
+        free(name);
     }
 
     phoneBook->numberOfUsersInFile = phoneBook->numberOfUsers;
 
     fclose(fileInput);
-    free(lineInFile);
-    free(name);
-    free(phoneNumber);
     return true;
 }
 
@@ -76,33 +68,41 @@ PhoneBook* initializePhoneBook(char nameOfFile[])
 
     if (!isCorrectInitialization)
     {
-        return  NULL;
+        return NULL;
     }
 
     return phoneBook;
 }
 
-//If (PhoneBook == NULL), the function will return false
+// If (sourceString == NULL), the function will return NULL
+char* getClonedString(char* sourceString)
+{
+    if (sourceString == NULL)
+    {
+        return NULL;
+    }
+    int lengthOfString = strlen(sourceString);
+    char* clonedString = (char*) malloc((lengthOfString + 1) * sizeof(char));
+    strcpy(clonedString, sourceString);
+    return clonedString;
+}
+
+// If (PhoneBook == NULL), the function will return false
 bool setDataToPhoneUser(PhoneBook* phoneBook, char name[], char phoneNumber[], int currentNumberOfUsers)
 {
-    if (phoneBook == NULL)
+    if (phoneBook == NULL || name == NULL || phoneNumber == NULL)
     {
         return false;
     }
 
-    char* newPhoneNumber = (char*) calloc(maxSizeOfPhoneNumber, sizeof(char));
-    char* newName = (char*) calloc(maxSizeOfName, sizeof(char));
-    strcpy(newName, name);
-    strcpy(newPhoneNumber, phoneNumber);
-
-    phoneBook->array[currentNumberOfUsers].name = newName;
-    phoneBook->array[currentNumberOfUsers].phoneNumber = newPhoneNumber;
+    phoneBook->array[currentNumberOfUsers].name = getClonedString(name);
+    phoneBook->array[currentNumberOfUsers].phoneNumber = getClonedString(phoneNumber);
     return true;
 }
 
 bool addUserToPhoneBook(PhoneBook* phoneBook, char name[], char phoneNumber[])
 {
-    if (phoneBook == NULL)
+    if (phoneBook == NULL || name == NULL || phoneNumber == NULL)
     {
         return false;
     }
@@ -125,9 +125,9 @@ bool isStringEqual(char* firstString, char* secondString)
     return strcmp(firstString, secondString) == 0;
 }
 
-bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[])
+bool hasName(PhoneBook* phoneBook, char* name)
 {
-    if (phoneBook == NULL)
+    if (phoneBook == NULL || name == NULL)
     {
         return false;
     }
@@ -136,7 +136,6 @@ bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[]
     {
         if (isStringEqual(phoneBook->array[i].name, name))
         {
-            strcpy(desiredPhoneNumber, phoneBook->array[i].phoneNumber);
             return true;
         }
     }
@@ -144,9 +143,9 @@ bool getPhoneByName(PhoneBook* phoneBook, char name[], char desiredPhoneNumber[]
     return false;
 }
 
-bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[])
+bool hasPhoneNumber(PhoneBook* phoneBook, char* phoneNumber)
 {
-    if (phoneBook == NULL)
+    if (phoneBook == NULL || phoneNumber == NULL)
     {
         return false;
     }
@@ -155,12 +154,49 @@ bool getNameByPhone(PhoneBook* phoneBook, char desiredName[], char phoneNumber[]
     {
         if (isStringEqual(phoneBook->array[i].phoneNumber, phoneNumber))
         {
-            strcpy(desiredName, phoneBook->array[i].name);
             return true;
         }
     }
 
     return false;
+}
+
+char* getPhoneByName(PhoneBook* phoneBook, char name[])
+{
+    if (phoneBook == NULL || name == NULL)
+    {
+        return NULL;
+    }
+
+    for (int i = 0; i < phoneBook->numberOfUsers; i++)
+    {
+        if (isStringEqual(phoneBook->array[i].name, name))
+        {
+            char* desiredPhoneNumber = getClonedString(phoneBook->array[i].phoneNumber);
+            return desiredPhoneNumber;
+        }
+    }
+
+    return NULL;
+}
+
+char* getNameByPhone(PhoneBook* phoneBook, char phoneNumber[])
+{
+    if (phoneBook == NULL || phoneNumber == NULL)
+    {
+        return NULL;
+    }
+
+    for (int i = 0; i < phoneBook->numberOfUsers; i++)
+    {
+        if (isStringEqual(phoneBook->array[i].phoneNumber, phoneNumber))
+        {
+            char* desiredName = getClonedString(phoneBook->array[i].name);
+            return desiredName;
+        }
+    }
+
+    return NULL;
 }
 
 bool writeDataToFile(PhoneBook* phoneBook, FILE* fileOutput)
