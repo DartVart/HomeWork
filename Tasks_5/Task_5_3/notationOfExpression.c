@@ -1,8 +1,7 @@
 #include <string.h>
+#include <stdlib.h>
 #include "notationOfExpression.h"
 #include "stack.h"
-
-const int maxSizeOfExpression = 1000;
 
 bool isOperator(char symbol)
 {
@@ -17,7 +16,7 @@ bool isDigit(char symbol)
     return '0' <= symbol && '9' >= symbol;
 }
 
-/* if the symbol isn't a digit, the function will return -1. */
+/* If the symbol isn't a digit, the function will return -1. */
 int convertCharToDigit(char symbol)
 {
     if (isDigit(symbol))
@@ -51,7 +50,7 @@ int getPriority(char operator)
     }
 }
 
-// If the string is full, the function will return false
+/* If the string is full, the function will return false. */
 bool addToEndOfString(char string[], char symbol, int maxSizeOfString)
 {
     int lengthOfString = strlen(string);
@@ -71,32 +70,32 @@ bool addOperatorToEndOfExpression(char expression[], char operator, int maxLengt
     return isCorrectAdding;
 }
 
-// indexOfDigit initially contains the index of the first digit of the rewritable number in infixExpression.
-// After the function works, indexOfDigit will contain the index of the last digit of the number.
-// If it's impossible to rewrite, the function will return false
-bool rewriteNumberToPostfixExpression(char infixExpression[], char postfixExpression[], int* indexOfDigit,
+/* indexOfDigit initially contains the index of the first digit of the rewritable number in infixExpression.
+ * After the function works, indexOfDigit will contain the index of the last digit of the number.
+ * If it's impossible to rewrite, the function will return false. */
+bool rewriteNumberToPostfixExpression(const char infixExpression[], char postfixExpression[], int* indexOfDigit,
                                       int maxLengthOfExpression)
 {
     bool isCorrectRewriting = true;
-    char currentSymbol = infixExpression[*indexOfDigit];
+    char currentDigit = infixExpression[*indexOfDigit];
     do
     {
-        isCorrectRewriting = addToEndOfString(postfixExpression, currentSymbol, maxLengthOfExpression);
+        isCorrectRewriting = addToEndOfString(postfixExpression, currentDigit, maxLengthOfExpression);
         if (!isCorrectRewriting)
         {
             return false;
         }
 
         (*indexOfDigit)++;
-        currentSymbol = infixExpression[*indexOfDigit];
-    } while (isDigit(currentSymbol));
+        currentDigit = infixExpression[*indexOfDigit];
+    } while (isDigit(currentDigit));
 
     (*indexOfDigit)--;
     isCorrectRewriting = addToEndOfString(postfixExpression, ' ', maxLengthOfExpression);
     return isCorrectRewriting;
 }
 
-// If it's impossible to process or the string is incorrect, the function will return false
+/* If it's impossible to push or the string is incorrect, the function will return false. */
 bool processOperatorWhenConvertingToPostfix(char postfixExpression[], StackOfChar* symbols, char operator,
                                             int maxLengthOfExpression)
 {
@@ -122,7 +121,7 @@ bool processOperatorWhenConvertingToPostfix(char postfixExpression[], StackOfCha
     return true;
 }
 
-// If it's impossible to process or the string is incorrect, the function will return false
+/* If it's impossible to push or the string is incorrect, the function will return false. */
 bool processClosingBracketWhenConvertingToPostfix(char postfixExpression[], StackOfChar* symbols, int maxLengthOfExpression)
 {
     char topOfStack = popFromStackOfChar(symbols);
@@ -143,8 +142,8 @@ bool processClosingBracketWhenConvertingToPostfix(char postfixExpression[], Stac
     return true;
 }
 
-// If it's impossible to push or the string is incorrect, the function will return false
-bool pushRemainingOperatorsToPostfixExpression(char postfixExpression[], StackOfChar* symbols, int maxLengthOfExpression)
+/* If it's impossible to push or the string is incorrect, the function will return false. */
+bool pushRemainingOperators(char postfixExpression[], StackOfChar* symbols, int maxLengthOfExpression)
 {
     char currentSymbol = '\000';
     bool isCorrectProcessing = true;
@@ -165,10 +164,10 @@ bool pushRemainingOperatorsToPostfixExpression(char postfixExpression[], StackOf
     return true;
 }
 
-// indexOfSymbol is an index of a symbol in infixExpression
-// If it's impossible to process or the string is incorrect, the function will return false
+/* indexOfSymbol is an index of a symbol in infixExpression
+ * If it's impossible to process or the string is incorrect, the function will return false. */
 bool processSymbolWhenConvertingToPostfix(char infixExpression[], char postfixExpression[], StackOfChar* symbols,
-                                          int* indexOfSymbol)
+                                          int* indexOfSymbol, int capacityOfPostfixExpression)
 {
     bool isCorrectExpression = true;
     char currentSymbol = infixExpression[*indexOfSymbol];
@@ -176,16 +175,17 @@ bool processSymbolWhenConvertingToPostfix(char infixExpression[], char postfixEx
     if (isDigit(currentSymbol))
     {
         isCorrectExpression = rewriteNumberToPostfixExpression(infixExpression, postfixExpression, indexOfSymbol,
-                                                               maxSizeOfExpression);
+                                                               capacityOfPostfixExpression);
     }
     else if (isOperator(currentSymbol))
     {
         isCorrectExpression = processOperatorWhenConvertingToPostfix(postfixExpression, symbols, currentSymbol,
-                                                                     maxSizeOfExpression);
+                                                                     capacityOfPostfixExpression);
     }
     else if (currentSymbol == ')')
     {
-        isCorrectExpression = processClosingBracketWhenConvertingToPostfix(postfixExpression, symbols, maxSizeOfExpression);
+        isCorrectExpression = processClosingBracketWhenConvertingToPostfix(postfixExpression, symbols,
+                                                                           capacityOfPostfixExpression);
     }
     else if (currentSymbol == '(')
     {
@@ -199,31 +199,45 @@ bool processSymbolWhenConvertingToPostfix(char infixExpression[], char postfixEx
     return isCorrectExpression;
 }
 
-bool convertInfixToPostfixNotation(char infixExpression[], char postfixExpression[])
+bool processInfixExpressionWhenConverting(char* infixExpression, char* postfixExpression, StackOfChar* symbols,
+                                          int capacityOfPostfixExpression)
 {
+    if (postfixExpression == NULL || infixExpression == NULL || symbols == NULL)
+    {
+        return false;
+    }
+
     int lengthOfInfixExpression = strlen(infixExpression);
 
-    StackOfChar* symbols = createStackOfChar();
     bool isCorrectExpression = true;
-    for (int indexOfNewSymbol = 0; indexOfNewSymbol < lengthOfInfixExpression; indexOfNewSymbol++)
+    for (int i = 0; i < lengthOfInfixExpression; i++)
     {
-        isCorrectExpression = processSymbolWhenConvertingToPostfix(infixExpression, postfixExpression, symbols,
-                                                                   &indexOfNewSymbol);
+        isCorrectExpression = processSymbolWhenConvertingToPostfix(infixExpression, postfixExpression, symbols, &i,
+                                                                   capacityOfPostfixExpression);
         if (!isCorrectExpression)
         {
             return false;
         }
     }
+    return true;
+}
 
-    isCorrectExpression = pushRemainingOperatorsToPostfixExpression(postfixExpression, symbols, maxSizeOfExpression);
-
-    if (!isCorrectExpression)
+bool convertInfixToPostfixNotation(char infixExpression[], char postfixExpression[], int capacityOfPostfixExpression)
+{
+    if (postfixExpression == NULL || infixExpression == NULL)
     {
         return false;
     }
 
+    StackOfChar* symbols = createStackOfChar();
+    bool isCorrectExpression = true;
+
+    isCorrectExpression = processInfixExpressionWhenConverting(infixExpression, postfixExpression, symbols,
+                                                               capacityOfPostfixExpression) &&
+                          pushRemainingOperators(postfixExpression, symbols, capacityOfPostfixExpression);
+
     deleteStackOfChar(symbols);
-    return true;
+    return isCorrectExpression;
 }
 
 
@@ -267,45 +281,53 @@ bool performOperation(double firstNumber, double secondNumber, double* resultOfO
     return true;
 }
 
-/* recordableNumber is the part of the number that was considered before the function call;
- * isScanNumber determines whether a digit was process before the function call. */
-bool processSymbolWhenCalculatingPostfixForm(StackOfDouble* numbersInExpression, char checkingSymbol,
-                                             int* recordableNumber, bool* isScanOfNumber)
+/* Initially 'indexOfDigit' contains the index of the first digit of the number in the string.
+ * After the function is completed, 'indexOfDigit' will contain the index of the last digit of the number. */
+bool scanNumberFromString(int* number, const char* string, int* indexOfDigit)
 {
+    *number = 0;
+    char currentSymbol = string[*indexOfDigit];
+    if (!isDigit(currentSymbol))
+    {
+        return false;
+    }
 
     int currentDigit = 0;
+    do
+    {
+        currentDigit = convertCharToDigit(currentSymbol);
+        *number = (*number) * 10 + currentDigit;
+        (*indexOfDigit)++;
+        currentSymbol = string[*indexOfDigit];
+    } while (isDigit(currentSymbol));
 
+    (*indexOfDigit)--;
+    return true;
+}
+
+/* The function processes the symbol when calculating in postfix notation.
+ * Initially the 'indexOfSymbol' contains the index of the checking character.
+ * If a number was read, then the 'indexOfSymbol' will contain the index of the last digit of the number. */
+bool processSymbolWhenCalculating(StackOfDouble* numbersInExpression, char checkingSymbol,
+                                  char* postfixExpression, int* indexOfSymbol)
+{
     if (isDigit(checkingSymbol))
     {
-        *isScanOfNumber = true;
-        currentDigit = convertCharToDigit(checkingSymbol);
-        *recordableNumber = (*recordableNumber) * 10 + currentDigit;
+        int recordableNumber = 0;
+        scanNumberFromString(&recordableNumber, postfixExpression, indexOfSymbol);
+        pushToStackOfDouble(numbersInExpression, recordableNumber);
     }
-    else
+    else if (checkingSymbol != ' ')
     {
-        if (*isScanOfNumber)
-        {
-            *isScanOfNumber = false;
-            pushToStackOfDouble(numbersInExpression, *recordableNumber);
-            *recordableNumber = 0;
-        }
-
-        if (checkingSymbol == ' ')
-        {
-            return true;
-        }
-
         if (getStackOfDoubleSize(numbersInExpression) < 2 || !isOperator(checkingSymbol))
         {
             return false;
         }
 
-        double firstNumberInOperation = 0.0;
-        double secondNumberInOperation = 0.0;
+        double secondNumberInOperation = popFromStackOfDouble(numbersInExpression);
+        double firstNumberInOperation = popFromStackOfDouble(numbersInExpression);
         double resultOfOperation = 0.0;
         bool isDivisionByZero = false;
-        secondNumberInOperation = popFromStackOfDouble(numbersInExpression);
-        firstNumberInOperation = popFromStackOfDouble(numbersInExpression);
         isDivisionByZero = !performOperation(firstNumberInOperation, secondNumberInOperation, &resultOfOperation,
                                              checkingSymbol);
         if (isDivisionByZero)
@@ -317,10 +339,42 @@ bool processSymbolWhenCalculatingPostfixForm(StackOfDouble* numbersInExpression,
     return true;
 }
 
+/* If the expression is incorrect or (postfixExpression == NULL), the function will return false.
+ * The result will be contained in the 'numbersInExpression'.
+ * This function only processes the string of the postfix expression
+ * without checking the calculating is correct. */
+bool processPostfixExpressionWhenCalculating(char* postfixExpression, StackOfDouble* numbersInExpression)
+{
+    if (postfixExpression == NULL || numbersInExpression == NULL)
+    {
+        return false;
+    }
+
+    int lengthOfExpression = strlen(postfixExpression);
+    char currentSymbol = '\0';
+    bool isCorrectExpression = true;
+    for (int i = 0; i < lengthOfExpression; i++)
+    {
+        currentSymbol = postfixExpression[i];
+
+        isCorrectExpression = processSymbolWhenCalculating(numbersInExpression, currentSymbol, postfixExpression, &i);
+        if (!isCorrectExpression)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isCorrectCompletionOfCalculating(StackOfDouble* numbersInExpression)
+{
+    return getStackOfDoubleSize(numbersInExpression) == 1;
+}
+
 /* The result will be written into resultOfExpression.
- * If the expression is incorrect or (postfixExpression == NULL), the function will return false and
+ * If the calculating is incorrect or (postfixExpression == NULL), the function will return false and
  * the value of resultOfExpression will be 0. */
-bool calculatePostfixExpression(char postfixExpression[], double* resultOfExpression)
+bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpression)
 {
     if (postfixExpression == NULL)
     {
@@ -328,35 +382,33 @@ bool calculatePostfixExpression(char postfixExpression[], double* resultOfExpres
     }
 
     StackOfDouble* numbersInExpression = createStackOfDouble();
-    int lengthOfExpression = strlen(postfixExpression);
+    bool isCorrectCalculating = processPostfixExpressionWhenCalculating(postfixExpression, numbersInExpression) &&
+                                isCorrectCompletionOfCalculating(numbersInExpression);
 
-    char currentSymbol = '\0';
-    int currentRecordableNumber = 0;
-    bool isScanOfNumber = false;
-    bool isCorrectExpression = true;
-
-    for (int i = 0; i < lengthOfExpression; i++)
-    {
-        currentSymbol = postfixExpression[i];
-
-        isCorrectExpression = processSymbolWhenCalculatingPostfixForm(numbersInExpression, currentSymbol,
-                                                                      &currentRecordableNumber, &isScanOfNumber);
-        if (!isCorrectExpression)
-        {
-            return false;
-        }
-    }
-
-    isCorrectExpression = getStackOfDoubleSize(numbersInExpression) == 1;
-
-    if (!isCorrectExpression)
+    if (!isCorrectCalculating)
     {
         *resultOfExpression = 0;
-        return false;
     }
-
-    *resultOfExpression = popFromStackOfDouble(numbersInExpression);
-
+    else
+    {
+        *resultOfExpression = popFromStackOfDouble(numbersInExpression);
+    }
     deleteStackOfDouble(numbersInExpression);
-    return true;
+    return isCorrectCalculating;
+}
+
+bool calculateInfixExpression(char* infixExpression, double* resultOfExpression)
+{
+    int lengthOfInfixExpression = strlen(infixExpression);
+
+    // The length of a postfix expression is not more than twice that an infix expression
+    // (in an infix expression, spaces between operators and numbers may be absent, for example).
+    int capacityOfPostfixExpression = lengthOfInfixExpression * 2;
+    char* postfixExpression = (char*) malloc(capacityOfPostfixExpression * sizeof(char));
+
+    bool isCorrectCalculating = convertInfixToPostfixNotation(infixExpression, postfixExpression, capacityOfPostfixExpression) &&
+                                calculatePostfixExpression(postfixExpression, resultOfExpression);
+
+    free(postfixExpression);
+    return isCorrectCalculating;
 }
