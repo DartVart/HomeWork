@@ -2,8 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stack.h"
-
-const int maxSizeOfString = 1000;
+#include "stringReading.h"
 
 bool isOperator(char symbol)
 {
@@ -184,23 +183,10 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
     return isCorrectExpression;
 }
 
-void scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
-{
-    if (inputStream == NULL)
-    {
-        return;
-    }
-    fflush(inputStream);
-    fgets(stringBuffer, maxLengthOfString, inputStream);
-    int indexOfNewLineCharacter = strlen(stringBuffer) - 1;
-    stringBuffer[indexOfNewLineCharacter] = '\0';
-}
-
 int main()
 {
-    char* postfixExpression = (char*) calloc(maxSizeOfString, sizeof(char));
     printf("Enter an expression in postfix notation (characters '+', '-', '*', '/' are allowed):\n");
-    scanStringWithSpaces(stdin, postfixExpression, maxSizeOfString);
+    char* postfixExpression = getStringFromStream(stdin, readingWithSpaces);
 
     double resultOfExpression = 0.0;
     bool isCorrectExpression = false;
