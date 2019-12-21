@@ -25,7 +25,7 @@ int convertCharToDigit(char symbol)
     {
         return symbol - '0';
     }
-    else return -1;
+    return -1;
 }
 
 bool performOperation(double firstNumber, double secondNumber, double* resultOfOperation, char operator)
@@ -68,44 +68,53 @@ bool performOperation(double firstNumber, double secondNumber, double* resultOfO
     return true;
 }
 
-/* recordableNumber is the part of the number that was considered before the function call;
- * isScanNumber determines whether a digit was process before the function call. */
-bool processSymbolWhenCalculatingPostfixForm(Stack* numbersInExpression, char checkingSymbol,
-                                             int* recordableNumber, bool* isScanOfNumber)
+/* Initially 'indexOfDigit' contains the index of the first digit of the number in the string.
+ * After the function is completed, 'indexOfDigit' will contain the index of the last digit of the number. */
+bool scanNumberFromString(int* number, const char* string, int* indexOfDigit)
 {
-    int currentDigit = 0;
+    *number = 0;
+    char currentSymbol = string[*indexOfDigit];
+    if (!isDigit(currentSymbol))
+    {
+        return false;
+    }
 
+    int currentDigit = 0;
+    do
+    {
+        currentDigit = convertCharToDigit(currentSymbol);
+        *number = (*number) * 10 + currentDigit;
+        (*indexOfDigit)++;
+        currentSymbol = string[*indexOfDigit];
+    } while (isDigit(currentSymbol));
+
+    (*indexOfDigit)--;
+    return true;
+}
+
+/* The function processes the symbol when calculating in postfix notation.
+ * Initially the 'indexOfSymbol' contains the index of the checking character.
+ * If a number was read, then the 'indexOfSymbol' will contain the index of the last digit of the number. */
+bool processSymbolWhenCalculating(Stack* numbersInExpression, char checkingSymbol,
+                                  char* postfixExpression, int* indexOfSymbol)
+{
     if (isDigit(checkingSymbol))
     {
-        *isScanOfNumber = true;
-        currentDigit = convertCharToDigit(checkingSymbol);
-        *recordableNumber = (*recordableNumber) * 10 + currentDigit;
+        int recordableNumber = 0;
+        scanNumberFromString(&recordableNumber, postfixExpression, indexOfSymbol);
+        pushToStack(numbersInExpression, recordableNumber);
     }
-    else
+    else if (checkingSymbol != ' ')
     {
-        if (*isScanOfNumber)
-        {
-            *isScanOfNumber = false;
-            pushToStack(numbersInExpression, *recordableNumber);
-            *recordableNumber = 0;
-        }
-
-        if (checkingSymbol == ' ')
-        {
-            return true;
-        }
-
         if (getStackSize(numbersInExpression) < 2 || !isOperator(checkingSymbol))
         {
             return false;
         }
 
-        double firstNumberInOperation = 0.0;
-        double secondNumberInOperation = 0.0;
+        double secondNumberInOperation = popFromStack(numbersInExpression);
+        double firstNumberInOperation = popFromStack(numbersInExpression);
         double resultOfOperation = 0.0;
         bool isDivisionByZero = false;
-        secondNumberInOperation = popFromStack(numbersInExpression);
-        firstNumberInOperation = popFromStack(numbersInExpression);
         isDivisionByZero = !performOperation(firstNumberInOperation, secondNumberInOperation, &resultOfOperation,
                                              checkingSymbol);
         if (isDivisionByZero)
@@ -117,8 +126,40 @@ bool processSymbolWhenCalculatingPostfixForm(Stack* numbersInExpression, char ch
     return true;
 }
 
+/* If the expression is incorrect or (postfixExpression == NULL), the function will return false.
+ * The result will be contained in the 'numbersInExpression'.
+ * This function only processes the string of the postfix expression
+ * without checking the calculating is correct. */
+bool processPostfixExpressionWhenCalculating(char* postfixExpression, Stack* numbersInExpression)
+{
+    if (postfixExpression == NULL || numbersInExpression == NULL)
+    {
+        return false;
+    }
+
+    int lengthOfExpression = strlen(postfixExpression);
+    char currentSymbol = '\0';
+    bool isCorrectExpression = true;
+    for (int i = 0; i < lengthOfExpression; i++)
+    {
+        currentSymbol = postfixExpression[i];
+
+        isCorrectExpression = processSymbolWhenCalculating(numbersInExpression, currentSymbol, postfixExpression, &i);
+        if (!isCorrectExpression)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool isCorrectCompletionOfCalculating(Stack* numbersInExpression)
+{
+    return getStackSize(numbersInExpression) == 1;
+}
+
 /* The result will be written into resultOfExpression.
- * If the expression is incorrect or (postfixExpression == NULL), the function will return false and
+ * If the calculating is incorrect or (postfixExpression == NULL), the function will return false and
  * the value of resultOfExpression will be 0. */
 bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpression)
 {
@@ -128,37 +169,19 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
     }
 
     Stack* numbersInExpression = createStack();
-    int lengthOfExpression = strlen(postfixExpression);
-
-    char currentSymbol = '\0';
-    int currentRecordableNumber = 0;
-    bool isScanOfNumber = false;
-    bool isCorrectExpression = true;
-
-    for (int i = 0; i < lengthOfExpression; i++)
-    {
-        currentSymbol = postfixExpression[i];
-
-        isCorrectExpression = processSymbolWhenCalculatingPostfixForm(numbersInExpression, currentSymbol,
-                                                                      &currentRecordableNumber, &isScanOfNumber);
-        if (!isCorrectExpression)
-        {
-            return false;
-        }
-    }
-
-    isCorrectExpression = getStackSize(numbersInExpression) == 1;
+    bool isCorrectExpression = processPostfixExpressionWhenCalculating(postfixExpression, numbersInExpression) &&
+                               isCorrectCompletionOfCalculating(numbersInExpression);
 
     if (!isCorrectExpression)
     {
         *resultOfExpression = 0;
-        return false;
     }
-
-    *resultOfExpression = popFromStack(numbersInExpression);
-
+    else
+    {
+        *resultOfExpression = popFromStack(numbersInExpression);
+    }
     deleteStack(numbersInExpression);
-    return true;
+    return isCorrectExpression;
 }
 
 void scanStringWithSpaces(FILE* inputStream, char* stringBuffer, int maxLengthOfString)
