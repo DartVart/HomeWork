@@ -1,5 +1,5 @@
 /**
- * This is beta of a module that implements the set. Debugging may be required (as of November 17, 2019)
+ * This is beta of a module that implements the set. Debugging may be required (as of December 20, 2019)
  **/
 
 #pragma once

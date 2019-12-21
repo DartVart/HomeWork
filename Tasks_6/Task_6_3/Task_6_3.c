@@ -3,7 +3,14 @@
 #include <string.h>
 #include "set.h"
 
-const int maxSizeOfString = 5;
+void cleanStdin()
+{
+    int character;
+    do
+    {
+        character = getchar();
+    } while (character != EOF && character != '\n');
+}
 
 void printArrayInDirectOrder(int array[], int sizeOfArray)
 {
@@ -34,64 +41,64 @@ void displayInvitationToEnterAction()
            "\'6\' to print the set (as a tree) in form: (node (left subtree) (right subtree)):\n");
 }
 
-bool isDigit(char symbol)
+void scanNumber(int* number)
 {
-    return symbol >= '0' && symbol <= '9';
-}
-
-/* if the symbol isn't a digit, the function will return -1. */
-int convertCharToDigit(char symbol)
-{
-    if (isDigit(symbol))
+    bool isCorrectInput = false;
+    do
     {
-        return symbol - '0';
-    }
-    return -1;
+        isCorrectInput = scanf("%d", number) == 1;
+        if (!isCorrectInput)
+        {
+            printf("Please enter a number.\n");
+        }
+        cleanStdin();
+    } while (!isCorrectInput);
 }
 
 void getAction(int* action)
 {
     displayInvitationToEnterAction();
     // validation of input
-    char* inputString = (char*) calloc(maxSizeOfString, sizeof(char));
     bool isCorrectInput = false;
-    while (!isCorrectInput)
+    do
     {
-        fflush(stdin);
-        scanf("%2s", inputString);
-
-        isCorrectInput = strlen(inputString) == 1 && inputString[0] >= '0' && inputString[0] <= '6';
+        scanNumber(action);
+        isCorrectInput = *action >= 0 && *action <= 6;
         if (!isCorrectInput)
         {
             printf("Please enter a valid value.\n");
         }
-    }
-
-    *action = convertCharToDigit(inputString[0]);
-    free(inputString);
+    } while (!isCorrectInput);
 }
 
 void addElement(Set* set)
 {
     int value = 0;
-    printf("Enter value:");
-    scanf("%d", &value);
+    printf("Enter a value:\n");
+    scanNumber(&value);
     insertToSet(set, value);
 }
 
 void removeElement(Set* set)
 {
     int value = 0;
-    printf("Enter value:");
-    scanf("%d", &value);
-    removeFromSet(set, value);
+    printf("Enter a value:\n");
+    scanNumber(&value);
+    if (isInSet(set, value))
+    {
+        removeFromSet(set, value);
+    }
+    else
+    {
+        printf("Error of removing. Number %d isn't in the set!\n", value);
+    }
 }
 
 void checkAffiliationOfElement(Set* set)
 {
     int value = 0;
-    printf("Enter value:");
-    scanf("%d", &value);
+    printf("Enter value:\n");
+    scanNumber(&value);
     bool isValueInSet = isInSet(set, value);
     if (isValueInSet)
     {
@@ -99,7 +106,7 @@ void checkAffiliationOfElement(Set* set)
     }
     else
     {
-        printf("Number %d isn't in set!\n", value);
+        printf("Number %d isn't in the set!\n", value);
     }
 }
 
@@ -112,10 +119,8 @@ void printSetInAscendingOrder(Set* set)
     }
     else
     {
-        int* setAsArray = NULL;
         sizeOfSet = getSizeOfSet(set);
-        free(setAsArray);
-        setAsArray = getSetInAscendingOrder(set);
+        int* setAsArray = getSetInAscendingOrder(set);
         printf("The set: \n");
         printArrayInDirectOrder(setAsArray, sizeOfSet);
         printf("\n");
@@ -132,9 +137,8 @@ void printSetInDescendingOrder(Set* set)
     }
     else
     {
-        int* setAsArray = NULL;
         sizeOfSet = getSizeOfSet(set);
-        setAsArray = getSetInAscendingOrder(set);
+        int* setAsArray = getSetInAscendingOrder(set);
         printf("The set:\n");
         printArrayInReverseOrder(setAsArray, sizeOfSet);
         printf("\n");
@@ -144,7 +148,7 @@ void printSetInDescendingOrder(Set* set)
 
 void printSet(Set* set)
 {
-    printf("The set: \n");
+    printf("The set:\n");
     printSetAsTree(set);
     printf("\n");
 }
@@ -157,7 +161,6 @@ bool processAction(int action, Set* set)
         return false;
     }
 
-    int* setAsArray = NULL;
     switch (action)
     {
         case 1:
@@ -195,7 +198,6 @@ bool processAction(int action, Set* set)
             break;
         }
     }
-    free(setAsArray);
     return true;
 }
 
@@ -210,7 +212,7 @@ void processUserActions(Set* set)
         isCorrectProcessing = processAction(action, set);
         if (!isCorrectProcessing)
         {
-            printf("Action processing error: set are not initialized.\n");
+            printf("Action processing error: the set are not initialized.\n");
             return;
         }
         getAction(&action);

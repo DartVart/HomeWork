@@ -1,6 +1,7 @@
 /**
  * This module implements an unbalanced binary search tree.
  */
+
 #pragma once
 
 #include <stdbool.h>
