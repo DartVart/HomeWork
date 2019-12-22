@@ -51,7 +51,7 @@ int getPriority(char operator)
 }
 
 /* If the string is full, the function will return false. */
-bool addToEndOfString(char string[], char symbol, int maxSizeOfString)
+bool addToEndOfString(char* string, char symbol, int maxSizeOfString)
 {
     int lengthOfString = strlen(string);
     if (lengthOfString == maxSizeOfString)
@@ -62,8 +62,8 @@ bool addToEndOfString(char string[], char symbol, int maxSizeOfString)
     return true;
 }
 
-// If it's impossible to add, the function will return false
-bool addOperatorToEndOfExpression(char expression[], char operator, int maxLengthOfExpression)
+/* If it's impossible to add, the function will return false. */
+bool addOperatorToEndOfExpression(char* expression, char operator, int maxLengthOfExpression)
 {
     bool isCorrectAdding = addToEndOfString(expression, operator, maxLengthOfExpression) &&
                            addToEndOfString(expression, ' ', maxLengthOfExpression);
@@ -72,10 +72,17 @@ bool addOperatorToEndOfExpression(char expression[], char operator, int maxLengt
 
 /* indexOfDigit initially contains the index of the first digit of the rewritable number in infixExpression.
  * After the function works, indexOfDigit will contain the index of the last digit of the number.
- * If it's impossible to rewrite, the function will return false. */
-bool rewriteNumberToPostfixExpression(const char infixExpression[], char postfixExpression[], int* indexOfDigit,
-                                      int maxLengthOfExpression)
+ * If it's impossible to rewrite, the function will return false.
+ * 'isNextOperator' checks the relative position of the operators and numbers in the infix expression. */
+bool rewriteNumberToPostfixExpression(const char* infixExpression, char* postfixExpression, int* indexOfDigit,
+                                      int maxLengthOfExpression, bool* isNextOperator)
 {
+    if (*isNextOperator)
+    {
+        return false;
+    }
+    *isNextOperator = true;
+
     bool isCorrectRewriting = true;
     char currentDigit = infixExpression[*indexOfDigit];
     do
@@ -95,10 +102,17 @@ bool rewriteNumberToPostfixExpression(const char infixExpression[], char postfix
     return isCorrectRewriting;
 }
 
-/* If it's impossible to push or the string is incorrect, the function will return false. */
-bool processOperatorWhenConvertingToPostfix(char postfixExpression[], StackOfChar* symbols, char operator,
-                                            int maxLengthOfExpression)
+/* If it's impossible to push or the string is incorrect, the function will return false.
+ * 'isNextOperator' checks the relative position of the operators and numbers in the infix expression. */
+bool processOperatorWhenConvertingToPostfix(char* postfixExpression, StackOfChar* symbols, char operator,
+                                            int maxLengthOfExpression, bool* isNextOperator)
 {
+    if (!(*isNextOperator))
+    {
+        return false;
+    }
+    *isNextOperator = false;
+
     char topOfStack = peekIntoStackOfChar(symbols);
     bool isCorrectProcessing = true;
 
@@ -122,7 +136,7 @@ bool processOperatorWhenConvertingToPostfix(char postfixExpression[], StackOfCha
 }
 
 /* If it's impossible to push or the string is incorrect, the function will return false. */
-bool processClosingBracketWhenConvertingToPostfix(char postfixExpression[], StackOfChar* symbols, int maxLengthOfExpression)
+bool processClosingBracketWhenConvertingToPostfix(char* postfixExpression, StackOfChar* symbols, int maxLengthOfExpression)
 {
     char topOfStack = popFromStackOfChar(symbols);
     bool isCorrectProcessing = true;
@@ -143,9 +157,9 @@ bool processClosingBracketWhenConvertingToPostfix(char postfixExpression[], Stac
 }
 
 /* If it's impossible to push or the string is incorrect, the function will return false. */
-bool pushRemainingOperators(char postfixExpression[], StackOfChar* symbols, int maxLengthOfExpression)
+bool pushRemainingOperators(char* postfixExpression, StackOfChar* symbols, int maxLengthOfExpression)
 {
-    char currentSymbol = '\000';
+    char currentSymbol = '\0';
     bool isCorrectProcessing = true;
 
     while (!isStackOfCharEmpty(symbols))
@@ -165,9 +179,10 @@ bool pushRemainingOperators(char postfixExpression[], StackOfChar* symbols, int 
 }
 
 /* indexOfSymbol is an index of a symbol in infixExpression
- * If it's impossible to process or the string is incorrect, the function will return false. */
-bool processSymbolWhenConvertingToPostfix(char infixExpression[], char postfixExpression[], StackOfChar* symbols,
-                                          int* indexOfSymbol, int capacityOfPostfixExpression)
+ * If it's impossible to process or the string is incorrect, the function will return false.
+ * 'isNextOperator' checks the relative position of the operators and numbers in the infix expression. */
+bool processSymbolWhenConvertingToPostfix(char* infixExpression, char* postfixExpression, StackOfChar* symbols,
+                                          int* indexOfSymbol, int capacityOfPostfixExpression, bool* isNextOperator)
 {
     bool isCorrectExpression = true;
     char currentSymbol = infixExpression[*indexOfSymbol];
@@ -175,12 +190,12 @@ bool processSymbolWhenConvertingToPostfix(char infixExpression[], char postfixEx
     if (isDigit(currentSymbol))
     {
         isCorrectExpression = rewriteNumberToPostfixExpression(infixExpression, postfixExpression, indexOfSymbol,
-                                                               capacityOfPostfixExpression);
+                                                               capacityOfPostfixExpression, isNextOperator);
     }
     else if (isOperator(currentSymbol))
     {
         isCorrectExpression = processOperatorWhenConvertingToPostfix(postfixExpression, symbols, currentSymbol,
-                                                                     capacityOfPostfixExpression);
+                                                                     capacityOfPostfixExpression, isNextOperator);
     }
     else if (currentSymbol == ')')
     {
@@ -199,6 +214,9 @@ bool processSymbolWhenConvertingToPostfix(char infixExpression[], char postfixEx
     return isCorrectExpression;
 }
 
+/* If the input data is incorrect, the function will return false.
+ * This function only processes the string of the infix expression
+ * without pushing remaining operators to the postfix expression. */
 bool processInfixExpressionWhenConverting(char* infixExpression, char* postfixExpression, StackOfChar* symbols,
                                           int capacityOfPostfixExpression)
 {
@@ -210,10 +228,11 @@ bool processInfixExpressionWhenConverting(char* infixExpression, char* postfixEx
     int lengthOfInfixExpression = strlen(infixExpression);
 
     bool isCorrectExpression = true;
+    bool isNextOperator = false;
     for (int i = 0; i < lengthOfInfixExpression; i++)
     {
         isCorrectExpression = processSymbolWhenConvertingToPostfix(infixExpression, postfixExpression, symbols, &i,
-                                                                   capacityOfPostfixExpression);
+                                                                   capacityOfPostfixExpression, &isNextOperator);
         if (!isCorrectExpression)
         {
             return false;
@@ -222,7 +241,7 @@ bool processInfixExpressionWhenConverting(char* infixExpression, char* postfixEx
     return true;
 }
 
-bool convertInfixToPostfixNotation(char infixExpression[], char postfixExpression[], int capacityOfPostfixExpression)
+bool convertInfixToPostfixNotation(char* infixExpression, char* postfixExpression, int capacityOfPostfixExpression)
 {
     if (postfixExpression == NULL || infixExpression == NULL)
     {
@@ -382,6 +401,7 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
     }
 
     StackOfDouble* numbersInExpression = createStackOfDouble();
+
     bool isCorrectCalculating = processPostfixExpressionWhenCalculating(postfixExpression, numbersInExpression) &&
                                 isCorrectCompletionOfCalculating(numbersInExpression);
 
@@ -403,10 +423,11 @@ bool calculateInfixExpression(char* infixExpression, double* resultOfExpression)
 
     // The length of a postfix expression is not more than twice that an infix expression
     // (in an infix expression, spaces between operators and numbers may be absent, for example).
-    int capacityOfPostfixExpression = lengthOfInfixExpression * 2;
-    char* postfixExpression = (char*) malloc(capacityOfPostfixExpression * sizeof(char));
+    int capacityOfPostfixExpression = (lengthOfInfixExpression + 1) * 2;
+    char* postfixExpression = (char*) calloc(capacityOfPostfixExpression, sizeof(char));
 
-    bool isCorrectCalculating = convertInfixToPostfixNotation(infixExpression, postfixExpression, capacityOfPostfixExpression) &&
+    bool isCorrectCalculating = convertInfixToPostfixNotation(infixExpression, postfixExpression,
+                                                              capacityOfPostfixExpression) &&
                                 calculatePostfixExpression(postfixExpression, resultOfExpression);
 
     free(postfixExpression);

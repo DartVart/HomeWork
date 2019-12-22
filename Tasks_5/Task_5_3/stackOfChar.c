@@ -48,7 +48,7 @@ char popFromStackOfChar(StackOfChar* stack)
 {
     if (isStackOfCharEmpty(stack))
     {
-        return '\000';
+        return '\0';
     }
 
     StackOfCharElement* poppedElement = stack->top;
@@ -64,7 +64,7 @@ char peekIntoStackOfChar(StackOfChar* stack)
 {
     if (isStackOfCharEmpty(stack))
     {
-        return '\000';
+        return '\0';
     }
 
     return stack->top->value;

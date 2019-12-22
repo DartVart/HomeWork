@@ -1,4 +1,3 @@
-
 /**
  * This module implements actions with various notations of mathematical expressions.
  * Expressions are represented as a char array.
@@ -8,7 +7,7 @@
 
 #pragma once
 
-#include "stdbool.h"
+#include <stdbool.h>
 
 /* The result will be written into resultOfExpression.
  * If the expression is incorrect, the function will return false and
@@ -21,4 +20,4 @@ bool calculatePostfixExpression(char* postfixExpression, double* resultOfExpress
 bool calculateInfixExpression(char* postfixExpression, double* resultOfExpression);
 
 /* This function doesn't detect all incorrect expressions, but if it does, it will return false. */
-bool convertInfixToPostfixNotation(char infixExpression[], char postfixExpression[], int capacityOfPostfixExpression);
+bool convertInfixToPostfixNotation(char* infixExpression, char* postfixExpression, int capacityOfPostfixExpression);
