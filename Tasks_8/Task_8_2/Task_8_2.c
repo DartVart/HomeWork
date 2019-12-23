@@ -29,26 +29,32 @@ void freeTwoDimensionalArray(int** array, int numberOfRows)
     free(array);
 }
 
-/* The function scans a number from 'minimumValue' to 'maximumValue' inclusive. */
+/* The function scans a number from 'minimumValue' to 'maximumValue' inclusive.
+ * If (fileInput == NULL), the function will return NULL. */
 bool scanNumberInRange(FILE* fileInput, int* number, int minimumValue, int maximumValue)
 {
-    return fscanf(fileInput, "%d", number) == 1 &&
+    return fileInput != NULL &&
+           fscanf(fileInput, "%d", number) == 1 &&
            *number >= minimumValue && *number <= maximumValue;
 }
 
+/* If (fileInput == NULL), the function will return NULL. */
 bool scanDistanceAndCities(FILE* fileInput, int* numberOfFirstCity, int* numberOfSecondCity, int* distance,
                            int numberOfCities)
 {
-    return scanNumberInRange(fileInput, numberOfFirstCity, 1, numberOfCities) &&
+    return fileInput != NULL &&
+           scanNumberInRange(fileInput, numberOfFirstCity, 1, numberOfCities) &&
            scanNumberInRange(fileInput, numberOfSecondCity, 1, numberOfCities) &&
            scanNumberInRange(fileInput, distance, 1, maxDistance - 1) &&
            *numberOfFirstCity != *numberOfSecondCity;
 }
 
+/* If (fileInput == NULL), the function will return NULL. */
 bool scanInitialData(FILE* fileInput, int* numberOfCities, int* numberOfRoads)
 {
     // since the graph of roads is connected, then (numberOfRoads >= *numberOfCities - 1)
-    return scanNumberInRange(fileInput, numberOfCities, 1, INT_MAX) &&
+    return fileInput != NULL &&
+           scanNumberInRange(fileInput, numberOfCities, 1, INT_MAX) &&
            scanNumberInRange(fileInput, numberOfRoads, *numberOfCities - 1, INT_MAX);
 }
 
