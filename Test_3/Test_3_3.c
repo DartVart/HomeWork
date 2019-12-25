@@ -10,7 +10,7 @@ typedef enum State
     qualificationLevel = 3,
     firstGroupDigit = 4,
     groupNumber = 5,
-    hyphen = 6,
+    minus = 6,
     firstM = 7,
     secondM = 8,
     end = 9,
@@ -97,7 +97,7 @@ void processGroupNumber(char symbol, State* state)
 {
     if (symbol == '-')
     {
-        *state = hyphen;
+        *state = minus;
     }
     else
     {
@@ -105,7 +105,7 @@ void processGroupNumber(char symbol, State* state)
     }
 }
 
-void processHyphen(char symbol, State* state)
+void processMinus(char symbol, State* state)
 {
     if (symbol == 'm')
     {
@@ -181,9 +181,9 @@ bool isGroupNumber(const char* checkingString)
                 processGroupNumber(currentSymbol, &state);
                 break;
             }
-            case hyphen:
+            case minus:
             {
-                processHyphen(currentSymbol, &state);
+                processMinus(currentSymbol, &state);
                 break;
             }
             case firstM:
