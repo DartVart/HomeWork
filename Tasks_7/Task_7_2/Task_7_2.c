@@ -27,15 +27,15 @@ void displayStringAfterConcatenation(MyString* destinationString, MyString* adde
     printStringData(destinationString);
     printf("Added string: ");
     printStringData(addedString);
-    printf("String after concatenation: ");
     concatenateStrings(destinationString, addedString);
+    printf("String after concatenation: ");
     printStringData(destinationString);
 }
 
 void displayCheckingForEmptiness(MyString* string)
 {
-    printf("Checking for emptiness. \n"
-           "String: ");
+    printf("Checking for emptiness. \n");
+    printf("String: ");
     printStringData(string);
     if (isStringEmpty(string))
     {
@@ -49,8 +49,8 @@ void displayCheckingForEmptiness(MyString* string)
 
 void displayCheckingForEquivalence(MyString* firstString, MyString* secondString)
 {
-    printf("Checking for equivalence. \n"
-           "First string: ");
+    printf("Checking for equivalence. \n");
+    printf("First string: ");
     printStringData(firstString);
     printf("Second string: ");
     printStringData(secondString);
