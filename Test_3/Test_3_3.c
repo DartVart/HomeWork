@@ -141,7 +141,7 @@ void processSecondM(char symbol, State* state)
     }
 }
 
-bool isGroupNumber(const char* checkingString)
+bool isMathMechGroupNumber(const char* checkingString)
 {
     char currentSymbol = '\0';
     int currentIndex = 0;
@@ -211,7 +211,7 @@ int main()
     printf("Enter the string:\n");
     char* inputString = getStringFromStream(stdin, readingWithSpaces);
 
-    if (isGroupNumber(inputString))
+    if (isMathMechGroupNumber(inputString))
     {
         printf("You entered a correct group number!");
     }
