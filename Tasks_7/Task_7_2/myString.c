@@ -12,7 +12,7 @@ MyString* createString()
 {
     MyString* newString = (MyString*) malloc(sizeof(MyString));
     newString->length = 0;
-    newString->content = calloc(2, sizeof(char));
+    newString->content = calloc(1, sizeof(char));
     return newString;
 }
 
