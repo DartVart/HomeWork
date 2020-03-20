@@ -1,0 +1,10 @@
+ The most important source of information about IntelliJ IDEA is this online help.
+ To access it from IntelliJ IDEA, do one of the following:
+    From the main menu, select Help | Help.
+    Press F1 on the keyboard.
+    Click The Help icon in a dialog or a tool window.
+If you do not have internet access to view the online help,
+you can use the IntelliJ IDEA Help plugin, which serves the help pages via the built-in web server for offline use.
+    note
+    The offline help plugin is updated when a new major version is released.
+    Changes that are added to online help during the release cycle may not be available in the offline help.
