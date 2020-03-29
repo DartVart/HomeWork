@@ -1,6 +1,6 @@
 package homeworks.homework1.task1
 
-import java.lang.IndexOutOfBoundsException
+import java.lang.IllegalArgumentException
 import java.util.Scanner
 
 fun scanPositiveInteger(): Int {
@@ -25,6 +25,7 @@ fun scanIntList(delimiters: Regex = Regex(" +")): List<Int> {
             println("Please, enter a string of integers only.")
             continue
         }
+
         if (scannedList == null) {
             println("Please, try to enter the string of integers again.")
         }
@@ -36,10 +37,10 @@ fun changePartOfList(firstPartLength: Int, secondPartLength: Int, list: MutableL
     val listSize = firstPartLength + secondPartLength
     when {
         firstPartLength < 0 || secondPartLength < 0 -> {
-            throw IndexOutOfBoundsException("The size of the list part is negative")
+            throw IllegalArgumentException("The size of the list part is negative")
         }
         listSize != list.size -> {
-            throw IndexOutOfBoundsException("The list size doesn't equal to the sum of its parts")
+            throw IllegalArgumentException("The list size doesn't equal to the sum of its parts")
         }
     }
 
@@ -61,7 +62,7 @@ fun main() {
     try {
         changePartOfList(sizeOfFirstPart, sizeOfSecondPart, inputList)
         println("Array with moved parts: ${inputList.joinToString(", ", "[", "]")}")
-    } catch (exception: IndexOutOfBoundsException) {
+    } catch (exception: IllegalArgumentException) {
         println("Error: ${exception.message}")
     }
 }

@@ -3,7 +3,7 @@ package homeworks.homework1.task1
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import java.lang.IndexOutOfBoundsException
+import java.lang.IllegalArgumentException
 
 internal class Task1KtTest {
 
@@ -60,7 +60,7 @@ internal class Task1KtTest {
     @Test
     fun changePartOfList_SumOfPartsIsBiggerThanListSize_ThrowsException() {
         val actual: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5)
-        assertThrows(IndexOutOfBoundsException::class.java) {
+        assertThrows(IllegalArgumentException::class.java) {
             changePartOfList(3, 4, actual)
         }
     }
@@ -68,7 +68,7 @@ internal class Task1KtTest {
     @Test
     fun changePartOfList_FirstPartLengthLessThanZero_ThrowsException() {
         val actual: MutableList<Int> = mutableListOf(5, 6, 7, 8, 9)
-        assertThrows(IndexOutOfBoundsException::class.java) {
+        assertThrows(IllegalArgumentException::class.java) {
             changePartOfList(-1, 1, actual)
         }
     }
@@ -76,7 +76,7 @@ internal class Task1KtTest {
     @Test
     fun changePartOfList_SecondPartLengthLessThanZero_ThrowsException() {
         val actual: MutableList<Int> = mutableListOf(5, 6, 7, 8, 9)
-        assertThrows(IndexOutOfBoundsException::class.java) {
+        assertThrows(IllegalArgumentException::class.java) {
             changePartOfList(1, -1, actual)
         }
     }
