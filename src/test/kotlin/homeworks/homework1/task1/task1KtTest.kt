@@ -1,143 +1,83 @@
 package homeworks.homework1.task1
 
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertIterableEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import java.lang.IndexOutOfBoundsException
 
 internal class Task1KtTest {
 
-    @Nested
-    inner class Check_ReversePartOfArray {
-
-        @Test
-        fun SimpleArray1_MustWork() {
-            val expected: IntArray = intArrayOf(0, 5, 4, 3, 2, 1)
-            val actual: IntArray = intArrayOf(0, 1, 2, 3, 4, 5)
-            reversePartOfArray(1, 5, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun SimpleArray2_MustWork() {
-            val expected: IntArray = intArrayOf(4, 5, 3, 2, 1)
-            val actual:IntArray = intArrayOf(5, 4, 3, 2, 1)
-            reversePartOfArray(0, 1, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun SingleElementArray_MustWork() {
-            val expected:IntArray = intArrayOf(9)
-            val actual: IntArray = intArrayOf(9)
-            reversePartOfArray(0, 0, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun EmptyArray_MustWork() {
-            val expected: IntArray = intArrayOf()
-            val actual:IntArray = intArrayOf()
-            reversePartOfArray(0, 0, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun EndIndexBiggerThanSize_MustWork() {
-            val expected: IntArray = intArrayOf(1, 2, 5, 4, 3)
-            val actual: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            reversePartOfArray(2, 10, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun StartIndexLessThanZero_MustWork() {
-            val expected: IntArray = intArrayOf(3, 2, 1, 4, 5)
-            val actual: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            reversePartOfArray(-10, 2, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun EndIndexLessThanStart_MustWork() {
-            val expected: IntArray = intArrayOf(0, 2, 3, 1)
-            val actual: IntArray = intArrayOf(0, 2, 3, 1)
-            reversePartOfArray(3, 2, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun EndIndexLessThanZero_MustWork() {
-            val expected: IntArray = intArrayOf(5, 4, 3, 2)
-            val actual: IntArray = intArrayOf(5, 4, 3, 2)
-            reversePartOfArray(0, -9, actual)
-            assertArrayEquals(expected, actual)
-        }
-
-        @Test
-        fun StartIndexBiggerThanSize_MustWork() {
-            val expected: IntArray = intArrayOf(5, 4, 3, 2)
-            val actual: IntArray = intArrayOf(5, 4, 3, 2)
-            reversePartOfArray(100, 3, actual)
-            assertArrayEquals(expected, actual)
-        }
-
+    @Test
+    fun changePartOfList_EmptyList_MustWork() {
+        val expected: List<Int> = listOf()
+        val actual: MutableList<Int> = mutableListOf()
+        changePartOfList(0, 0, actual)
+        assertIterableEquals(expected, actual)
     }
 
-    @Nested
-    inner class Check_ChangePartOfArray {
-        @Test
-        fun EmptyArray_MustWork() {
-            val expected: IntArray = intArrayOf()
-            val actual: IntArray = intArrayOf()
-            changePartOfArray(0, actual)
-            assertArrayEquals(expected, actual)
-        }
+    @Test
+    fun changePartOfList_SingleElementList_MustWork() {
+        val expected: List<Int> = listOf(1)
+        val actual: MutableList<Int> = mutableListOf(1)
+        changePartOfList(1, 0, actual)
+        assertIterableEquals(expected, actual)
+    }
 
-        @Test
-        fun SingleElementArray_MustWork() {
-            val expected: IntArray = intArrayOf(1)
-            val actual: IntArray = intArrayOf(1)
-            changePartOfArray(1, actual)
-            assertArrayEquals(expected, actual)
-        }
+    @Test
+    fun changePartOfList_SimpleList_MustWork() {
+        val expected: List<Int> = listOf(9, 10, 6, 7, 8)
+        val actual: MutableList<Int> = mutableListOf(6, 7, 8, 9, 10)
+        changePartOfList(3, 2, actual)
+        assertIterableEquals(expected, actual)
+    }
 
-        @Test
-        fun PartLengthMoreThanSize_MustWork() {
-            val expected: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            val actual: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            changePartOfArray(100, actual)
-            assertArrayEquals(expected, actual)
-        }
+    @Test
+    fun changePartOfList_LargeList_MustWork() {
+        val expected: MutableList<Int> = MutableList(4999) { it }
+        expected.add(0, 4999)
 
-        @Test
-        fun PartLengthLessThanZero_MustWork() {
-            val expected: IntArray = intArrayOf(6, 7, 8, 9)
-            val actual: IntArray = intArrayOf(6, 7, 8, 9)
-            changePartOfArray(-1, actual)
-            assertArrayEquals(expected, actual)
-        }
+        val actual: MutableList<Int> = MutableList(5000) { it }
+        changePartOfList(4999, 1, actual)
+        assertIterableEquals(expected, actual)
+    }
 
-        @Test
-        fun SimpleArray1_MustWork() {
-            val expected: IntArray = intArrayOf(9, 10, 6, 7, 8)
-            val actual: IntArray = intArrayOf(6, 7, 8, 9, 10)
-            changePartOfArray(3, actual)
-            assertArrayEquals(expected, actual)
-        }
+    @Test
+    fun changePartOfList_ZeroSizeOfFirstPart_MustWork() {
+        val expected: List<Int> = listOf(1, 2, 3, 4, 5)
+        val actual: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5)
+        changePartOfList(0, 5, actual)
+        assertIterableEquals(expected, actual)
+    }
 
-        @Test
-        fun SimpleArray2_MustWork() {
-            val expected: IntArray = intArrayOf(5, 1, 2, 3, 4)
-            val actual: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            changePartOfArray(4, actual)
-            assertArrayEquals(expected, actual)
-        }
+    @Test
+    fun changePartOfList_ZeroSizeOfSecondPart_MustWork() {
+        val expected: List<Int> = listOf(1, 2, 3, 4, 5)
+        val actual: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5)
+        changePartOfList(5, 0, actual)
+        assertIterableEquals(expected, actual)
+    }
 
-        @Test
-        fun PartLengthIsEqualToSize_MustWork() {
-            val expected: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            val actual: IntArray = intArrayOf(1, 2, 3, 4, 5)
-            changePartOfArray(5, actual)
-            assertArrayEquals(expected, actual)
+    @Test
+    fun changePartOfList_SumOfPartsIsBiggerThanListSize_ThrowsException() {
+        val actual: MutableList<Int> = mutableListOf(1, 2, 3, 4, 5)
+        assertThrows(IndexOutOfBoundsException::class.java) {
+            changePartOfList(3, 4, actual)
+        }
+    }
+
+    @Test
+    fun changePartOfList_FirstPartLengthLessThanZero_ThrowsException() {
+        val actual: MutableList<Int> = mutableListOf(5, 6, 7, 8, 9)
+        assertThrows(IndexOutOfBoundsException::class.java) {
+            changePartOfList(-1, 1, actual)
+        }
+    }
+
+    @Test
+    fun changePartOfList_SecondPartLengthLessThanZero_ThrowsException() {
+        val actual: MutableList<Int> = mutableListOf(5, 6, 7, 8, 9)
+        assertThrows(IndexOutOfBoundsException::class.java) {
+            changePartOfList(1, -1, actual)
         }
     }
 }
