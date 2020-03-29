@@ -1,5 +1,6 @@
 package homeworks.homework1.task1
 
+import java.lang.IndexOutOfBoundsException
 import java.util.Scanner
 
 fun scanPositiveInteger(): Int {
@@ -12,44 +13,38 @@ fun scanPositiveInteger(): Int {
     return number
 }
 
-fun scanIntegerArray(size: Int): IntArray {
-    val scan = Scanner(System.`in`)
-    return IntArray(size) { scan.nextInt() }
-}
-
 /**
- * Reverses part of an array including elements with indices [startIndex] and [endIndex]
+ * Tries to read an array from the console until the array is entered correctly
  * */
-fun reversePartOfArray(startIndex: Int, endIndex: Int, array: IntArray) {
-    var leftIndex = when {
-        (startIndex < 0) -> 0
-        (startIndex >= array.size) -> array.size - 1
-        else -> startIndex
+fun scanIntList(delimiters: Regex = Regex(" +")): List<Int> {
+    var scannedArray: List<Int>? = null
+    while (scannedArray == null) {
+        try {
+            scannedArray = readLine()?.trim()?.split(delimiters)?.map { it.toInt() }
+        } catch (exception: NumberFormatException) {
+            println("Please, enter a string of integers only.")
+            continue
+        }
+        if (scannedArray == null) {
+            println("Please, try to enter the string of integers again.")
+        }
     }
-    var rightIndex = when {
-        endIndex < leftIndex -> leftIndex
-        (endIndex >= array.size) -> array.size - 1
-        else -> endIndex
-    }
-
-    val numberOfSwapping = (rightIndex - leftIndex + 1) / 2
-    repeat(numberOfSwapping) {
-        array[leftIndex] = array[rightIndex].also { array[rightIndex] = array[leftIndex] }
-        rightIndex--
-        leftIndex++
-    }
+    return scannedArray
 }
 
-fun changePartOfArray(firstPartLength: Int, array: IntArray) {
-    val safeFirstPartLength = when {
-        firstPartLength > array.size -> array.size
-        firstPartLength < 0 -> 0
-        else -> firstPartLength
+fun changePartOfList(firstPartLength: Int, secondPartLength: Int, list: MutableList<Int>) {
+    when {
+        firstPartLength < 0 || secondPartLength < 0 -> {
+            throw IndexOutOfBoundsException("The size of the list part is negative")
+        }
+        firstPartLength + secondPartLength != list.size -> {
+            throw IndexOutOfBoundsException("The list size doesn't equal to the sum of its parts")
+        }
     }
 
-    reversePartOfArray(0, safeFirstPartLength - 1, array)
-    reversePartOfArray(safeFirstPartLength, array.size - 1, array)
-    reversePartOfArray(0, array.size - 1, array)
+    list.subList(0, firstPartLength).reverse()
+    list.subList(firstPartLength, list.size).reverse()
+    list.subList(0, list.size).reverse()
 }
 
 fun main() {
@@ -59,10 +54,13 @@ fun main() {
     println("Enter the number of elements in the second part of the array:")
     val sizeOfSecondPart = scanPositiveInteger()
 
-    val sizeOfArray = sizeOfFirstPart + sizeOfSecondPart
     println("Enter the array:")
-    val inputArray: IntArray = scanIntegerArray(sizeOfArray)
+    val inputList: MutableList<Int> = scanIntList().toMutableList()
 
-    changePartOfArray(sizeOfFirstPart, inputArray)
-    println("Array with moved parts: ${inputArray.joinToString(", ", "[", "]")}")
+    try {
+        changePartOfList(sizeOfFirstPart, sizeOfSecondPart, inputList)
+        println("Array with moved parts: ${inputList.joinToString(", ", "[", "]")}")
+    } catch (exception: IndexOutOfBoundsException) {
+        println("Error: ${exception.message}")
+    }
 }
