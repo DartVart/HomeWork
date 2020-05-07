@@ -4,11 +4,11 @@ import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 
 /**
- * Tries to read an non-negative integer from the console until the integer is entered correctly
+ * Tries to read a positive integer from the console until the integer is entered correctly
  * */
-fun scanNonNegativeInteger(): Int {
+fun scanPositiveInteger(): Int {
     var number: Int? = null
-    while (number == null || number < 0) {
+    while (number == null || number <= 0) {
         try {
             number = readLine()?.toInt()
         } catch (exception: NumberFormatException) {
@@ -18,10 +18,10 @@ fun scanNonNegativeInteger(): Int {
 
         when {
             number == null -> {
-                println("Please, try to enter the integer again.")
+                println("Please, try to enter an integer again.")
             }
-            number < 0 -> {
-                println("Please, enter the non-negative integer.")
+            number <= 0 -> {
+                println("Please, enter a positive integer.")
             }
         }
     }
@@ -42,7 +42,7 @@ fun scanIntList(delimiters: Regex = Regex(" +")): List<Int> {
         }
 
         if (scannedList == null) {
-            println("Please, try to enter the string of integers again.")
+            println("Please, try to enter a string of integers again.")
         }
     }
     return scannedList
@@ -50,10 +50,10 @@ fun scanIntList(delimiters: Regex = Regex(" +")): List<Int> {
 
 fun scanInputData(): Triple<Int, Int, MutableList<Int>> {
     println("Enter the number of elements in the first part of the array:")
-    val firstPartLength = scanNonNegativeInteger()
+    val firstPartLength = scanPositiveInteger()
 
     println("Enter the number of elements in the second part of the array:")
-    val secondPartLength = scanNonNegativeInteger()
+    val secondPartLength = scanPositiveInteger()
 
     println("Enter the array:")
     val list = scanIntList().toMutableList()
