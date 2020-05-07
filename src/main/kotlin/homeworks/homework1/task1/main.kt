@@ -1,14 +1,28 @@
 package homeworks.homework1.task1
 
 import java.lang.IllegalArgumentException
-import java.util.Scanner
 
+/**
+ * Tries to read an non-negative integer from the console until the integer is entered correctly
+ * */
 fun scanPositiveInteger(): Int {
-    val scan = Scanner(System.`in`)
-    var number = scan.nextInt()
-    while (number < 0) {
-        println("Please, enter a non-negative integer.")
-        number = scan.nextInt()
+    var number: Int? = null
+    while (number == null || number < 0) {
+        try {
+            number = readLine()?.toInt()
+        } catch (exception: NumberFormatException) {
+            println("Please, enter a single integer.")
+            continue
+        }
+
+        when {
+            number == null -> {
+                println("Please, try to enter the integer again.")
+            }
+            number < 0 -> {
+                println("Please, enter the non-negative integer.")
+            }
+        }
     }
     return number
 }
