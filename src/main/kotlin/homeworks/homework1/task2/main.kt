@@ -1,13 +1,27 @@
 package homeworks.homework1.task2
 
-import java.util.Scanner
 
+/**
+ * Tries to read a non-negative integer from the console until the integer is entered correctly
+ * */
 fun scanNonNegativeInteger(): Int {
-    val scan = Scanner(System.`in`)
-    var number = scan.nextInt()
-    while (number < 0) {
-        println("Please, enter a non-negative integer.")
-        number = scan.nextInt()
+    var number: Int? = null
+    while (number == null || number < 0) {
+        try {
+            number = readLine()?.toInt()
+        } catch (exception: NumberFormatException) {
+            println("Please, enter a single integer.")
+            continue
+        }
+
+        when {
+            number == null -> {
+                println("Please, try to enter an integer again.")
+            }
+            number < 0 -> {
+                println("Please, enter a non-negative integer.")
+            }
+        }
     }
     return number
 }
