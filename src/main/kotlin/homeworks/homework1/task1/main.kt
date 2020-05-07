@@ -1,6 +1,7 @@
 package homeworks.homework1.task1
 
 import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 
 /**
  * Tries to read an non-negative integer from the console until the integer is entered correctly
@@ -47,35 +48,40 @@ fun scanIntList(delimiters: Regex = Regex(" +")): List<Int> {
     return scannedList
 }
 
-fun changePartOfList(firstPartLength: Int, secondPartLength: Int, list: MutableList<Int>) {
-    val listSize = firstPartLength + secondPartLength
-    when {
-        firstPartLength < 0 || secondPartLength < 0 -> {
-            throw IllegalArgumentException("The size of the list part is negative")
-        }
-        listSize != list.size -> {
-            throw IllegalArgumentException("The list size doesn't equal to the sum of its parts")
-        }
+fun scanInputData(): Triple<Int, Int, MutableList<Int>> {
+    println("Enter the number of elements in the first part of the array:")
+    val firstPartLength = scanPositiveInteger()
+
+    println("Enter the number of elements in the second part of the array:")
+    val secondPartLength = scanPositiveInteger()
+
+    println("Enter the array:")
+    val list = scanIntList().toMutableList()
+
+    check(secondPartLength + firstPartLength == list.size) {
+        "The list size doesn't equal to the sum of its parts"
+    }
+
+    return Triple(firstPartLength, secondPartLength, list)
+}
+
+fun changePartsOfList(firstPartLength: Int, secondPartLength: Int, list: MutableList<Int>) {
+    require(secondPartLength + firstPartLength == list.size) {
+        "The list size doesn't equal to the sum of its parts"
     }
 
     list.subList(0, firstPartLength).reverse()
-    list.subList(firstPartLength, listSize).reverse()
+    list.subList(firstPartLength, firstPartLength + secondPartLength).reverse()
     list.reverse()
 }
 
 fun main() {
-    println("Enter the number of elements in the first part of the array:")
-    val sizeOfFirstPart = scanPositiveInteger()
-
-    println("Enter the number of elements in the second part of the array:")
-    val sizeOfSecondPart = scanPositiveInteger()
-
-    println("Enter the array:")
-    val inputList: MutableList<Int> = scanIntList().toMutableList()
-
     try {
-        changePartOfList(sizeOfFirstPart, sizeOfSecondPart, inputList)
+        val (sizeOfFirstPart, sizeOfSecondPart, inputList) = scanInputData()
+        changePartsOfList(sizeOfFirstPart, sizeOfSecondPart, inputList)
         println("Array with moved parts: ${inputList.joinToString(", ", "[", "]")}")
+    } catch (exception: IllegalStateException) {
+        println("Error: ${exception.message}")
     } catch (exception: IllegalArgumentException) {
         println("Error: ${exception.message}")
     }
