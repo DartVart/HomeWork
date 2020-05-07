@@ -1,6 +1,5 @@
 package homeworks.homework1.task2
 
-
 /**
  * Tries to read a non-negative integer from the console until the integer is entered correctly
  * */
