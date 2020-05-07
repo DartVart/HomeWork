@@ -6,7 +6,7 @@ import java.lang.IllegalStateException
 /**
  * Tries to read an non-negative integer from the console until the integer is entered correctly
  * */
-fun scanPositiveInteger(): Int {
+fun scanNonNegativeInteger(): Int {
     var number: Int? = null
     while (number == null || number < 0) {
         try {
@@ -50,10 +50,10 @@ fun scanIntList(delimiters: Regex = Regex(" +")): List<Int> {
 
 fun scanInputData(): Triple<Int, Int, MutableList<Int>> {
     println("Enter the number of elements in the first part of the array:")
-    val firstPartLength = scanPositiveInteger()
+    val firstPartLength = scanNonNegativeInteger()
 
     println("Enter the number of elements in the second part of the array:")
-    val secondPartLength = scanPositiveInteger()
+    val secondPartLength = scanNonNegativeInteger()
 
     println("Enter the array:")
     val list = scanIntList().toMutableList()
