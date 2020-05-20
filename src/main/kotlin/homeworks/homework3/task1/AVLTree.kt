@@ -18,11 +18,13 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
 
     private var root: Node? = null
 
-    private val balanceFactorNeededForLeftTurn = 2
-    private val balanceFactorNeededForRightTurn = -2
-
     private var returnValueAfterPutting: V? = null
     private var returnValueAfterRemoval: V? = null
+
+    companion object {
+        private const val BALANCE_FACTOR_NEEDED_FOR_RIGHT_TURN = -2
+        private const val BALANCE_FACTOR_NEEDED_FOR_LEFT_TURN = 2
+    }
 
     private inner class Node(override val key: K, override var value: V) : Map.Entry<K, V>, Iterable<Node> {
         private var rightChild: Node? = null
@@ -75,13 +77,13 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
         private fun getBalancedNode(): Node? {
             updateHeight()
             return when (balanceFactor) {
-                balanceFactorNeededForLeftTurn -> {
+                BALANCE_FACTOR_NEEDED_FOR_LEFT_TURN -> {
                     if ((rightChild?.balanceFactor ?: 0) < 0) {
                         rightChild = rightChild?.rotateRight()
                     }
                     rotateLeft()
                 }
-                balanceFactorNeededForRightTurn -> {
+                BALANCE_FACTOR_NEEDED_FOR_RIGHT_TURN -> {
                     if ((leftChild?.balanceFactor ?: 0) > 0) {
                         leftChild = leftChild?.rotateLeft()
                     }
