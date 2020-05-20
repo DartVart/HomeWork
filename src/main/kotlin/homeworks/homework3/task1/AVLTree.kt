@@ -15,7 +15,7 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
 
     override val size: Int
         get() = root?.sizeOfSubtree ?: 0
-    
+
     private var root: Node? = null
 
     private val balanceFactorNeededForLeftTurn = 2
@@ -161,7 +161,7 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
             }
             return getBalancedNode()
         }
-        
+
         override fun iterator(): Iterator<Node> {
             val stackOfNodes = Stack<Node>()
             stackOfNodes.push(this)
