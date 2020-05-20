@@ -151,13 +151,14 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
                 }
                 else -> {
                     returnValueAfterRemoval = this.value
-                    if (rightChild == null) {
-                        return leftChild
+                    return if (rightChild == null) {
+                        leftChild
+                    } else {
+                        val minimumInRightSubtree = rightChild?.minimumInSubtree
+                        minimumInRightSubtree?.rightChild = rightChild?.separateMinimumFromSubtree()
+                        minimumInRightSubtree?.leftChild = leftChild
+                        minimumInRightSubtree?.getBalancedNode()
                     }
-                    val minimumInRightSubtree = rightChild?.minimumInSubtree
-                    minimumInRightSubtree?.rightChild = rightChild?.separateMinimumFromSubtree()
-                    minimumInRightSubtree?.leftChild = leftChild
-                    return minimumInRightSubtree?.getBalancedNode()
                 }
             }
             return getBalancedNode()
