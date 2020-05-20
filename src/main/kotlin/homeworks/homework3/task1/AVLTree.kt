@@ -51,6 +51,9 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
         val sizeOfSubtree: Int
             get() = (rightChild?.sizeOfSubtree ?: 0) + (leftChild?.sizeOfSubtree ?: 0) + 1
 
+        private val minimumInSubtree: Node?
+            get() = leftChild?.minimumInSubtree ?: this
+
         private fun rotateLeft(): Node? {
             val pivot = rightChild
             rightChild = pivot?.leftChild
@@ -76,13 +79,13 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
                     if ((rightChild?.balanceFactor ?: 0) < 0) {
                         rightChild = rightChild?.rotateRight()
                     }
-                    return rotateLeft()
+                    rotateLeft()
                 }
                 balanceFactorNeededForRightTurn -> {
                     if ((leftChild?.balanceFactor ?: 0) > 0) {
                         leftChild = leftChild?.rotateLeft()
                     }
-                    return rotateRight()
+                    rotateRight()
                 }
                 else -> {
                     this
@@ -128,10 +131,6 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
             return getBalancedNode()
         }
 
-        private fun getMinimumInSubtree(): Node? {
-            return leftChild?.getMinimumInSubtree() ?: this
-        }
-
         private fun separateMinimumFromSubtree(): Node? {
             if (leftChild == null) {
                 return rightChild
@@ -153,7 +152,7 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
                     if (rightChild == null) {
                         return leftChild
                     }
-                    val minimumInRightSubtree = rightChild?.getMinimumInSubtree()
+                    val minimumInRightSubtree = rightChild?.minimumInSubtree
                     minimumInRightSubtree?.rightChild = rightChild?.separateMinimumFromSubtree()
                     minimumInRightSubtree?.leftChild = leftChild
                     return minimumInRightSubtree?.getBalancedNode()
