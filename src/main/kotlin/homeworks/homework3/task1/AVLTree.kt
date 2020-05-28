@@ -48,6 +48,10 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
         return result
     }
 
+    fun equalsTo(tree: AVLTree<K, V>): Boolean {
+        return root?.equalsTo(tree.root) ?: (tree.root == null)
+    }
+
     private inner class SubtreeOperations {
         fun getNodeToInsert(key: K, value: V): Node<K, V> {
             size++

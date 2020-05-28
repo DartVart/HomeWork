@@ -30,6 +30,36 @@ internal class AVLTreeTest {
     private val emptyTree = AVLTree<Int, String>()
 
     @Nested
+    inner class Check_equalsTo {
+        @Test
+        fun onlyFirstTreeIsEmpty_MustWork() {
+            println(emptyTree)
+            println(smallTree)
+            assertFalse(emptyTree.equalsTo(smallTree))
+        }
+
+        @Test
+        fun onlySecondTreeIsEmpty_MustWork() {
+            assertFalse(smallTree.equalsTo(emptyTree))
+        }
+
+        @Test
+        fun bothTreesAreEmpty_MustWork() {
+            assertTrue(emptyTree.equalsTo(emptyTree))
+        }
+
+        @Test
+        fun notIdenticalAndNotEmptyTrees_MustWork() {
+            assertFalse(bigTree.equalsTo(smallTree))
+        }
+
+        @Test
+        fun identicalAndNotEmptyTrees_MustWork() {
+            assertTrue(bigTree.equalsTo(getBigTree()))
+        }
+    }
+
+    @Nested
     inner class Check_containsKey {
         @Test
         fun emptyTree_MustWork() {
@@ -217,7 +247,7 @@ internal class AVLTreeTest {
             tree.put(2, "2")
             tree.remove(2)
             tree.remove(3)
-            assertTrue(tree.isEmpty())
+            assertTrue(tree.equalsTo(emptyTree))
         }
     }
 }

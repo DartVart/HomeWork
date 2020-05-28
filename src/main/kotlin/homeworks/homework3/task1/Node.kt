@@ -99,4 +99,13 @@ class Node<K, V>(override val key: K, override var value: V) : Map.Entry<K, V>, 
             }
         }.iterator()
     }
+
+    fun equalsTo(node: Node<K, V>?): Boolean {
+        return node?.let {
+            node.value == value &&
+                    node.key == key &&
+                    rightChild?.equalsTo(node.rightChild) ?: (node.rightChild == null) &&
+                    leftChild?.equalsTo(node.leftChild) ?: (node.leftChild == null)
+        } ?: false
+    }
 }
