@@ -1,6 +1,7 @@
 package homeworks.homework3.task1
 
 import java.util.Stack
+import kotlin.math.max
 
 class Node<K, V>(override val key: K, override var value: V) : Map.Entry<K, V>, Iterable<Node<K, V>>
         where K : Comparable<K> {
@@ -30,7 +31,7 @@ class Node<K, V>(override val key: K, override var value: V) : Map.Entry<K, V>, 
         get() = rightChildHeight - leftChildHeight
 
     fun updateHeight() {
-        height = kotlin.math.max(leftChildHeight, rightChildHeight) + 1
+        height = max(leftChildHeight, rightChildHeight) + 1
     }
 
     private fun rotateLeft(): Node<K, V>? {
