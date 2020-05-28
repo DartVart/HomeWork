@@ -13,8 +13,7 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
     override val values: Collection<V>
         get() = root?.asSequence()?.map { it.value }?.toList() ?: listOf()
 
-    override val size: Int
-        get() = root?.sizeOfSubtree ?: 0
+    override var size = 0
 
     private var root: Node? = null
 
@@ -27,6 +26,10 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
     }
 
     private inner class Node(override val key: K, override var value: V) : Map.Entry<K, V>, Iterable<Node> {
+        init {
+            size++
+        }
+
         private var rightChild: Node? = null
         private var leftChild: Node? = null
         private val children: List<Node>
@@ -49,9 +52,6 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
         private fun updateHeight() {
             height = max(leftChildHeight, rightChildHeight) + 1
         }
-
-        val sizeOfSubtree: Int
-            get() = (rightChild?.sizeOfSubtree ?: 0) + (leftChild?.sizeOfSubtree ?: 0) + 1
 
         private val minimumInSubtree: Node?
             get() = leftChild?.minimumInSubtree ?: this
@@ -151,6 +151,7 @@ class AVLTree<K, V> : Map<K, V> where K : Comparable<K> {
                 }
                 else -> {
                     returnValueAfterRemoval = this.value
+                    size--
                     return if (rightChild == null) {
                         leftChild
                     } else {
