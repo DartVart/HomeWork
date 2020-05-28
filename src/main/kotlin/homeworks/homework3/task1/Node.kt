@@ -29,7 +29,7 @@ class Node<K, V>(override val key: K, override var value: V) : Map.Entry<K, V>, 
     private val balanceFactor: Int
         get() = rightChildHeight - leftChildHeight
 
-    private fun updateHeight() {
+    fun updateHeight() {
         height = kotlin.math.max(leftChildHeight, rightChildHeight) + 1
     }
 

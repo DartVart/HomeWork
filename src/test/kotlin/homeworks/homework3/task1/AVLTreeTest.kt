@@ -33,8 +33,6 @@ internal class AVLTreeTest {
     inner class Check_equalsTo {
         @Test
         fun onlyFirstTreeIsEmpty_MustWork() {
-            println(emptyTree)
-            println(smallTree)
             assertFalse(emptyTree.equalsTo(smallTree))
         }
 
