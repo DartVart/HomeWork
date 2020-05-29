@@ -43,7 +43,7 @@ internal class AVLTreeTest {
 
         @Test
         fun bothTreesAreEmpty_MustWork() {
-            assertTrue(emptyTree.equalsTo(emptyTree))
+            assertTrue(emptyTree.equalsTo(AVLTree()))
         }
 
         @Test
@@ -54,6 +54,11 @@ internal class AVLTreeTest {
         @Test
         fun identicalAndNotEmptyTrees_MustWork() {
             assertTrue(bigTree.equalsTo(getBigTree()))
+        }
+
+        @Test
+        fun objectsThatAreEqualByReference_MustWork() {
+            assertTrue(bigTree.equalsTo(bigTree))
         }
     }
 

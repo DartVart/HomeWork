@@ -30,7 +30,7 @@ internal class NodeTest {
     inner class Check_equalsTo {
         @Test
         fun argumentIsNull_MustWork() {
-            assertFalse(simpleNode.equalsTo(null))
+            assertFalse(getNodeWithChildren().equalsTo(null))
         }
 
         @Test
@@ -39,22 +39,27 @@ internal class NodeTest {
         }
 
         @Test
-        fun identicalNodesWithChildren_MustWork_MustWork() {
+        fun identicalNodesWithChildren_MustWork() {
             val firstNode = getNodeWithChildren()
             val secondNode = getNodeWithChildren()
             assertTrue(firstNode.equalsTo(secondNode))
         }
 
         @Test
-        fun notIdenticalNodes() {
+        fun notIdenticalNodes_MustWork() {
             assertFalse(getNodeWithChildren().equalsTo(simpleNode))
+        }
+
+        @Test
+        fun objectsThatAreEqualByReference_MustWork() {
+            assertTrue(simpleNode.equalsTo(simpleNode))
         }
     }
 
     @Nested
     inner class Check_getMinimumNode {
         @Test
-        fun nodeWithoutChildren_MustWork_MustWork() {
+        fun nodeWithoutChildren_MustWork() {
             val result = simpleNode.getMinimumNode()
             assertTrue(simpleNode.equalsTo(result))
         }
@@ -83,7 +88,7 @@ internal class NodeTest {
     @Nested
     inner class Check_separateMinimumNode {
         @Test
-        fun nodeWithoutChildren_MustWork_MustWork() {
+        fun nodeWithoutChildren_MustWork() {
             assertNull(simpleNode.separateMinimumNode())
         }
 
