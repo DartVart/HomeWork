@@ -16,6 +16,7 @@ internal class BucketTest {
         bucket.add(321, "321")
         return bucket
     }
+
     val immutableSimpleBucket = getSimpleBucket()
 
     @Nested
