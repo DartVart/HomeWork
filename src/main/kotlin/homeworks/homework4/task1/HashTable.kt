@@ -121,11 +121,8 @@ class HashTable<K, V>(
             if (!inputFile.exists()) {
                 throw FileNotFoundException("File \"${inputFile.path}\" not found.")
             }
-            if (stringToKey == null) {
-                throw NullPointerException("A function that translates a string to a K value is not initialized.")
-            }
-            if (stringToValue == null) {
-                throw NullPointerException("A function that translates a string to a V value is not initialized.")
+            if (stringToKey == null || stringToValue == null) {
+                throw NullPointerException("The function of converting a string to a key or value is not initialized")
             }
 
             val regex = Regex("""\S+:\S+""")
