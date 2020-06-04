@@ -203,9 +203,9 @@ internal class HashTableTest {
         fun stringToKeyIsNull_ThrowsException() {
             val hashTable = getEmptyHashTable()
             hashTable.fileParser.stringToValue = { it }
-            val nonexistentFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/empty.txt")
+            val inputFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/empty.txt")
             assertThrows(NullPointerException::class.java) {
-                hashTable.fileParser.fillFromFile(nonexistentFile)
+                hashTable.fileParser.fillFromFile(inputFile)
             }
         }
 
@@ -213,9 +213,9 @@ internal class HashTableTest {
         fun stringToValueIsNull_ThrowsException() {
             val hashTable = getEmptyHashTable()
             hashTable.fileParser.stringToKey = { it }
-            val nonexistentFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/empty.txt")
+            val inputFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/empty.txt")
             assertThrows(NullPointerException::class.java) {
-                hashTable.fileParser.fillFromFile(nonexistentFile)
+                hashTable.fileParser.fillFromFile(inputFile)
             }
         }
 
