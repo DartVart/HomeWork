@@ -1,13 +1,14 @@
 package homeworks.homework4.task1
 
+import homeworks.homework4.task1.hashFunctions.HashFunction
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.math.abs
 
 class HashTable<K, V>(
     private var size: Int = 20,
-    private val maxLoadFactor: Double = 0.9,
-    private var hashFunction: (K) -> Int
+    private var hashFunction: HashFunction<K>,
+    private val maxLoadFactor: Double = 0.9
 ) {
     private var arrayOfBuckets = Array(size) { Bucket<K, V>() }
     private var numberOfConflicts = 0
@@ -42,7 +43,7 @@ class HashTable<K, V>(
         }
     }
 
-    private fun getIndexByHashFunction(key: K) = abs(hashFunction(key)) % size
+    private fun getIndexByHashFunction(key: K) = abs(hashFunction.getHash(key)) % size
 
     fun add(key: K, value: V): Boolean {
         val requiredBucketIndex = getIndexByHashFunction(key)
@@ -83,7 +84,7 @@ class HashTable<K, V>(
      * Functions that give a negative result may be accepted.
      * In this case, the absolute value will be taken.
      * */
-    fun setHashFunction(hashFunction: (K) -> Int) {
+    fun setHashFunction(hashFunction: HashFunction<K>) {
         this.hashFunction = hashFunction
         rebuild()
     }

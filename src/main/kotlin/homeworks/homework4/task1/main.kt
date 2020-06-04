@@ -1,5 +1,7 @@
 package homeworks.homework4.task1
 
+import homeworks.homework4.task1.hashFunctions.PolynomialHashFunction
+import homeworks.homework4.task1.hashFunctions.SimpleHashFunction
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -107,14 +109,14 @@ fun handleFindAction(hashTable: HashTable<String, String>) {
 }
 
 fun handleChangeHashFunctionAction(hashTable: HashTable<String, String>) {
-    println("Enter \"polynomial\" to connect the polynomial hash function.")
-    println("Enter \"simple\" to connect the simple hash function.")
+    println("Enter \"${HashFunctions.POLYNOMIAL.code}\" to connect the polynomial hash function.")
+    println("Enter \"${HashFunctions.SIMPLE.code}\" to connect the simple hash function.")
     var command: String?
     do {
         command = readLine()
         when (command) {
-            HashFunctions.SIMPLE.code -> hashTable.setHashFunction { simpleHashFunction(it) }
-            HashFunctions.POLYNOMIAL.code -> hashTable.setHashFunction { polynomialHashFunction(it) }
+            HashFunctions.SIMPLE.code -> hashTable.setHashFunction(SimpleHashFunction())
+            HashFunctions.POLYNOMIAL.code -> hashTable.setHashFunction(PolynomialHashFunction())
             else -> {
                 println("Invalid input. Please enter again.")
                 command = null
@@ -124,7 +126,7 @@ fun handleChangeHashFunctionAction(hashTable: HashTable<String, String>) {
 }
 
 fun main() {
-    val hashTable = HashTable<String, String>(INITIAL_SIZE) { simpleHashFunction(it) }
+    val hashTable = HashTable<String, String>(INITIAL_SIZE, SimpleHashFunction())
     hashTable.fileParser.stringToKey = { it }
     hashTable.fileParser.stringToValue = { it }
     val file = File(PATH_TO_TEXT_FILE)

@@ -1,5 +1,7 @@
 package homeworks.homework4.task1
 
+import homeworks.homework4.task1.hashFunctions.PolynomialHashFunction
+import homeworks.homework4.task1.hashFunctions.SimpleHashFunction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -14,7 +16,9 @@ import java.io.File as File
 const val PATH_TO_DIRECTORY_WITH_TEXTS = "./src/test/resources/homeworks/homework4/task1"
 
 internal class HashTableTest {
-    fun getEmptyHashTable() = HashTable<String, String>(INITIAL_SIZE) { simpleHashFunction(it) }
+    private val simpleHashFunction = SimpleHashFunction()
+    private val polynomialHashFunction = PolynomialHashFunction()
+    fun getEmptyHashTable() = HashTable<String, String>(INITIAL_SIZE, simpleHashFunction)
     fun getBigAlmostFilledHashTable(): HashTable<String, String> {
         val hashTable = getEmptyHashTable()
         for (i in 0..1000) {
@@ -130,7 +134,7 @@ internal class HashTableTest {
         private val hashTableWithAnotherHashFunction = getBigAlmostFilledHashTable()
 
         init {
-            hashTableWithAnotherHashFunction.setHashFunction { polynomialHashFunction(it) }
+            hashTableWithAnotherHashFunction.setHashFunction(polynomialHashFunction)
         }
 
         @Test
