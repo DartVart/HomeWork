@@ -1,10 +1,10 @@
 package homeworks.homework4.task2
 
-import java.io.File
-import java.io.FileNotFoundException
+import java.io.InputStream
+import java.lang.IllegalStateException
 import java.util.LinkedList
 
-class FileParser {
+class StreamParser {
     var tokens = LinkedList<String>()
 
     private fun getArithmeticExpressionTreeByString(inputString: String): ArithmeticExpressionElement {
@@ -44,12 +44,12 @@ class FileParser {
         return resultNode
     }
 
-    fun parseFile(inputFile: File): ArithmeticExpressionElement {
-        if (!inputFile.exists()) {
-            throw FileNotFoundException("File \"${inputFile.path}\" not found.")
-        }
-        val inputString = inputFile.bufferedReader().readLine()
-        check(!inputString.isNullOrBlank()) { "Arithmetic expression not found in the file \"${inputFile.path}\"." }
+    /**
+     * If the stream is blank or line reading returned null, [IllegalStateException] will be thrown
+     * */
+    fun parseStream(inputStream: InputStream): ArithmeticExpressionElement {
+        val inputString = inputStream.bufferedReader().readLine()
+        check(!inputString.isNullOrBlank()) { "Arithmetic expression not found." }
         return getArithmeticExpressionTreeByString(inputString)
     }
 }
