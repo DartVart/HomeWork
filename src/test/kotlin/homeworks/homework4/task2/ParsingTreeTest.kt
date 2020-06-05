@@ -12,12 +12,6 @@ import java.lang.IllegalStateException
 const val PATH_TO_TEXT_FILE = "./src/test/resources/homeworks/homework4/task2/expression.txt"
 
 internal class ParsingTreeTest {
-    fun getTreeFromStream(inputStream: InputStream): ParsingTree {
-        val parsingTree = ParsingTree()
-        parsingTree.setExpressionFromStream(inputStream)
-        return parsingTree
-    }
-
     private fun getStreamFromString(string: String) = ByteArrayInputStream(string.toByteArray())
 
     val twoOperands = getStreamFromString("(+ 90 1)")
@@ -33,74 +27,58 @@ internal class ParsingTreeTest {
     inner class Check_toString {
         @Test
         fun twoOperands_MustWork() {
-            val actual = getTreeFromStream(twoOperands).toString()
+            val actual = ParsingTree(twoOperands).toString()
             val expected = "(+ 90 1)"
             assertEquals(expected, actual)
         }
 
         @Test
         fun operandThenOperatorAsChildren_MustWork() {
-            val actual = getTreeFromStream(operandThenOperatorAsChildren).toString()
+            val actual = ParsingTree(operandThenOperatorAsChildren).toString()
             val expected = "(* 90 (- 0 3))"
             assertEquals(expected, actual)
         }
 
         @Test
         fun operatorThenOperandAsChildren_MustWork() {
-            val actual = getTreeFromStream(operatorThenOperandAsChildren).toString()
+            val actual = ParsingTree(operatorThenOperandAsChildren).toString()
             val expected = "(/ (- 30 -34) 8)"
             assertEquals(expected, actual)
         }
 
         @Test
         fun twoOperandsAsChildren_MustWork() {
-            val actual = getTreeFromStream(twoOperandsAsChildren).toString()
+            val actual = ParsingTree(twoOperandsAsChildren).toString()
             val expected = "(- (- 100 100) (- 100 100))"
             assertEquals(expected, actual)
         }
 
         @Test
         fun onlyOneOperand_MustWork() {
-            val actual = getTreeFromStream(onlyOneOperand).toString()
+            val actual = ParsingTree(onlyOneOperand).toString()
             val expected = "4"
             assertEquals(expected, actual)
         }
 
         @Test
         fun complexExpression1_MustWork() {
-            val actual = getTreeFromStream(complexExpression1).toString()
+            val actual = ParsingTree(complexExpression1).toString()
             val expected = "(+ (- 0 10) (/ (+ 90 80) (- 8 4)))"
             assertEquals(expected, actual)
         }
 
         @Test
         fun complexExpression2_MustWork() {
-            val actual = getTreeFromStream(complexExpression2).toString()
+            val actual = ParsingTree(complexExpression2).toString()
             val expected = "(+ (- 0 (+ 5 5)) (/ (+ (+ 34 8) (- 3 4)) (- (* 9 3) (/ 4 2))))"
             assertEquals(expected, actual)
         }
 
         @Test
         fun manyClosingBracketsNext_MustWork() {
-            val actual = getTreeFromStream(manyClosingBracketsNext).toString()
+            val actual = ParsingTree(manyClosingBracketsNext).toString()
             val expected = "(+ 3 (- 4 (+ 9 (* 8 (+ 10 (- -90 (- 78 9)))))))"
             assertEquals(expected, actual)
-        }
-
-        @Test
-        fun parsingFromMoreThanOneFile_MustWork() {
-            val tree = getTreeFromStream(complexExpression1)
-            tree.setExpressionFromStream(complexExpression2)
-            val actual = tree.toString()
-            val expected = "(+ (- 0 (+ 5 5)) (/ (+ (+ 34 8) (- 3 4)) (- (* 9 3) (/ 4 2))))"
-            assertEquals(expected, actual)
-        }
-
-        @Test
-        fun uninitializedTree_ThrowsException() {
-            assertThrows(IllegalStateException::class.java) {
-                ParsingTree().toString()
-            }
         }
     }
 
@@ -108,74 +86,58 @@ internal class ParsingTreeTest {
     inner class Check_calculate {
         @Test
         fun twoOperands_MustWork() {
-            val actual = getTreeFromStream(twoOperands).calculate()
+            val actual = ParsingTree(twoOperands).calculate()
             val expected = 91.0
             assertEquals(expected, actual)
         }
 
         @Test
         fun operandThenOperatorAsChildren_MustWork() {
-            val actual = getTreeFromStream(operandThenOperatorAsChildren).calculate()
+            val actual = ParsingTree(operandThenOperatorAsChildren).calculate()
             val expected = -270.0
             assertEquals(expected, actual)
         }
 
         @Test
         fun operatorThenOperandAsChildren_MustWork() {
-            val actual = getTreeFromStream(operatorThenOperandAsChildren).calculate()
+            val actual = ParsingTree(operatorThenOperandAsChildren).calculate()
             val expected = 8.0
             assertEquals(expected, actual)
         }
 
         @Test
         fun twoOperandsAsChildren_MustWork() {
-            val actual = getTreeFromStream(twoOperandsAsChildren).calculate()
+            val actual = ParsingTree(twoOperandsAsChildren).calculate()
             val expected = 0.0
             assertEquals(expected, actual)
         }
 
         @Test
         fun onlyOneOperand_MustWork() {
-            val actual = getTreeFromStream(onlyOneOperand).calculate()
+            val actual = ParsingTree(onlyOneOperand).calculate()
             val expected = 4.0
             assertEquals(expected, actual)
         }
 
         @Test
         fun complexExpression1_MustWork() {
-            val actual = getTreeFromStream(complexExpression1).calculate()
+            val actual = ParsingTree(complexExpression1).calculate()
             val expected = 32.5
             assertEquals(expected, actual)
         }
 
         @Test
         fun complexExpression2_MustWork() {
-            val actual = getTreeFromStream(complexExpression2).calculate()
+            val actual = ParsingTree(complexExpression2).calculate()
             val expected = -8.36
             assertEquals(expected, actual)
         }
 
         @Test
         fun manyClosingBracketsNext_MustWork() {
-            val actual = getTreeFromStream(manyClosingBracketsNext).calculate()
+            val actual = ParsingTree(manyClosingBracketsNext).calculate()
             val expected = 1190.0
             assertEquals(expected, actual)
-        }
-
-        @Test
-        fun parsingFromMoreThanOneFile_MustWork() {
-            val tree = getTreeFromStream(complexExpression1)
-            tree.setExpressionFromStream(complexExpression2)
-            val actual = tree.calculate()
-            val expected = -8.36
-            assertEquals(expected, actual)
-        }
-
-        @Test
-        fun uninitializedTree_ThrowsException() {
-            assertThrows(IllegalStateException::class.java) {
-                ParsingTree().calculate()
-            }
         }
     }
 
@@ -184,16 +146,15 @@ internal class ParsingTreeTest {
         @Test
         fun streamFromFile_MustWork() {
             val inputFile = File(PATH_TO_TEXT_FILE)
-            val tree = getTreeFromStream(inputFile.inputStream())
+            val tree = ParsingTree(inputFile.inputStream())
             assertEquals(9.8, tree.calculate())
         }
 
         @Test
         fun emptyStream_ThrowsException() {
-            val tree = ParsingTree()
             val emptyStream = ByteArrayInputStream("    ".toByteArray())
             assertThrows(IllegalStateException::class.java) {
-                tree.setExpressionFromStream(emptyStream)
+                ParsingTree(emptyStream)
             }
         }
     }

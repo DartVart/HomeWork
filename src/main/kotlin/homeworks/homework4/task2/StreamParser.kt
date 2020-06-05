@@ -21,7 +21,7 @@ class StreamParser {
                 it.last() == ')' -> {
                     val pairOfNumberAndBrackets = it.partition { it != ')' }
                     tokens.add(pairOfNumberAndBrackets.first)
-                    pairOfNumberAndBrackets.second.toList().forEach {
+                    pairOfNumberAndBrackets.second.forEach {
                         tokens.add(it.toString())
                     }
                 }

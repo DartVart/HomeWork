@@ -1,7 +1,11 @@
 package homeworks.homework4.task2
 
 import java.io.InputStream
+import java.lang.IllegalStateException
 
+/**
+ * If the [inputStream] is blank or line reading returned null, [IllegalStateException] will be thrown
+ * */
 class ParsingTree(inputStream: InputStream) {
     private val root: ArithmeticExpressionElement
     init {

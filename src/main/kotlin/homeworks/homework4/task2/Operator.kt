@@ -1,5 +1,7 @@
 package homeworks.homework4.task2
 
+import java.lang.IllegalArgumentException
+
 class Operator(
     private val sign: String,
     private val leftChild: ArithmeticExpressionElement,
@@ -18,7 +20,7 @@ class Operator(
 
     init {
         operation = supportedOperators.find { it.sign == sign }?.operation
-            ?: throw IllegalStateException("Operation with sign '$sign' not found.")
+            ?: throw IllegalArgumentException("Operation with sign '$sign' not found.")
     }
 
     override fun toString() = "($sign $leftChild $rightChild)"
