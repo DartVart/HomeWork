@@ -1,16 +1,15 @@
 package homeworks.homework4.task1.hashFunctions
 
-class PolynomialHashFunction : HashFunction<String> {
-    companion object {
-        const val POLYNOMIAL_HASH_MODULO = 2147483647
-        const val PRIME_NUMBER = 17
-    }
-
+/**
+ * @param primeNumber is a number that will be raised to a power
+ * */
+class PolynomialHashFunction(private val hashModulo: Int = 2147483647, private val primeNumber: Int = 17) :
+    HashFunction<String> {
     override fun getHash(key: String): Int {
         var primeRaisedToCurrentPower = 1
         return key.fold(0) { total, currentChar ->
-            primeRaisedToCurrentPower = (primeRaisedToCurrentPower * PRIME_NUMBER) % POLYNOMIAL_HASH_MODULO
-            total + (currentChar.toInt() * primeRaisedToCurrentPower) % POLYNOMIAL_HASH_MODULO
+            primeRaisedToCurrentPower = (primeRaisedToCurrentPower * primeNumber) % hashModulo
+            total + (currentChar.toInt() * primeRaisedToCurrentPower) % hashModulo
         }
     }
 }

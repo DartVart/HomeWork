@@ -15,8 +15,7 @@ class HashTable<K, V>(
     var numberOfEntries = 0
         private set
 
-    var loadFactor = 0.0
-        private set
+    private val loadFactor: Double
         get() = numberOfEntries.toDouble() / size
 
     private val maxLengthOfListInConflictingBuckets: Int
