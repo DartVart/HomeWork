@@ -7,24 +7,21 @@ class Operator(
 ) : ArithmeticExpressionElement {
     private companion object {
         val supportedOperators = listOf(
-            Pair("+", { a: Double, b: Double -> a + b }),
-            Pair("-", { a: Double, b: Double -> a - b }),
-            Pair("/", { a: Double, b: Double -> a / b }),
-            Pair("*", { a: Double, b: Double -> a * b })
+            Operation("+") { a: Double, b: Double -> a + b },
+            Operation("-") { a: Double, b: Double -> a - b },
+            Operation("/") { a: Double, b: Double -> a / b },
+            Operation("*") { a: Double, b: Double -> a * b }
         )
     }
 
-    private fun isSupportedOperator(sign: String): Boolean = sign in supportedOperators.map { it.first }
+    private val operation: (Double, Double) -> Double
 
     init {
-        require(isSupportedOperator(sign)) { "'$sign' is not supported as an operator." }
+        operation = supportedOperators.find { it.sign == sign }?.operation
+            ?: throw IllegalStateException("Operation with sign '$sign' not found.")
     }
 
     override fun toString() = "($sign $leftChild $rightChild)"
 
-    override fun calculate(): Double {
-        val suitableArithmeticFunction = supportedOperators.find { it.first == sign }?.second
-        check(suitableArithmeticFunction != null) { "Operation with sign '$sign' not found." }
-        return suitableArithmeticFunction(leftChild.calculate(), rightChild.calculate())
-    }
+    override fun calculate() = operation(leftChild.calculate(), rightChild.calculate())
 }
