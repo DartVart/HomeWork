@@ -13,8 +13,7 @@ class StreamParser {
     }
 
     private fun setTokens(inputString: String) {
-        val initialSplitting = inputString.split(" ")
-        initialSplitting.forEach { it ->
+        inputString.split(" ").forEach { it ->
             when {
                 it[0] == '(' -> {
                     it.forEach { tokens.add(it.toString()) }
