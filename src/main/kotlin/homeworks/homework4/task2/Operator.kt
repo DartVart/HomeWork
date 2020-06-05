@@ -1,9 +1,9 @@
 package homeworks.homework4.task2
 
 class Operator(
-    var sign: String,
-    var leftChild: ArithmeticExpressionElement,
-    var rightChild: ArithmeticExpressionElement
+    private val sign: String,
+    private val leftChild: ArithmeticExpressionElement,
+    private val rightChild: ArithmeticExpressionElement
 ) : ArithmeticExpressionElement {
     private companion object {
         val supportedOperators = listOf(

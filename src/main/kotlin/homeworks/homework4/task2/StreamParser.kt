@@ -5,7 +5,7 @@ import java.lang.IllegalStateException
 import java.util.LinkedList
 
 class StreamParser {
-    var tokens = LinkedList<String>()
+    private val tokens = LinkedList<String>()
 
     private fun getArithmeticExpressionTreeByString(inputString: String): ArithmeticExpressionElement {
         setTokens(inputString)
@@ -13,7 +13,6 @@ class StreamParser {
     }
 
     private fun setTokens(inputString: String) {
-        tokens = LinkedList()
         val initialSplitting = inputString.split(" ")
         initialSplitting.forEach { it ->
             when {
