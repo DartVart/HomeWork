@@ -3,18 +3,22 @@ package homeworks.homework5.task1
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.io.Serializable
 import java.util.Stack
 
 class Trie : Serializable {
     private var root = Node()
-    var size = 0
+    var numberOfWords = 0
         private set
+
+    companion object {
+        const val PRIME_NUMBER_FOR_HASH_CODE = 31
+    }
 
     fun add(element: String): Boolean {
         if (contains(element)) {
             return false
         }
-
         var currentNode = root
         element.forEach { it ->
             if (!currentNode.children.containsKey(it)) {
@@ -24,7 +28,7 @@ class Trie : Serializable {
             currentNode.howManyStartsWithPrefix++
         }
 
-        size++
+        numberOfWords++
         currentNode.isTerminal = true
         return true
     }
@@ -55,12 +59,11 @@ class Trie : Serializable {
             }
         }
         nextNode?.let { it.isTerminal = false }
-        size--
+        numberOfWords--
         return true
     }
 
     fun howManyStartsWithPrefix(prefix: String): Int {
-        if (prefix == "") return size
         var currentNode: Node? = root
         prefix.forEach {
             currentNode = currentNode?.children?.get(it)
@@ -69,12 +72,12 @@ class Trie : Serializable {
         return currentNode?.howManyStartsWithPrefix ?: 0
     }
 
-    override fun serialize(outputStream: OutputStream) {
+    fun serialize(outputStream: OutputStream) {
         outputStream.write(root.getWords().joinToString(";").toByteArray())
         outputStream.close()
     }
 
-    override fun deserialize(inputStream: InputStream) {
+    fun deserialize(inputStream: InputStream) {
         root = Node()
         inputStream.bufferedReader().readLine()?.split(";")?.forEach {
             add(it)
@@ -82,7 +85,19 @@ class Trie : Serializable {
         inputStream.close()
     }
 
-    fun equalsTo(otherTrie: Trie) = root.equalsTo(otherTrie.root)
+    override fun equals(other: Any?): Boolean {
+        return if (other != null && other is Trie) {
+            other.root == root
+        } else {
+            false
+        }
+    }
+
+    override fun hashCode(): Int {
+        var result = root.hashCode()
+        result = PRIME_NUMBER_FOR_HASH_CODE * result + numberOfWords
+        return result
+    }
 
     private class Node {
         var isTerminal = false
@@ -102,19 +117,30 @@ class Trie : Serializable {
             return result
         }
 
-        fun equalsTo(otherNode: Node): Boolean {
-            var areEquals = true
-            if (isTerminal == otherNode.isTerminal && children.size == otherNode.children.size) {
-                for (charAndNodePair in children) {
-                    if (!(otherNode.children[charAndNodePair.key]?.equalsTo(charAndNodePair.value) ?: return false)) {
-                        areEquals = false
-                        break
+        override fun equals(other: Any?): Boolean {
+            return if (other != null && other is Node) {
+                var areEquals = true
+                if (isTerminal == other.isTerminal && children.size == other.children.size) {
+                    for (charAndNodePair in children) {
+                        if (other.children[charAndNodePair.key] != charAndNodePair.value) {
+                            areEquals = false
+                            break
+                        }
                     }
+                } else {
+                    areEquals = false
                 }
+                areEquals
             } else {
-                areEquals = false
+                false
             }
-            return areEquals
+        }
+
+        override fun hashCode(): Int {
+            var result = isTerminal.hashCode()
+            result = PRIME_NUMBER_FOR_HASH_CODE * result + children.hashCode()
+            result = PRIME_NUMBER_FOR_HASH_CODE * result + howManyStartsWithPrefix
+            return result
         }
     }
 }

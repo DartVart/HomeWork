@@ -49,12 +49,12 @@ internal class TrieTest {
             trie.add("abc")
             trie.add("cab")
             trie.add("bca")
-            assertEquals(3, trie.size)
+            assertEquals(3, trie.numberOfWords)
         }
 
         @Test
         fun addingWithSamePrefix_CheckSize_MustWork() {
-            assertEquals(4, trieAfterAddWithSamePrefix.size)
+            assertEquals(4, trieAfterAddWithSamePrefix.numberOfWords)
         }
 
         @Test
@@ -74,7 +74,7 @@ internal class TrieTest {
             trie.add("night")
             trie.add("night")
             trie.add("night")
-            assertEquals(1, trie.size)
+            assertEquals(1, trie.numberOfWords)
         }
 
         @Test
@@ -96,7 +96,7 @@ internal class TrieTest {
         fun emptyTrie_MustWork() {
             val trie = Trie()
             trie.remove("0")
-            assertTrue(emptyTrie.equalsTo(trie))
+            assertEquals(emptyTrie, trie)
         }
 
         @Test
@@ -109,7 +109,7 @@ internal class TrieTest {
             actual.remove("abc")
             val expected = Trie()
             expected.add("bca")
-            assertTrue(expected.equalsTo(actual))
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -120,7 +120,7 @@ internal class TrieTest {
             actual.remove("param")
             val expected = Trie()
             expected.add("parameter")
-            assertTrue(expected.equalsTo(actual))
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -129,7 +129,7 @@ internal class TrieTest {
             for (i in 1..10000) {
                 trie.remove(i.toString())
             }
-            assertTrue(emptyTrie.equalsTo(trie))
+            assertEquals(emptyTrie, trie)
         }
 
         @Test
@@ -157,15 +157,15 @@ internal class TrieTest {
     }
 
     @Nested
-    inner class Check_size {
+    inner class Check_numberOfWords {
         @Test
         fun emptyTrie_MustWork() {
-            assertEquals(0, emptyTrie.size)
+            assertEquals(0, emptyTrie.numberOfWords)
         }
 
         @Test
         fun bigTrie_MustWork() {
-            assertEquals(10000, getBigTrie().size)
+            assertEquals(10000, getBigTrie().numberOfWords)
         }
     }
 
@@ -259,7 +259,7 @@ internal class TrieTest {
             expected.add("ever")
             expected.add("nothing")
             expected.add("nowhere")
-            assertTrue(expected.equalsTo(actual))
+            assertEquals(expected, actual)
         }
 
         @Test
@@ -274,7 +274,7 @@ internal class TrieTest {
             expected.add("140")
             expected.add("150")
             expected.add("160")
-            assertTrue(expected.equalsTo(actual))
+            assertEquals(expected, actual)
         }
 
         @Test
