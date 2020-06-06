@@ -122,11 +122,9 @@ class Trie : Serializable {
             children.clear()
         }
 
-        override fun equals(other: Any?) = other is Node && this.typeSafeEquals(other)
-
-        fun typeSafeEquals(other: Node): Boolean {
+        override fun equals(other: Any?): Boolean {
             var areEquals = true
-            if (isTerminal == other.isTerminal && children.size == other.children.size) {
+            if (other is Node && isTerminal == other.isTerminal && children.size == other.children.size) {
                 for (charAndNodePair in children) {
                     if (other.children[charAndNodePair.key] != charAndNodePair.value) {
                         areEquals = false
