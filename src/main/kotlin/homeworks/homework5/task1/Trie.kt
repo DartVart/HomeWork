@@ -78,19 +78,14 @@ class Trie : Serializable {
 
     fun deserialize(inputStream: InputStream) {
         root.removeAllDescendants()
+        numberOfWords = 0
         inputStream.bufferedReader().readLine()?.split(";")?.forEach {
             add(it)
         } ?: throw IOException("An attempt to read the stream resulted in a null result")
         inputStream.close()
     }
 
-    override fun equals(other: Any?): Boolean {
-        return if (other != null && other is Trie) {
-            other.root == root
-        } else {
-            false
-        }
-    }
+    override fun equals(other: Any?)= other is Trie && other.root == root
 
     override fun hashCode(): Int {
         var result = root.hashCode()
@@ -127,13 +122,7 @@ class Trie : Serializable {
             children.clear()
         }
 
-        override fun equals(other: Any?): Boolean {
-            return if (other != null && other is Node) {
-                this.typeSafeEquals(other)
-            } else {
-                false
-            }
-        }
+        override fun equals(other: Any?) = other is Node && this.typeSafeEquals(other)
 
         fun typeSafeEquals(other: Node): Boolean {
             var areEquals = true
