@@ -130,21 +130,25 @@ class Trie : Serializable {
 
         override fun equals(other: Any?): Boolean {
             return if (other != null && other is Node) {
-                var areEquals = true
-                if (isTerminal == other.isTerminal && children.size == other.children.size) {
-                    for (charAndNodePair in children) {
-                        if (other.children[charAndNodePair.key] != charAndNodePair.value) {
-                            areEquals = false
-                            break
-                        }
-                    }
-                } else {
-                    areEquals = false
-                }
-                areEquals
+                this.typeSafeEquals(other)
             } else {
                 false
             }
+        }
+
+        fun typeSafeEquals(other: Node): Boolean {
+            var areEquals = true
+            if (isTerminal == other.isTerminal && children.size == other.children.size) {
+                for (charAndNodePair in children) {
+                    if (other.children[charAndNodePair.key] != charAndNodePair.value) {
+                        areEquals = false
+                        break
+                    }
+                }
+            } else {
+                areEquals = false
+            }
+            return areEquals
         }
 
         override fun hashCode(): Int {
