@@ -11,9 +11,7 @@ class Trie : Serializable {
     var numberOfWords = 0
         private set
 
-    companion object {
-        const val PRIME_NUMBER_FOR_HASH_CODE = 31
-    }
+    private val primeNumberForHashCode = 31
 
     fun add(element: String): Boolean {
         if (contains(element)) {
@@ -96,7 +94,7 @@ class Trie : Serializable {
 
     override fun hashCode(): Int {
         var result = root.hashCode()
-        result = PRIME_NUMBER_FOR_HASH_CODE * result + numberOfWords
+        result = primeNumberForHashCode * result + numberOfWords
         return result
     }
 
@@ -104,6 +102,7 @@ class Trie : Serializable {
         var isTerminal = false
         val children: MutableMap<Char, Node> = mutableMapOf()
         var howManyStartsWithPrefix = 0
+        private val primeNumberForHashCode = 31
 
         fun getWords(): Stack<String> {
             val result = Stack<String>()
@@ -153,8 +152,8 @@ class Trie : Serializable {
 
         override fun hashCode(): Int {
             var result = isTerminal.hashCode()
-            result = PRIME_NUMBER_FOR_HASH_CODE * result + children.hashCode()
-            result = PRIME_NUMBER_FOR_HASH_CODE * result + howManyStartsWithPrefix
+            result = primeNumberForHashCode * result + children.hashCode()
+            result = primeNumberForHashCode * result + howManyStartsWithPrefix
             return result
         }
     }
