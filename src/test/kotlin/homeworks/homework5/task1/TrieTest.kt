@@ -11,10 +11,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-const val PATH_TO_FOLDER_WITH_TEXT_FILES = "./src/test/resources/homeworks/homework5/task1"
-
 internal class TrieTest {
-    val emptyTrie = Trie()
+    private val pathToFolderWithTextFiles = "./src/test/resources/homeworks/homework5/task1"
+    private val emptyTrie = Trie()
     fun getBigTrie(): Trie {
         val trie = Trie()
         for (i in 1..10000) {
@@ -218,9 +217,9 @@ internal class TrieTest {
     inner class Check_serialize {
         @Test
         fun emptyStream_MustWork() {
-            val outputStream = FileOutputStream("$PATH_TO_FOLDER_WITH_TEXT_FILES/recordedEmptyTrie.txt")
+            val outputStream = FileOutputStream("$pathToFolderWithTextFiles/recordedEmptyTrie.txt")
             emptyTrie.serialize(outputStream)
-            val actual = File("$PATH_TO_FOLDER_WITH_TEXT_FILES/recordedEmptyTrie.txt").readText()
+            val actual = File("$pathToFolderWithTextFiles/recordedEmptyTrie.txt").readText()
             val expected = ""
             assertEquals(expected, actual)
         }
@@ -235,9 +234,9 @@ internal class TrieTest {
             trie.add("kotlin")
             trie.add("camera")
             trie.add("cameron")
-            val outputStream = FileOutputStream("$PATH_TO_FOLDER_WITH_TEXT_FILES/recordedNonEmptyTrie.txt")
+            val outputStream = FileOutputStream("$pathToFolderWithTextFiles/recordedNonEmptyTrie.txt")
             trie.serialize(outputStream)
-            val actual = File("$PATH_TO_FOLDER_WITH_TEXT_FILES/recordedNonEmptyTrie.txt").readText()
+            val actual = File("$pathToFolderWithTextFiles/recordedNonEmptyTrie.txt").readText()
             val expected = "parser;parker;param;parameter;kotlin;camera;cameron"
             assertEquals(expected, actual)
         }
@@ -247,7 +246,7 @@ internal class TrieTest {
     inner class Check_deserialize {
         @Test
         fun fileStream_MustWork() {
-            val inputStream = File("$PATH_TO_FOLDER_WITH_TEXT_FILES/nonEmptyTrie.txt").inputStream()
+            val inputStream = File("$pathToFolderWithTextFiles/nonEmptyTrie.txt").inputStream()
             val actual = Trie()
             actual.deserialize(inputStream)
             val expected = Trie()
