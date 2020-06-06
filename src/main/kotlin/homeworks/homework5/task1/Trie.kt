@@ -85,7 +85,7 @@ class Trie : Serializable {
         inputStream.close()
     }
 
-    override fun equals(other: Any?)= other is Trie && other.root == root
+    override fun equals(other: Any?) = other is Trie && other.root == root
 
     override fun hashCode(): Int {
         var result = root.hashCode()
