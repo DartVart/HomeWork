@@ -7,7 +7,7 @@ import java.io.Serializable
 import java.util.Stack
 
 class Trie : Serializable {
-    private var root = Node()
+    private val root = Node()
     var numberOfWords = 0
         private set
 
@@ -79,7 +79,7 @@ class Trie : Serializable {
     }
 
     fun deserialize(inputStream: InputStream) {
-        root = Node()
+        root.removeAllDescendants()
         inputStream.bufferedReader().readLine()?.split(";")?.forEach {
             add(it)
         } ?: throw IOException("An attempt to read the stream resulted in a null result")
