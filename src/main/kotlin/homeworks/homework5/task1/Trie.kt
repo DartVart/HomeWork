@@ -52,6 +52,7 @@ class Trie : Serializable {
             nextNode = currentNode.children[symbol]
             nextNode?.let { it.howManyStartsWithPrefix-- }
             if (nextNode?.howManyStartsWithPrefix == 0) {
+                currentNode.children[symbol]?.removeAllDescendants()
                 currentNode.children.remove(symbol)
                 break
             } else {
@@ -115,6 +116,16 @@ class Trie : Serializable {
                 }
             }
             return result
+        }
+
+        fun removeAllDescendants() {
+            if (children.isEmpty()) {
+                return
+            }
+            children.forEach {
+                it.value.removeAllDescendants()
+            }
+            children.clear()
         }
 
         override fun equals(other: Any?): Boolean {
