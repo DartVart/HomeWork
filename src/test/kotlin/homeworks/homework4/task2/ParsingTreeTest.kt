@@ -142,7 +142,7 @@ internal class ParsingTreeTest {
     }
 
     @Nested
-    inner class Check_setExpressionFromStream {
+    inner class Check_initialization {
         @Test
         fun streamFromFile_MustWork() {
             val inputFile = File(PATH_TO_TEXT_FILE)
