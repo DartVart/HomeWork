@@ -73,12 +73,12 @@ class Trie : Serializable {
         return currentNode?.howManyStartsWithPrefix ?: 0
     }
 
-    fun serialize(outputStream: OutputStream) {
+    fun writeObject(outputStream: OutputStream) {
         outputStream.write(root.getWords().joinToString(";").toByteArray())
         outputStream.close()
     }
 
-    fun deserialize(inputStream: InputStream) {
+    fun readObject(inputStream: InputStream) {
         root.removeAllDescendants()
         numberOfWords = 0
         inputStream.bufferedReader().readLine()?.split(";")?.forEach {

@@ -214,11 +214,11 @@ internal class TrieTest {
     }
 
     @Nested
-    inner class Check_serialize {
+    inner class Check_writeObject {
         @Test
         fun emptyStream_MustWork() {
             val outputStream = FileOutputStream("$pathToFolderWithTextFiles/recordedEmptyTrie.txt")
-            emptyTrie.serialize(outputStream)
+            emptyTrie.writeObject(outputStream)
             val actual = File("$pathToFolderWithTextFiles/recordedEmptyTrie.txt").readText()
             val expected = ""
             assertEquals(expected, actual)
@@ -235,7 +235,7 @@ internal class TrieTest {
             trie.add("camera")
             trie.add("cameron")
             val outputStream = FileOutputStream("$pathToFolderWithTextFiles/recordedNonEmptyTrie.txt")
-            trie.serialize(outputStream)
+            trie.writeObject(outputStream)
             val actual = File("$pathToFolderWithTextFiles/recordedNonEmptyTrie.txt").readText()
             val expected = "parser;parker;param;parameter;kotlin;camera;cameron"
             assertEquals(expected, actual)
@@ -243,12 +243,12 @@ internal class TrieTest {
     }
 
     @Nested
-    inner class Check_deserialize {
+    inner class Check_readObject {
         @Test
         fun fileStream_MustWork() {
             val inputStream = File("$pathToFolderWithTextFiles/nonEmptyTrie.txt").inputStream()
             val actual = Trie()
-            actual.deserialize(inputStream)
+            actual.readObject(inputStream)
             val expected = Trie()
             expected.add("something")
             expected.add("somewhere")
@@ -265,7 +265,7 @@ internal class TrieTest {
         fun byteArrayStream_MustWork() {
             val inputStream = ByteArrayInputStream("101;102;103;140;150;160".toByteArray())
             val actual = Trie()
-            actual.deserialize(inputStream)
+            actual.readObject(inputStream)
             val expected = Trie()
             expected.add("101")
             expected.add("102")
@@ -281,7 +281,7 @@ internal class TrieTest {
             val inputStream = ByteArrayInputStream("".toByteArray())
             val trie = Trie()
             assertThrows(IOException::class.java) {
-                trie.deserialize(inputStream)
+                trie.readObject(inputStream)
             }
         }
     }
