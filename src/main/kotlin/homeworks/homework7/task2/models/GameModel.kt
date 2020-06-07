@@ -21,7 +21,11 @@ class GameModel {
 
     var opponent = DEFAULT_OPPONENT
         set(value) {
-            if (value != "hardBot" && value != "mediumBot" && value != "easyBot" && value != "friend") {
+            if (value != "hardBot" &&
+                value != "mediumBot" &&
+                value != "easyBot" &&
+                value != "friend"
+            ) {
                 throw IllegalStateException("Opponent is not defined")
             }
             field = value
