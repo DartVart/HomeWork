@@ -24,7 +24,7 @@ class GameFieldStylesheet : Stylesheet() {
         private const val GAME_BUTTON_FONT_SIZE = 30.0
         private val GAME_BUTTON_TEXT_COLOR = Color.GOLD
         private val GAME_BUTTON_BACKGROUND_COLOR = Color.GRAY
-        private val GAME_BUTTON_SIZE = 90.0
+        private const val GAME_BUTTON_SIZE = 90.0
 
         val mainBox by cssclass()
         private const val MAIN_VBOX_SPACING = 5
