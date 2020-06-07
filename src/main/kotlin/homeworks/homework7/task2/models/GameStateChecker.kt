@@ -6,8 +6,9 @@ class GameStateChecker {
     fun isFieldFilled(field: List<List<String>>): Boolean {
         for (row in 0..2) {
             for (column in 0..2) {
-                if (field[row][column] == SIGN_OF_ABSENCE)
+                if (field[row][column] == SIGN_OF_ABSENCE) {
                     return false
+                }
             }
         }
         return true

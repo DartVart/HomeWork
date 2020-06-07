@@ -2,10 +2,11 @@ package homeworks.homework7.task2.bots
 
 import kotlin.random.Random
 
-class MediumBot: Bot() {
+class MediumBot : Bot() {
     private companion object {
         const val CHANCE_OF_MOVE_OF_HARD_BOT = 0.6
     }
+
     private val easyBot = EasyBot()
     private val hardBot = HardBot()
     override fun getMove(field: MutableList<MutableList<String>>, botSign: String, humanSign: String): Pair<Int, Int> {
