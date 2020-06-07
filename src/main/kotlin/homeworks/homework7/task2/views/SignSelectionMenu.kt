@@ -19,18 +19,18 @@ class SignSelectionMenu : View("Sign selection") {
         label("(\"$FIRST_PLAYER_SIGN\" starts the game)") { addClass(MenuStylesheet.smallDescriptionLabel) }
         button(FIRST_PLAYER_SIGN) {
             action {
-                replaceWithGameView(FIRST_PLAYER_SIGN)
+                replaceWithGameView(SECOND_PLAYER_SIGN)
             }
         }
         button(SECOND_PLAYER_SIGN) {
             action {
-                replaceWithGameView(SECOND_PLAYER_SIGN)
+                replaceWithGameView(FIRST_PLAYER_SIGN)
             }
         }
     }
 
-    private fun replaceWithGameView(humanSign: String) {
-        controller.setPlayerSign(humanSign)
+    private fun replaceWithGameView(botSign: String) {
+        controller.setBotSign(botSign)
         replaceWith<GameView>()
     }
 }

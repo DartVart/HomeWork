@@ -14,8 +14,7 @@ class HardBot : Bot() {
         var bestScore = MIN_SCORE
         var bestMove = Pair(-1, -1)
         var currentMoveScore: Int
-        val freePositions = getFreePositions(field)
-        freePositions.forEach {
+        getFreePositions(field).forEach {
             field[it.first][it.second] = botSign
             currentMoveScore = minimax(field, false, botSign, humanSign)
             field[it.first][it.second] = SIGN_OF_ABSENCE
@@ -47,9 +46,8 @@ class HardBot : Bot() {
 
     private fun getScoreWithBotMove(field: MutableList<MutableList<String>>, botSign: String, humanSign: String): Int {
         var highestScore = MIN_SCORE
-        val freePosition = getFreePositions(field)
         var currentMoveScore: Int
-        freePosition.forEach {
+        getFreePositions(field).forEach {
             field[it.first][it.second] = botSign
             currentMoveScore = minimax(field, false, botSign, humanSign)
             if (currentMoveScore > highestScore) {
@@ -66,9 +64,8 @@ class HardBot : Bot() {
         humanSign: String
     ): Int {
         var smallestScore = MAX_SCORE
-        val freePosition = getFreePositions(field)
         var currentMoveScore: Int
-        freePosition.forEach {
+        getFreePositions(field).forEach {
             field[it.first][it.second] = humanSign
             currentMoveScore = minimax(field, true, botSign, humanSign)
             if (currentMoveScore < smallestScore) {

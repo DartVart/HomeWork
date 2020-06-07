@@ -33,9 +33,9 @@ class GameController : Controller() {
         gameModel.setInitialState()
     }
 
-    fun setPlayerSign(humanSign: String) {
-        gameModel.humanSign = humanSign
-        gameModel.botSign = gameModel.getAnotherPlayerSign(humanSign)
+    fun setBotSign(botSign: String) {
+        gameModel.botSign = botSign
+        gameModel.humanSign = gameModel.getAnotherPlayerSign(botSign)
     }
 
     fun setOpponent(opponent: String) {
