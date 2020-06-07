@@ -19,13 +19,16 @@ class GameModel {
     var humanSign: String = FIRST_PLAYER_SIGN
     var botSign: String = SECOND_PLAYER_SIGN
 
+    private fun isValidOpponent(opponent: String): Boolean {
+        return (opponent == "hardBot" ||
+                opponent == "mediumBot" ||
+                opponent == "easyBot" ||
+                opponent == "friend")
+    }
+
     var opponent = DEFAULT_OPPONENT
         set(value) {
-            if (value != "hardBot" &&
-                value != "mediumBot" &&
-                value != "easyBot" &&
-                value != "friend"
-            ) {
+            if (!isValidOpponent(opponent)) {
                 throw IllegalStateException("Opponent is not defined")
             }
             field = value
