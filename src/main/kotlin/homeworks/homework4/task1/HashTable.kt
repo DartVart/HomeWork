@@ -8,6 +8,8 @@ import kotlin.math.abs
 class HashTable<K, V>(
     private var size: Int = 20,
     private var hashFunction: HashFunction<K>,
+    private val stringToKey: ((String) -> K),
+    private val stringToValue: ((String) -> V),
     private val maxLoadFactor: Double = 0.9
 ) {
     private var arrayOfBuckets = Array(size) { Bucket<K, V>() }
@@ -21,7 +23,7 @@ class HashTable<K, V>(
     private val maxLengthOfListInConflictingBuckets: Int
         get() = arrayOfBuckets.map { it.size }.filter { it > 1 }.max() ?: 0
 
-    val fileParser = FileParser()
+    val fileParser = FileParser(stringToKey, stringToValue)
 
     /**
      * This only changes [size]
@@ -37,7 +39,7 @@ class HashTable<K, V>(
         arrayOfBuckets = Array(size) { Bucket<K, V>() }
         oldArrayOfBuckets.forEach { it ->
             it.listOfEntries.forEach {
-                add(it.first, it.second)
+                add(it.key, it.value)
             }
         }
     }
@@ -49,13 +51,13 @@ class HashTable<K, V>(
         val sizeBeforeAdding = arrayOfBuckets[requiredBucketIndex].size
         val isAdded = arrayOfBuckets[requiredBucketIndex].add(key, value)
         if (isAdded && sizeBeforeAdding != arrayOfBuckets[requiredBucketIndex].size) {
-            if (loadFactor > maxLoadFactor) {
-                increaseSize()
-                rebuild()
-            }
             numberOfEntries++
             if (arrayOfBuckets[requiredBucketIndex].size >= 2) {
                 numberOfConflicts++
+            }
+            if (loadFactor > maxLoadFactor) {
+                increaseSize()
+                rebuild()
             }
         }
 
@@ -77,7 +79,7 @@ class HashTable<K, V>(
     /**
      * If nothing is found, null will be returned
      * */
-    fun find(key: K): V? = arrayOfBuckets[getIndexByHashFunction(key)].getPairByKey(key)?.second
+    fun find(key: K): V? = arrayOfBuckets[getIndexByHashFunction(key)].getPairByKey(key)?.value
 
     /**
      * Functions that give a negative result may be accepted.
@@ -99,16 +101,7 @@ class HashTable<K, V>(
 
     fun isEmpty() = numberOfEntries == 0
 
-    inner class FileParser {
-        /**
-         * This lambda function is needed to read entries from a file.
-         * */
-        var stringToKey: ((String) -> K)? = null
-
-        /**
-         * This lambda function is needed to read entries from a file.
-         * */
-        var stringToValue: ((String) -> V)? = null
+    inner class FileParser(private val stringToKey: ((String) -> K), private val stringToValue: ((String) -> V)) {
 
         /**
          * This function reads entries of the form "key:value".
@@ -121,32 +114,18 @@ class HashTable<K, V>(
             if (!inputFile.exists()) {
                 throw FileNotFoundException("File \"${inputFile.path}\" not found.")
             }
-            if (stringToKey == null || stringToValue == null) {
-                throw NullPointerException("The function of converting a string to a key or value is not initialized")
-            }
 
             val regex = Regex("""\S+:\S+""")
             val inputFileStream = inputFile.inputStream()
             inputFileStream.bufferedReader().lines().forEach { it ->
                 regex.findAll(it).forEach {
-                    val entryAsPair = parseStringToEntry(it.value)
-                    val key = entryAsPair.first
-                    val value = entryAsPair.second
-                    if (key != null && value != null) {
-                        add(key, value)
-                    }
+                    val match = Regex("(.+):(.+)").find(it.value)
+                    check(match != null) { "The string is incorrect" }
+                    val (keyAsString, valueAsString) = match.destructured
+                    add(stringToKey(keyAsString), stringToValue(valueAsString))
                 }
             }
-
             inputFileStream.close()
-        }
-
-        private fun parseStringToEntry(inputString: String): Pair<K?, V?> {
-            val entryAsStringList = inputString.split(':')
-            check(entryAsStringList.size == 2) { "The string is incorrect." }
-            val keyAsString = entryAsStringList[0]
-            val valueAsString = entryAsStringList[1]
-            return Pair(stringToKey?.let { it(keyAsString) }, stringToValue?.let { it(valueAsString) })
         }
     }
 }

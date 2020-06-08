@@ -18,7 +18,7 @@ const val PATH_TO_DIRECTORY_WITH_TEXTS = "./src/test/resources/homeworks/homewor
 internal class HashTableTest {
     private val simpleHashFunction = SimpleHashFunction()
     private val polynomialHashFunction = PolynomialHashFunction()
-    fun getEmptyHashTable() = HashTable<String, String>(INITIAL_SIZE, simpleHashFunction)
+    fun getEmptyHashTable() = HashTable(INITIAL_SIZE, simpleHashFunction, { it }, { it })
     fun getBigAlmostFilledHashTable(): HashTable<String, String> {
         val hashTable = getEmptyHashTable()
         for (i in 0..1000) {
@@ -157,8 +157,6 @@ internal class HashTableTest {
     inner class Check_fillFromFile {
         private fun getHashTableFilledFromFile(fileName: String): HashTable<String, String> {
             val hashTable = getEmptyHashTable()
-            hashTable.fileParser.stringToKey = { it }
-            hashTable.fileParser.stringToValue = { it }
             val inputFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/$fileName")
             hashTable.fileParser.fillFromFile(inputFile)
             return hashTable
@@ -200,37 +198,6 @@ internal class HashTableTest {
             val nonexistentFile = File("nonexistentFile.txt")
             assertThrows(FileNotFoundException::class.java) {
                 hashTable.fileParser.fillFromFile(nonexistentFile)
-            }
-        }
-
-        @Test
-        fun stringToKeyIsNull_ThrowsException() {
-            val hashTable = getEmptyHashTable()
-            hashTable.fileParser.stringToValue = { it }
-            val inputFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/empty.txt")
-            assertThrows(NullPointerException::class.java) {
-                hashTable.fileParser.fillFromFile(inputFile)
-            }
-        }
-
-        @Test
-        fun stringToValueIsNull_ThrowsException() {
-            val hashTable = getEmptyHashTable()
-            hashTable.fileParser.stringToKey = { it }
-            val inputFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/empty.txt")
-            assertThrows(NullPointerException::class.java) {
-                hashTable.fileParser.fillFromFile(inputFile)
-            }
-        }
-
-        @Test
-        fun incorrectFile_ThrowsException() {
-            val hashTable = getEmptyHashTable()
-            hashTable.fileParser.stringToKey = { it }
-            hashTable.fileParser.stringToValue = { it }
-            val inputFile = File("$PATH_TO_DIRECTORY_WITH_TEXTS/incorrect.txt")
-            assertThrows(IllegalStateException::class.java) {
-                hashTable.fileParser.fillFromFile(inputFile)
             }
         }
     }

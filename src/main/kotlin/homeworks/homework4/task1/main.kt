@@ -1,5 +1,6 @@
 package homeworks.homework4.task1
 
+import homeworks.homework4.task1.hashFunctions.HashFunction
 import homeworks.homework4.task1.hashFunctions.PolynomialHashFunction
 import homeworks.homework4.task1.hashFunctions.SimpleHashFunction
 import java.io.File
@@ -17,20 +18,20 @@ fun safeReadLine(): String {
     return result
 }
 
-enum class Actions(val code: String) {
-    HELP("help"),
-    ADD_TO_HASH_TABLE("add"),
-    REMOVE_FROM_HASH_TABLE("remove"),
-    PRINT_STATISTICS("print statistics"),
-    FIND("find"),
-    FILL_FORM_FILE("fill from file"),
-    CHANGE_HASH_FUNCTION("change hash fun"),
-    EXIT("exit");
+enum class Actions(val code: String, val description: String) {
+    HELP("help", "to see available commands"),
+    ADD_TO_HASH_TABLE("add", "to add a value to the hash table"),
+    REMOVE_FROM_HASH_TABLE("remove", "to remove the entry from the hash table"),
+    PRINT_STATISTICS("print statistics", "to see basic statistics about the hash table"),
+    FIND("find", "to find the value by key"),
+    FILL_FORM_FILE("fill from file", "to import the table from the file \"$PATH_TO_TEXT_FILE\""),
+    CHANGE_HASH_FUNCTION("change hash fun", "to change the hash function"),
+    EXIT("exit", "to exit");
 }
 
-enum class HashFunctions(val code: String) {
-    SIMPLE("simple"),
-    POLYNOMIAL("polynomial");
+enum class HashFunctions(val code: String, val hashFunction: HashFunction<String>) {
+    SIMPLE("simple", SimpleHashFunction()),
+    POLYNOMIAL("polynomial", PolynomialHashFunction());
 }
 
 fun printIntroduction() {
@@ -39,15 +40,7 @@ fun printIntroduction() {
 }
 
 fun printHelp() {
-    println("The following commands are supported:")
-    println("1. \"${Actions.HELP.code}\" to see available commands;")
-    println("2. \"${Actions.ADD_TO_HASH_TABLE.code}\" to add a value to the hash table;")
-    println("3. \"${Actions.REMOVE_FROM_HASH_TABLE.code}\" to remove the entry from the hash table;")
-    println("4. \"${Actions.PRINT_STATISTICS.code}\" to see basic statistics about the hash table;")
-    println("5. \"${Actions.FIND.code}\" to find the value by key;")
-    println("6. \"${Actions.FILL_FORM_FILE.code}\" to supplement the table with data from the file;")
-    println("7. \"${Actions.CHANGE_HASH_FUNCTION.code}\" to change the hash function;")
-    println("8. \"${Actions.EXIT.code}\" to exit.")
+    Actions.values().forEachIndexed { i, it -> println("$i. \"${it.code}\" ${it.description};") }
 }
 
 fun handleUserActions(hashTable: HashTable<String, String>, inputFile: File) {
@@ -114,21 +107,18 @@ fun handleChangeHashFunctionAction(hashTable: HashTable<String, String>) {
     var command: String?
     do {
         command = readLine()
-        when (command) {
-            HashFunctions.SIMPLE.code -> hashTable.setHashFunction(SimpleHashFunction())
-            HashFunctions.POLYNOMIAL.code -> hashTable.setHashFunction(PolynomialHashFunction())
-            else -> {
-                println("Invalid input. Please enter again.")
-                command = null
-            }
+        val currentHashFunction = HashFunctions.values().find { it.code == command }?.hashFunction
+        if (currentHashFunction != null) {
+            hashTable.setHashFunction(currentHashFunction)
+        } else {
+            println("Invalid input. Please enter again.")
+            command = null
         }
     } while (command == null)
 }
 
 fun main() {
-    val hashTable = HashTable<String, String>(INITIAL_SIZE, SimpleHashFunction())
-    hashTable.fileParser.stringToKey = { it }
-    hashTable.fileParser.stringToValue = { it }
+    val hashTable = HashTable(INITIAL_SIZE, SimpleHashFunction(), { it }, { it })
     val file = File(PATH_TO_TEXT_FILE)
 
     try {

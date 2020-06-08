@@ -28,7 +28,7 @@ internal class BucketTest {
             bucket.add(-34, "-34")
             bucket.add(0, "0")
             val expectedListOfEntries =
-                listOf(MutablePair(123, "123"), MutablePair(-34, "-34"), MutablePair(0, "0"))
+                listOf(HashTableEntry(123, "123"), HashTableEntry(-34, "-34"), HashTableEntry(0, "0"))
             assertIterableEquals(expectedListOfEntries, bucket.listOfEntries)
         }
 
@@ -39,7 +39,7 @@ internal class BucketTest {
             bucket.add(1, "1")
             bucket.add(1, "one")
             bucket.add(0, "zero")
-            val expectedListOfEntries = listOf(MutablePair(0, "zero"), MutablePair(1, "one"))
+            val expectedListOfEntries = listOf(HashTableEntry(0, "zero"), HashTableEntry(1, "one"))
             assertIterableEquals(expectedListOfEntries, bucket.listOfEntries)
         }
 
@@ -50,7 +50,7 @@ internal class BucketTest {
             bucket.add(1, "1")
             bucket.add(1, "1")
             bucket.add(0, "0")
-            val expectedListOfEntries = listOf(MutablePair(0, "0"), MutablePair(1, "1"))
+            val expectedListOfEntries = listOf(HashTableEntry(0, "0"), HashTableEntry(1, "1"))
             assertIterableEquals(expectedListOfEntries, bucket.listOfEntries)
         }
     }
@@ -64,7 +64,7 @@ internal class BucketTest {
 
         @Test
         fun containsKey_MustWork() {
-            val expected = MutablePair(123, "123")
+            val expected = HashTableEntry(123, "123")
             assertEquals(expected, immutableSimpleBucket.getPairByKey(123))
         }
 
@@ -80,7 +80,7 @@ internal class BucketTest {
         fun emptyBucket_MustWork() {
             val bucket = Bucket<Int, String>()
             bucket.remove(123)
-            assertIterableEquals(listOf<MutablePair<Int, String>>(), bucket.listOfEntries)
+            assertIterableEquals(listOf<HashTableEntry<Int, String>>(), bucket.listOfEntries)
         }
 
         @Test
@@ -89,7 +89,7 @@ internal class BucketTest {
             bucket.remove(100)
             bucket.remove(321)
             val expectedListOfEntries =
-                listOf(MutablePair(123, "123"))
+                listOf(HashTableEntry(123, "123"))
             assertIterableEquals(expectedListOfEntries, bucket.listOfEntries)
         }
 
@@ -99,7 +99,7 @@ internal class BucketTest {
             bucket.remove(-1)
             bucket.remove(-2)
             val expectedListOfEntries =
-                listOf(MutablePair(100, "100"), MutablePair(123, "123"), MutablePair(321, "321"))
+                listOf(HashTableEntry(100, "100"), HashTableEntry(123, "123"), HashTableEntry(321, "321"))
             assertIterableEquals(expectedListOfEntries, bucket.listOfEntries)
         }
 
