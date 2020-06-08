@@ -30,7 +30,7 @@ class GameFieldController : Controller() {
 }
 
 fun main() {
-    launch<myApp>()
+    launch<ButtonApp>()
 }
 
 class GameField : View() {
