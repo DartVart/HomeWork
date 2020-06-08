@@ -1,0 +1,28 @@
+Size of list: 5,000,000
+max number: 1,000
+
+async quick sort: 8574
+usual quick sort: 7022
+
+async quick sort: 8170
+usual quick sort: 6485
+
+async quick sort: 7527
+usual quick sort: 6401
+
+async quick sort: 7774
+usual quick sort: 6305
+
+async quick sort: 8139
+usual quick sort: 6579
+
+async quick sort: 8154
+usual quick sort: 6513
+
+async quick sort: 7804
+usual quick sort: 6534
+
+async quick sort: 8886
+usual quick sort: 7426
+
+* After 10,000 measurements on an array of 100,000 elements, asynchronous sorting was faster in 467 cases.

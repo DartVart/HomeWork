@@ -6,14 +6,18 @@ import org.junit.jupiter.api.Assertions.assertIterableEquals
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
-internal class MainKtTest {
+internal class QuickSortTest {
+    private val quickSortInt = QuickSort<Int>()
+    private val quickSortDouble = QuickSort<Double>()
+    private val quickSortString = QuickSort<String>()
+
     @Test
     fun asyncQuickSorting_SimpleList_MustWork() {
         val expected: List<Int> = listOf(0, 1, 1, 2, 3, 3, 4, 7, 8)
         val actual: MutableList<Int> = mutableListOf(4, 3, 1, 3, 2, 1, 8, 0, 7)
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -25,7 +29,7 @@ internal class MainKtTest {
         val expected: List<String> = mutableListOf("Elena", "John", "Marina", "Mark", "Victor")
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortString.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -37,7 +41,7 @@ internal class MainKtTest {
         val expected: List<Double> = actual.sorted()
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortDouble.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -51,7 +55,7 @@ internal class MainKtTest {
         val expected: List<Int> = actual.toMutableList()
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -65,7 +69,7 @@ internal class MainKtTest {
         val expected: List<Int> = actual.reversed()
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -77,7 +81,7 @@ internal class MainKtTest {
         val expected: List<Int> = mutableListOf(2)
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -89,7 +93,7 @@ internal class MainKtTest {
         val expected: List<Int> = mutableListOf()
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -101,7 +105,7 @@ internal class MainKtTest {
         val expected: List<Int> = MutableList(100) { 1 }
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
@@ -109,11 +113,11 @@ internal class MainKtTest {
 
     @Test
     fun asyncQuickSorting_BigList_MustWork() {
-        val actual: MutableList<Int> = MutableList(1000000) { Random.nextInt(-1000, 1000) }
+        val actual: MutableList<Int> = MutableList(5000000) { Random.nextInt(0, 1000) }
         val expected: List<Int> = actual.sorted()
         runBlocking {
             launch {
-                asyncQuickSort(actual)
+                quickSortInt.asyncQuickSort(actual)
             }
         }
         assertIterableEquals(expected, actual)
