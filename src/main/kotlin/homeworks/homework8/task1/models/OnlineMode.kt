@@ -45,25 +45,29 @@ class OnlineMode(private val gameModel: GameModel) : Thread() {
         Platform.runLater { gameModel.handleOnlineOpponentMove(move1[0].toInt(), move1[1].toInt()) }
     }
 
-    private suspend fun receivedMessageHandling(socket: WebSocketSession) {
+    suspend fun handleReceiveMessage(message: String, socket: WebSocketSession) {
+        when {
+            message == "start" -> onStart()
+            message == "opponent left" -> {
+                gameModel.isAbnormalOnlineTermination = true
+                socket.close()
+            }
+            isStarted.get() -> {
+                receivedMoveHandling(message)
+                gameModel.isWaiting = false
+                if (gameModel.winner != "") {
+                    socket.close()
+                }
+            }
+        }
+    }
+
+    private suspend fun getAndHandleReceivedMessage(socket: WebSocketSession) {
         if (isNeededToReceiveMove.getAndSet(false)) {
             when (val frame = socket.incoming.receive()) {
                 is Frame.Text -> {
-                    val text = frame.readText()
-                    when {
-                        text == "start" -> onStart()
-                        text == "opponent left" -> {
-                            gameModel.isAbnormalOnlineTermination = true
-                            socket.close()
-                        }
-                        isStarted.get() -> {
-                            receivedMoveHandling(text)
-                            gameModel.isWaiting = false
-                            if (gameModel.winner != "") {
-                                socket.close()
-                            }
-                        }
-                    }
+                    val message = frame.readText()
+                    handleReceiveMessage(message, socket)
                 }
             }
         }
@@ -99,7 +103,7 @@ class OnlineMode(private val gameModel: GameModel) : Thread() {
 
                 while (isActive) {
                     sendMoveHandling(this)
-                    receivedMessageHandling(this)
+                    getAndHandleReceivedMessage(this)
                     waitBit()
                 }
             }
