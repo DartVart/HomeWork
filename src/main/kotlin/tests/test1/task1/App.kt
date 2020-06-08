@@ -12,7 +12,7 @@ import tornadofx.hbox
 private const val STAGE_HEIGHT = 400.0
 private const val STAGE_WIDTH = 400.0
 
-class myApp : App(GameField::class) {
+class ButtonApp : App(GameField::class) {
     override fun start(stage: Stage) {
         stage.height = STAGE_HEIGHT
         stage.width = STAGE_WIDTH
@@ -20,7 +20,6 @@ class myApp : App(GameField::class) {
         super.start(stage)
     }
 }
-
 
 class GameFieldController : Controller() {
     fun startGame() {
