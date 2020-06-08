@@ -19,7 +19,7 @@ class HashTable<K, V>(
         get() = numberOfEntries.toDouble() / size
 
     private val maxLengthOfListInConflictingBuckets: Int
-        get() = arrayOfBuckets.filter { it.size > 1 }.maxBy { it.size }?.size ?: 0
+        get() = arrayOfBuckets.map { it.size }.filter { it > 1 }.max() ?: 0
 
     val fileParser = FileParser()
 
@@ -49,16 +49,16 @@ class HashTable<K, V>(
         val sizeBeforeAdding = arrayOfBuckets[requiredBucketIndex].size
         val isAdded = arrayOfBuckets[requiredBucketIndex].add(key, value)
         if (isAdded && sizeBeforeAdding != arrayOfBuckets[requiredBucketIndex].size) {
+            if (loadFactor > maxLoadFactor) {
+                increaseSize()
+                rebuild()
+            }
             numberOfEntries++
             if (arrayOfBuckets[requiredBucketIndex].size >= 2) {
                 numberOfConflicts++
             }
         }
 
-        if (loadFactor > maxLoadFactor) {
-            increaseSize()
-            rebuild()
-        }
         return isAdded
     }
 
